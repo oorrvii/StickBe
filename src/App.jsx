@@ -578,7 +578,6 @@ export default function StickBeSite() {
           align-items: center;
           justify-content: center;
           position: relative;
-          clip-path: polygon(0 0, 100% 0, 100% 88%, 88% 100%, 0 100%);
         }
         .stickbe-order-btn {
           display: inline-flex;
