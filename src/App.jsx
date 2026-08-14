@@ -580,16 +580,6 @@ export default function StickBeSite() {
           position: relative;
           clip-path: polygon(0 0, 100% 0, 100% 88%, 88% 100%, 0 100%);
         }
-        .stickbe-thumb::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 16px;
-          height: 16px;
-          background: ${theme.surface};
-          clip-path: polygon(0 100%, 100% 0, 100% 100%);
-        }
         .stickbe-order-btn {
           display: inline-flex;
           align-items: center;
