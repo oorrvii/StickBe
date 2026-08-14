@@ -572,13 +572,13 @@ export default function StickBeSite() {
           z-index: 2;
         }
         .stickbe-thumb {
-          height: 108px;
-          background: ${PEACH_LIGHT};
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-        }
+        aspect-ratio: 1 / 1;
+        background: ${PEACH_LIGHT};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+       }
         .stickbe-order-btn {
           display: inline-flex;
           align-items: center;
@@ -662,6 +662,17 @@ export default function StickBeSite() {
           padding: 6px;
         }
         .stickbe-sidebar-link:hover, .stickbe-sidebar-link.active { color: ${theme.heading}; }
+        .stickbe-shop-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 20px;
+       }
+       @media (max-width: 520px) {
+       .stickbe-shop-grid {
+       grid-template-columns: repeat(2, 1fr);
+       gap: 12px;
+      }
+    }
 
         .stickbe-tab {
           font-family: 'Nunito', sans-serif;
@@ -934,7 +945,7 @@ export default function StickBeSite() {
         <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
           Pop-ups, packing days, and everything in between.
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 16 }}>
+        <div className="stickbe-shop-grid">
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
@@ -971,10 +982,10 @@ export default function StickBeSite() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ marginTop: 50, background: "#3F2B57", padding: "30px 20px", textAlign: "center" }}>
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: "#fff", fontSize: 18, margin: "0 0 8px" }}>StickBe</p>
-        <p style={{ color: "#cbb9de", fontSize: 13, margin: "0 0 16px" }}>Good things take time 💜</p>
-        <div style={{ display: "flex", justifyContent: "center", gap: 18, marginBottom: 14 }}>
+      <footer style={{ marginTop: 30, background: "#3F2B57", padding: "18px 20px", textAlign: "center" }}>
+        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: "#fff", fontSize: 15, margin: "0 0 4px" }}>StickBe</p>
+        <p style={{ color: "#cbb9de", fontSize: 11.5, margin: "0 0 10px" }}>Good things take time 💜</p>
+        <div style={{ display: "flex", justifyContent: "center", gap: 14, marginBottom: 8 }}>
           <button
             onClick={() => window.open(INSTAGRAM, "_blank")}
             style={{ color: "#fff", background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
@@ -990,7 +1001,7 @@ export default function StickBeSite() {
             <Mail size={18} />
           </button>
         </div>
-        <p style={{ color: "#9b87b0", fontSize: 11.5, margin: 0 }}>{ORDER_EMAIL}</p>
+        <p style={{ color: "#9b87b0", fontSize: 10.5, margin: 0 }}>{ORDER_EMAIL}</p>
       </footer>
 
       {cartOpen && (
