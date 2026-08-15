@@ -93,9 +93,9 @@ const CATEGORIES = [
     icon: "bookmark",
     aspectRatio: "4 / 5",
     items: [
-      { name: "Starry Night Bookmark", price: 59,image:"/products/starry-night.jpeg", inStock: true},
-      { name: "Pressed Flower Bookmark", price: 69 },
-      { name: "Magnetic Bookmark Set", price: 99 },
+      { name: "Starry Night Bookmark", price: 35,image:"/products/starry-night.jpeg", inStock: true},
+      { name: "Pressed Flower Bookmark", price: 35 },
+      { name: "Magnetic Bookmark Set", price: 35 },
     ],
   },
   {
