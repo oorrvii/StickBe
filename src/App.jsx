@@ -52,13 +52,13 @@ const CATEGORIES = [
     label: "Stickers",
     icon: "sticker",
     items: [
-      { name: "Jiraya", price: 10,image:"/products/Jiraya.jpeg", inStock: true },
-      { name: "Itachi", price: 10,image:"/products/Itachi.jpeg",inStock: true },
-      { name: "Itachi Uchiha", price: 10,image:"/products/Itachi-Uchiha.jpeg",inStock: true },
-      { name: "Kakashi Hatake", price: 10,image:"/products/Kakashi-Hatake.jpeg",inStock: true },
-      { name: "Porsche 911", price: 10,image:"/products/porsche_911.jpeg",inStock: true },
-      { name: "Floral Skull", price: 10,image:"/products/floral_skull.jpeg",inStock: true },
-      { name: "Batman", price: 10,image:"/products/batman.jpeg",inStock: true },
+      { name: "Jiraya Stickers", price: 10,image:"/products/Jiraya.jpeg", inStock: true },
+      { name: "Itachi Stickers", price: 10,image:"/products/Itachi.jpeg",inStock: true },
+      { name: "Itachi Uchiha Stickers", price: 10,image:"/products/Itachi-Uchiha.jpeg",inStock: true },
+      { name: "Kakashi Hatake Stickers", price: 10,image:"/products/Kakashi-Hatake.jpeg",inStock: true },
+      { name: "Porsche 911 Stickers", price: 10,image:"/products/porsche_911.jpeg",inStock: true },
+      { name: "Floral Skull Stickers", price: 10,image:"/products/floral_skull.jpeg",inStock: true },
+      { name: "Batman Stickers", price: 10,image:"/products/batman.jpeg",inStock: true },
     ],
   },
   {
@@ -76,10 +76,10 @@ const CATEGORIES = [
     label: "Memo Pads",
     icon: "pad",
     items: [
-      { name: "Pastel Peach Rabbit", price: 59,image:"/products/peach.jpeg", inStock: true },
-      { name: "Pastel Pink Rabbit", price: 59,image:"/products/pink.jpeg",inStock: true },
-      { name: "Pastel Blue Rabbit", price: 59,image:"/products/blue.jpeg",inStock: true },
-      { name: "Pastel Yellow Rabbit", price: 59,image:"/products/yellow.jpeg",inStock: true },
+      { name: "Pastel Peach Rabbit Memo Pad", price: 59,image:"/products/peach.jpeg", inStock: true },
+      { name: "Pastel Pink Rabbit Memo Pad", price: 59,image:"/products/pink.jpeg",inStock: true },
+      { name: "Pastel Blue Rabbit Memo Pad", price: 59,image:"/products/blue.jpeg",inStock: true },
+      { name: "Pastel Yellow Rabbit Memo Pad", price: 59,image:"/products/yellow.jpeg",inStock: true },
     ],
   },
   {
@@ -167,7 +167,6 @@ function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWi
 
   return (
     <div className="stickbe-card" style={!inStock ? { opacity: 0.75 } : undefined}>
-      <div className="stickbe-tape" />
       <div
         className="stickbe-thumb"
         style={showImage ? { padding: 0, cursor: "zoom-in" } : { cursor: "default" }}
@@ -731,7 +730,7 @@ const searchResults = searchQuery.trim()
   }, []);
 
   return (
-    <div className="stickbe-root" style={{ background: theme.pageBg, minHeight: "100%", fontFamily: "'Nunito', sans-serif" }}>
+   <div className="stickbe-root" style={{ background: theme.pageBg, minHeight: "100%", fontFamily: "'Nunito', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
 
@@ -758,6 +757,45 @@ const searchResults = searchQuery.trim()
           border-radius: 2px;
           z-index: 2;
         }
+          @media (max-width: 480px) {
+  .stickbe-hero-heart {
+    display: none;
+  }
+}
+          .stickbe-mobile-nav {
+  display: none;
+}
+@media (max-width: 899px) {
+  .stickbe-mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: ${theme.surface};
+    border-top: 1px solid ${LILAC}33;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 30;
+  }
+    .stickbe-root {
+    padding-bottom: 60px;
+  }
+}
+.stickbe-mobile-nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: ${theme.bodyMuted};
+  font-family: 'Nunito', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 4px 8px;
+}
         .stickbe-thumb {
         aspect-ratio: 1 / 1;
         background: ${PEACH_LIGHT};
@@ -1057,7 +1095,7 @@ const searchResults = searchQuery.trim()
           size={22}
         />
         <Heart
-          className="stickbe-float"
+          className="stickbe-float stickbe-hero-heart"
           style={{ position: "absolute", top: 60, right: "14%", color: PEACH, ["--r"]: "10deg", animationDelay: "1s" }}
           size={20}
           fill={PEACH}
@@ -1075,7 +1113,7 @@ const searchResults = searchQuery.trim()
           Bringing little joys<br />to your everyday.
         </h1>
         <p style={{ maxWidth: 420, margin: "16px auto 26px", color: theme.body, fontSize: 15, lineHeight: 1.6 }}>
-          Cute, homegrown stickers, washi tapes, memo pads, bookmarks and stationery — made with love, just for you.
+          Cute homegrown stickers, washi tapes, memo pads, bookmarks and stationery — made with love, just for you.
         </p>
         <button
           onClick={() => scrollToSection("shop")}
@@ -1275,6 +1313,37 @@ const searchResults = searchQuery.trim()
   />
 )}
 <Toast message={toast} onDone={() => setToast(null)} />
+  <nav className="stickbe-mobile-nav" aria-label="Mobile navigation">
+  <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="stickbe-mobile-nav-link">
+    <Home size={18} strokeWidth={2} />
+    <span>Home</span>
+  </button>
+  <button onClick={() => scrollToSection("shop")} className="stickbe-mobile-nav-link">
+    <ShoppingBag size={18} strokeWidth={2} />
+    <span>Shop</span>
+  </button>
+  <button onClick={() => scrollToSection("gallery")} className="stickbe-mobile-nav-link">
+    <Camera size={18} strokeWidth={2} />
+    <span>Gallery</span>
+  </button>
+  <button onClick={() => scrollToSection("feedback")} className="stickbe-mobile-nav-link">
+    <MessageCircle size={18} strokeWidth={2} />
+    <span>Feedback</span>
+  </button>
+  <button onClick={() => setCartOpen(true)} className="stickbe-mobile-nav-link" style={{ position: "relative" }}>
+    <ShoppingCart size={18} strokeWidth={2} />
+    <span>Cart</span>
+    {cartCount > 0 && (
+      <span style={{
+        position: "absolute", top: 0, right: 12, background: PEACH, color: "#fff",
+        fontSize: 9, fontWeight: 700, borderRadius: "50%", width: 14, height: 14,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        {cartCount}
+      </span>
+    )}
+  </button>
+</nav>
     </div>
   );
 }
