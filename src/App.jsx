@@ -151,17 +151,14 @@ function CategoryIcon({ type }) {
   );
 }
 
-function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWishlist, onImageClick }) {
-  const [added, setAdded] = useState(false);
+function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWishlist, onImageClick, cartQty, onUpdateQty }) {
   const [imgFailed, setImgFailed] = useState(false);
-  const inStock = item.inStock !== false;
+const inStock = item.inStock !== false;
 
-  const handleAdd = () => {
-    if (!inStock) return;
-    onAdd({ ...item, categoryLabel });
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1200);
-  };
+const handleAdd = () => {
+  if (!inStock) return;
+  onAdd({ ...item, categoryLabel });
+};
 
   const showImage = item.image && !imgFailed;
 
@@ -214,23 +211,37 @@ function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWi
           {item.name}
         </p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
-          <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 14.5, color: PEACH, fontWeight: 600 }}>
-            ₹{item.price}
-          </span>
-          <button
-            onClick={handleAdd}
-            disabled={!inStock}
-            className="stickbe-order-btn"
-            style={{
-              padding: "5px 10px", fontSize: 11.5,
-              ...(added ? { background: "#6FA37A" } : {}),
-              ...(!inStock ? { opacity: 0.5, cursor: "not-allowed" } : {}),
-            }}
-          >
-            {added ? <Check size={11} strokeWidth={2.5} /> : <Plus size={11} strokeWidth={2.5} />}
-            {added ? "Added" : inStock ? "Add" : "Sold out"}
-          </button>
-        </div>
+  <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 14.5, color: PEACH, fontWeight: 600 }}>
+    ₹{item.price}
+  </span>
+
+  {cartQty > 0 ? (
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <button onClick={() => onUpdateQty(item.name, cartQty - 1)} className="stickbe-qty-btn" aria-label="Decrease quantity">
+        <Minus size={12} />
+      </button>
+      <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 14, textAlign: "center" }}>
+        {cartQty}
+      </span>
+      <button onClick={() => onUpdateQty(item.name, cartQty + 1)} className="stickbe-qty-btn" aria-label="Increase quantity">
+        <Plus size={12} />
+      </button>
+    </div>
+  ) : (
+    <button
+      onClick={handleAdd}
+      disabled={!inStock}
+      className="stickbe-order-btn"
+      style={{
+        padding: "5px 10px", fontSize: 11.5,
+        ...(!inStock ? { opacity: 0.5, cursor: "not-allowed" } : {}),
+      }}
+    >
+      <Plus size={11} strokeWidth={2.5} />
+      {inStock ? "Add" : "Sold out"}
+    </button>
+  )}
+</div>
       </div>
     </div>
   );
@@ -1189,6 +1200,8 @@ const searchResults = searchQuery.trim()
       inWishlist={wishlist.includes(item.name)}
       onToggleWishlist={toggleWishlist}
       onImageClick={setLightboxImage}
+      cartQty={cart.find((c) => c.name ===      item.name)?.qty || 0}
+      onUpdateQty={updateQty}
     />
   ))}
 </div>
