@@ -52,13 +52,18 @@ const CATEGORIES = [
     label: "Stickers",
     icon: "sticker",
     items: [
-      { name: "Jiraya Stickers", price: 10,image:"/products/Jiraya.jpeg", inStock: true },
-      { name: "Itachi Stickers", price: 10,image:"/products/Itachi.jpeg",inStock: true },
-      { name: "Itachi Uchiha Stickers", price: 10,image:"/products/Itachi-Uchiha.jpeg",inStock: true },
-      { name: "Kakashi Hatake Stickers", price: 10,image:"/products/Kakashi-Hatake.jpeg",inStock: true },
-      { name: "Porsche 911 Stickers", price: 10,image:"/products/porsche_911.jpeg",inStock: true },
-      { name: "Floral Skull Stickers", price: 10,image:"/products/floral_skull.jpeg",inStock: true },
-      { name: "Batman Stickers", price: 10,image:"/products/batman.jpeg",inStock: true },
+      { name: "Jiraya Sticker", price: 10,image:"/products/Jiraya.jpeg", inStock: true },
+      { name: "Itachi Sticker", price: 10,image:"/products/Itachi.jpeg",inStock: true },
+      { name: "Itachi Uchiha Sticker", price: 10,image:"/products/Itachi-Uchiha.jpeg",inStock: true },
+      { name: "Kakashi Hatake Sticker", price: 10,image:"/products/Kakashi-Hatake.jpeg",inStock: true },
+      { name: "Porsche 911 Sticker", price: 10,image:"/products/porsche_911.jpeg",inStock: true },
+      { name: "Floral Skull Sticker", price: 10,image:"/products/floral_skull.jpeg",inStock: true },
+      { name: "Batman Sticker", price: 10,image:"/products/batman.jpeg",inStock: true },
+      { name: "Coffee Drip Sticker", price: 10,image:"/products/coffee-drip.jpeg",inStock: true },
+      { name: "Maomao Sticker", price: 10,image:"/products/girl.jpeg",inStock: true },
+      { name: "Iced Coffee Girly Sticker", price: 10,image:"/products/iced-coffee.jpeg",inStock: true },
+      { name: "Mood Alert Sticker", price: 10,image:"/products/not-in-mood.jpeg",inStock: true },
+      { name: "Espresso Patronum Sticker", price: 10,image:"/products/espresso.jpeg",inStock: true },
     ],
   },
   {
@@ -86,8 +91,9 @@ const CATEGORIES = [
     id: "bookmarks",
     label: "Bookmarks",
     icon: "bookmark",
+    aspectRatio: "4 / 5",
     items: [
-      { name: "Tasseled Bookmark", price: 59 },
+      { name: "Starry Night Bookmark", price: 59,image:"/products/starry-night.jpeg", inStock: true},
       { name: "Pressed Flower Bookmark", price: 69 },
       { name: "Magnetic Bookmark Set", price: 99 },
     ],
@@ -165,10 +171,13 @@ const handleAdd = () => {
   return (
     <div className="stickbe-card" style={!inStock ? { opacity: 0.75 } : undefined}>
       <div
-        className="stickbe-thumb"
-        style={showImage ? { padding: 0, cursor: "zoom-in" } : { cursor: "default" }}
-        onClick={() => showImage && onImageClick(item.image)}
-      >
+  className="stickbe-thumb"
+  style={{
+    ...(showImage ? { padding: 0, cursor: "zoom-in" } : { cursor: "default" }),
+    aspectRatio: item.aspectRatio || "1 / 1",
+  }}
+  onClick={() => showImage && onImageClick(item.image)}
+>
         {showImage ? (
           <img
             src={item.image}
@@ -808,7 +817,6 @@ const searchResults = searchQuery.trim()
   padding: 4px 8px;
 }
         .stickbe-thumb {
-        aspect-ratio: 1 / 1;
         background: ${PEACH_LIGHT};
         display: flex;
         align-items: center;
@@ -1190,7 +1198,7 @@ const searchResults = searchQuery.trim()
         </div>
 
         <div className="stickbe-shop-grid">
-  {(searchResults ?? activeCategory.items.map((item) => ({ ...item, iconOverride: activeCategory.icon, categoryLabel: activeCategory.label }))).map((item) => (
+  {(searchResults ?? activeCategory.items.map((item) => ({ ...item, iconOverride: activeCategory.icon, categoryLabel: activeCategory.label, aspectRatio: activeCategory.aspectRatio }))).map((item) => (
     <ProductCard
       key={item.name}
       item={item}
