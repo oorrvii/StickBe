@@ -52,13 +52,13 @@ const CATEGORIES = [
     label: "Stickers",
     icon: "sticker",
     items: [
-      { name: "Jiraya", price: 10,image:"/products/Jiraya.jpeg" },
-      { name: "Itachi", price: 10,image:"/products/Itachi.jpeg" },
-      { name: "Itachi Uchiha", price: 10,image:"/products/Itachi-Uchiha.jpeg" },
-      { name: "Kakashi Hatake", price: 10,image:"/products/Kakashi-Hatake.jpeg" },
-      { name: "Porsche 911", price: 10,image:"/products/porsche_911.jpeg" },
-      { name: "Floral Skull", price: 10,image:"/products/floral_skull.jpeg" },
-      { name: "Batman", price: 10,image:"/products/batman.jpeg" },
+      { name: "Jiraya", price: 10,image:"/products/Jiraya.jpeg", inStock: true },
+      { name: "Itachi", price: 10,image:"/products/Itachi.jpeg",inStock: true },
+      { name: "Itachi Uchiha", price: 10,image:"/products/Itachi-Uchiha.jpeg",inStock: true },
+      { name: "Kakashi Hatake", price: 10,image:"/products/Kakashi-Hatake.jpeg",inStock: true },
+      { name: "Porsche 911", price: 10,image:"/products/porsche_911.jpeg",inStock: true },
+      { name: "Floral Skull", price: 10,image:"/products/floral_skull.jpeg",inStock: true },
+      { name: "Batman", price: 10,image:"/products/batman.jpeg",inStock: true },
     ],
   },
   {
@@ -66,9 +66,9 @@ const CATEGORIES = [
     label: "Washi Tapes",
     icon: "tape",
     items: [
-      { name: "Gingham Pastel Roll", price: 120 },
-      { name: "Floral Border Tape", price: 140 },
-      { name: "Heart Pattern Tape", price: 110 },
+      { name: "Gingham Pastel Roll", price: 120, inStock: true },
+      { name: "Floral Border Tape", price: 140, inStock: true },
+      { name: "Heart Pattern Tape", price: 110, inStock: true },
     ],
   },
   {
@@ -76,10 +76,10 @@ const CATEGORIES = [
     label: "Memo Pads",
     icon: "pad",
     items: [
-      { name: "Pastel Peach Rabbit", price: 59,image:"/products/peach.jpeg" },
-      { name: "Pastel Pink Rabbit", price: 59,image:"/products/pink.jpeg" },
-      { name: "Pastel Blue Rabbit", price: 59,image:"/products/blue.jpeg" },
-      { name: "Pastel Yellow Rabbit", price: 59,image:"/products/yellow.jpeg" },
+      { name: "Pastel Peach Rabbit", price: 59,image:"/products/peach.jpeg", inStock: true },
+      { name: "Pastel Pink Rabbit", price: 59,image:"/products/pink.jpeg",inStock: true },
+      { name: "Pastel Blue Rabbit", price: 59,image:"/products/blue.jpeg",inStock: true },
+      { name: "Pastel Yellow Rabbit", price: 59,image:"/products/yellow.jpeg",inStock: true },
     ],
   },
   {
@@ -151,11 +151,13 @@ function CategoryIcon({ type }) {
   );
 }
 
-function ProductCard({ item, categoryLabel, onAdd, theme }) {
+function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWishlist, onImageClick }) {
   const [added, setAdded] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
+  const inStock = item.inStock !== false;
 
   const handleAdd = () => {
+    if (!inStock) return;
     onAdd({ ...item, categoryLabel });
     setAdded(true);
     setTimeout(() => setAdded(false), 1200);
@@ -164,8 +166,13 @@ function ProductCard({ item, categoryLabel, onAdd, theme }) {
   const showImage = item.image && !imgFailed;
 
   return (
-    <div className="stickbe-card">
-      <div className="stickbe-thumb" style={showImage ? { padding: 0 } : undefined}>
+    <div className="stickbe-card" style={!inStock ? { opacity: 0.75 } : undefined}>
+      <div className="stickbe-tape" />
+      <div
+        className="stickbe-thumb"
+        style={showImage ? { padding: 0, cursor: "zoom-in" } : { cursor: "default" }}
+        onClick={() => showImage && onImageClick(item.image)}
+      >
         {showImage ? (
           <img
             src={item.image}
@@ -176,27 +183,167 @@ function ProductCard({ item, categoryLabel, onAdd, theme }) {
         ) : (
           <CategoryIcon type={item.iconOverride} />
         )}
+
+        <button
+          onClick={(e) => { e.stopPropagation(); onToggleWishlist(item.name); }}
+          style={{
+            position: "absolute", top: 8, right: 8, background: "rgba(255,255,255,0.85)",
+            border: "none", borderRadius: "50%", width: 26, height: 26, display: "flex",
+            alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 2,
+          }}
+          aria-label="Toggle wishlist"
+        >
+          <Heart size={13} fill={inWishlist ? "#e07a7a" : "none"} stroke={inWishlist ? "#e07a7a" : "#8a7a97"} strokeWidth={2} />
+        </button>
+
+        {!inStock && (
+          <div style={{
+            position: "absolute", inset: 0, background: "rgba(40,30,50,0.55)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <span style={{
+              background: "#fff", color: "#5B3E7F", fontFamily: "'Baloo 2', sans-serif",
+              fontSize: 12, fontWeight: 700, padding: "5px 12px", borderRadius: 100,
+            }}>
+              Sold out
+            </span>
+          </div>
+        )}
       </div>
-      <div style={{ padding: "14px 16px 16px" }}>
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 15, color: theme.heading, margin: 0, lineHeight: 1.3 }}>
+      <div style={{ padding: "8px 10px 10px" }}>
+        <p style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 13.5, color: theme.heading, margin: 0, lineHeight: 1.2 }}>
           {item.name}
         </p>
-        <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 13, color: theme.bodyMuted, margin: "2px 0 10px" }}>
-          {categoryLabel}
-        </p>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 17, color: PEACH, fontWeight: 600 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
+          <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 14.5, color: PEACH, fontWeight: 600 }}>
             ₹{item.price}
           </span>
-          <button onClick={handleAdd} className="stickbe-order-btn" style={added ? { background: "#6FA37A" } : undefined}>
-            {added ? <Check size={13} strokeWidth={2.5} /> : <Plus size={13} strokeWidth={2.5} />}
-            {added ? "Added" : "Add"}
+          <button
+            onClick={handleAdd}
+            disabled={!inStock}
+            className="stickbe-order-btn"
+            style={{
+              padding: "5px 10px", fontSize: 11.5,
+              ...(added ? { background: "#6FA37A" } : {}),
+              ...(!inStock ? { opacity: 0.5, cursor: "not-allowed" } : {}),
+            }}
+          >
+            {added ? <Check size={11} strokeWidth={2.5} /> : <Plus size={11} strokeWidth={2.5} />}
+            {added ? "Added" : inStock ? "Add" : "Sold out"}
           </button>
         </div>
       </div>
     </div>
   );
 }
+
+function Toast({ message, onDone }) {
+  useEffect(() => {
+    if (!message) return;
+    const timer = setTimeout(onDone, 2200);
+    return () => clearTimeout(timer);
+  }, [message]);
+
+  if (!message) return null;
+
+  return (
+    <div
+      style={{
+        position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
+        background: "#5B3E7F", color: "#fff", fontFamily: "'Nunito', sans-serif",
+        fontWeight: 700, fontSize: 13.5, padding: "11px 20px", borderRadius: 100,
+        boxShadow: "0 8px 22px rgba(0,0,0,0.25)", zIndex: 70,
+        display: "flex", alignItems: "center", gap: 8,
+        animation: "stickbe-toast-in 0.25s ease",
+      }}
+    >
+      <Check size={15} strokeWidth={2.5} />
+      {message}
+    </div>
+  );
+}
+
+function Lightbox({ image, onClose }) {
+  if (!image) return null;
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, background: "rgba(20,14,28,0.85)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 60, padding: 20, cursor: "zoom-out",
+      }}
+    >
+      <img
+        src={image}
+        alt="Product zoom"
+        style={{ maxWidth: "92vw", maxHeight: "88vh", borderRadius: 12, boxShadow: "0 12px 40px rgba(0,0,0,0.4)" }}
+      />
+      <button
+        onClick={onClose}
+        style={{
+          position: "absolute", top: 20, right: 20, background: "rgba(255,255,255,0.15)",
+          border: "none", color: "#fff", fontSize: 22, width: 38, height: 38, borderRadius: "50%",
+          cursor: "pointer",
+        }}
+        aria-label="Close"
+      >
+        ×
+      </button>
+    </div>
+  );
+}
+
+function WishlistModal({ wishlistItems, onClose, onToggleWishlist, onAdd, theme }) {
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, background: "rgba(63,43,87,0.45)",
+        display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 20,
+      }}
+    >
+      <div onClick={(e) => e.stopPropagation()} style={{ background: theme.surface, borderRadius: 18, maxWidth: 420, width: "100%", maxHeight: "80vh", overflowY: "auto", padding: 22, position: "relative" }}>
+        <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
+        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 19, margin: "6px 0 16px", display: "flex", alignItems: "center", gap: 8 }}>
+          <Heart size={18} fill="#e07a7a" stroke="#e07a7a" /> Your wishlist
+        </p>
+
+        {wishlistItems.length === 0 ? (
+          <p style={{ color: theme.bodyMuted, fontSize: 14, textAlign: "center", padding: "20px 0" }}>
+            Nothing saved yet — tap the heart on anything you love!
+          </p>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {wishlistItems.map((item) => (
+              <div key={item.name} style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: `1px solid ${theme.border}`, paddingBottom: 10 }}>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 14, margin: 0 }}>{item.name}</p>
+                  <p style={{ fontSize: 12, color: theme.bodyMuted, margin: "2px 0 0" }}>₹{item.price} · {item.categoryLabel}</p>
+                </div>
+                <button onClick={() => onAdd({ ...item })} className="stickbe-order-btn" style={{ padding: "5px 10px", fontSize: 11.5 }}>
+                  <Plus size={11} strokeWidth={2.5} /> Add
+                </button>
+                <button onClick={() => onToggleWishlist(item.name)} style={{ background: "none", border: "none", color: "#d68a8a", cursor: "pointer", padding: 4 }} aria-label="Remove from wishlist">
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button
+          onClick={onClose}
+          style={{ position: "absolute", top: 12, right: 14, background: "none", border: "none", color: "#c4b6cf", fontSize: 18, cursor: "pointer" }}
+          aria-label="Close"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme }) {
   const [copied, setCopied] = useState(false);
   const [form, setForm] = useState({
@@ -221,7 +368,19 @@ function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme 
 
   const requiredFilled = form.name && form.email && form.phone && form.instagram && form.address && form.city && form.state && form.pincode;
 
-  const handleField = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+const handleField = (key) => (e) => {
+  let value = e.target.value;
+  if (key === "name" || key === "city" || key === "state") {
+    value = value.replace(/[^a-zA-Z\s]/g, "");
+  }
+  if (key === "phone" || key === "altPhone") {
+    value = value.replace(/[^0-9]/g, "").slice(0, 10);
+  }
+  if (key === "pincode") {
+    value = value.replace(/[^0-9]/g, "").slice(0, 6);
+  }
+  setForm((f) => ({ ...f, [key]: value }));
+};
 
   const handleCopy = async () => {
     const fullText = `To: ${ORDER_EMAIL}\nSubject: Order from StickBe site\n\n${orderText}`;
@@ -418,6 +577,10 @@ function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme 
 
 function FeedbackForm({ theme }) {
   const [name, setName] = useState("");
+  const handleNameChange = (e) => {
+  const value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+  setName(value);
+};
   const [contact, setContact] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
@@ -462,7 +625,7 @@ function FeedbackForm({ theme }) {
     <div style={{ maxWidth: 460, margin: "0 auto", background: theme.surface, borderRadius: 16, padding: 22, position: "relative", boxShadow: "0 4px 14px rgba(91,62,127,0.08)" }}>
       <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
-        <input className="stickbe-input" placeholder="Your name *" value={name} onChange={(e) => setName(e.target.value)} />
+        <input className="stickbe-input" placeholder="Your name *" value={name} onChange={handleNameChange} />
         <input className="stickbe-input" placeholder="Email *" value={contact} onChange={(e) => setContact(e.target.value)} />
         <textarea
           className="stickbe-input"
@@ -502,19 +665,25 @@ export default function StickBeSite() {
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [wishlist, setWishlist] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [lightboxImage, setLightboxImage] =     useState(null);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [toast, setToast] = useState(null);
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
 
-  const addToCart = (item) => {
-    setCart((prev) => {
-      const existing = prev.find((i) => i.name === item.name);
-      if (existing) {
-        return prev.map((i) => (i.name === item.name ? { ...i, qty: i.qty + 1 } : i));
-      }
-      return [...prev, { ...item, qty: 1 }];
-    });
-  };
+ const addToCart = (item) => {
+  setCart((prev) => {
+    const existing = prev.find((i) => i.name === item.name);
+    if (existing) {
+      return prev.map((i) => (i.name === item.name ? { ...i, qty: i.qty + 1 } : i));
+    }
+    return [...prev, { ...item, qty: 1 }];
+  });
+  setToast(`${item.name} added to cart!`);
+};
 
   const updateQty = (name, qty) => {
     if (qty <= 0) {
@@ -525,6 +694,24 @@ export default function StickBeSite() {
   };
 
   const removeFromCart = (name) => setCart((prev) => prev.filter((i) => i.name !== name));
+  const toggleWishlist = (name) => {
+  setWishlist((prev) =>
+    prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
+  );
+};
+
+const searchResults = searchQuery.trim()
+  ? CATEGORIES.flatMap((cat) =>
+      cat.items
+        .filter((item) => item.name.toLowerCase().includes(searchQuery.trim().toLowerCase()))
+        .map((item) => ({ ...item, categoryLabel: cat.label, iconOverride: cat.icon }))
+    )
+  : null;
+  const wishlistItems = CATEGORIES.flatMap((cat) =>
+  cat.items
+    .filter((item) => wishlist.includes(item.name))
+    .map((item) => ({ ...item, categoryLabel: cat.label, iconOverride: cat.icon }))
+);
 
   const handleOrderPlaced = () => setCart([]);
 
@@ -702,6 +889,11 @@ export default function StickBeSite() {
         }
         .stickbe-float { animation: floaty 5s ease-in-out infinite; }
 
+        @keyframes stickbe-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -801,12 +993,28 @@ export default function StickBeSite() {
             <Instagram size={19} strokeWidth={2.2} />
           </button>
           <button
-            onClick={() => window.open(`mailto:${ORDER_EMAIL}`, "_self")}
-            style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
-            aria-label="Email"
-          >
-            <Mail size={19} strokeWidth={2.2} />
-          </button>
+  onClick={() => scrollToSection("feedback")}
+  style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
+  aria-label="Email"
+>
+  <Mail size={19} strokeWidth={2.2} />
+</button>
+<button
+  onClick={() => setWishlistOpen(true)}
+  style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
+  aria-label="Wishlist"
+>
+  <Heart size={19} strokeWidth={2.2} fill={wishlist.length > 0 ? "#e07a7a" : "none"} stroke={wishlist.length > 0 ? "#e07a7a" : "currentColor"} />
+  {wishlist.length > 0 && (
+    <span style={{
+      position: "absolute", top: -4, right: -6, background: "#e07a7a", color: "#fff",
+      fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 16, height: 16,
+      display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Nunito', sans-serif",
+    }}>
+      {wishlist.length}
+    </span>
+  )}
+</button>
           <button
             onClick={() => setCartOpen(true)}
             style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
@@ -911,7 +1119,15 @@ export default function StickBeSite() {
         <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
           Tap "Add" on anything you love, then check out from your cart.
         </p>
-
+        <div style={{ maxWidth: 320, margin: "0 auto 20px" }}>
+  <input
+    className="stickbe-input"
+    placeholder="Search products..."
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+    style={{ textAlign: "center" }}
+  />
+</div>
         <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 6, marginBottom: 28, justifyContent: "center", flexWrap: "wrap" }}>
           {CATEGORIES.map((cat) => (
             <button
@@ -924,17 +1140,25 @@ export default function StickBeSite() {
           ))}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 20 }}>
-          {activeCategory.items.map((item) => (
-            <ProductCard
-              key={item.name}
-              item={{ ...item, iconOverride: activeCategory.icon }}
-              categoryLabel={activeCategory.label}
-              onAdd={addToCart}
-              theme={theme}
-            />
-          ))}
-        </div>
+        <div className="stickbe-shop-grid">
+  {(searchResults ?? activeCategory.items.map((item) => ({ ...item, iconOverride: activeCategory.icon, categoryLabel: activeCategory.label }))).map((item) => (
+    <ProductCard
+      key={item.name}
+      item={item}
+      categoryLabel={item.categoryLabel}
+      onAdd={addToCart}
+      theme={theme}
+      inWishlist={wishlist.includes(item.name)}
+      onToggleWishlist={toggleWishlist}
+      onImageClick={setLightboxImage}
+    />
+  ))}
+</div>
+{searchResults && searchResults.length === 0 && (
+  <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 14, marginTop: 20 }}>
+    No products found for "{searchQuery}"
+  </p>
+)}
       </section>
 
       {/* GALLERY */}
@@ -970,6 +1194,32 @@ export default function StickBeSite() {
         </div>
       </section>
 
+    <section style={{ padding: "10px 20px 50px", maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
+  <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 24, margin: "0 0 12px" }}>
+    A little about us
+  </h2>
+  <p style={{ color: theme.body, fontSize: 14.5, lineHeight: 1.7, margin: 0 }}>
+    StickBe started as a small passion project — handmade stickers, washi tapes, and stationery made in
+    tiny batches, with a lot of love and zero shortcuts. Every order is packed by hand, one sheet at a time.
+    Thank you for supporting something small and homegrown. 💜
+  </p>
+</section>
+   
+<section style={{ padding: "10px 20px 50px", textAlign: "center" }}>
+  <div style={{ maxWidth: 420, margin: "0 auto", background: theme.surface, borderRadius: 18, padding: 28, boxShadow: "0 4px 14px rgba(91,62,127,0.08)" }}>
+    <Instagram size={28} color={PLUM} style={{ marginBottom: 10 }} />
+    <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 17, margin: "0 0 6px" }}>
+      Follow along on Instagram
+    </p>
+    <p style={{ color: theme.bodyMuted, fontSize: 13, margin: "0 0 16px" }}>
+      Packing days, new drops, and behind-the-scenes.
+    </p>
+    <button onClick={() => window.open(INSTAGRAM, "_blank")} className="stickbe-order-btn" style={{ justifyContent: "center" }}>
+      <Instagram size={14} /> @stickbe.co
+    </button>
+  </div>
+</section>
+
       {/* FEEDBACK */}
       <section id="feedback" style={{ padding: "10px 20px 56px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
         <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
@@ -994,12 +1244,12 @@ export default function StickBeSite() {
             <Instagram size={18} />
           </button>
           <button
-            onClick={() => window.open(`mailto:${ORDER_EMAIL}`, "_self")}
-            style={{ color: "#fff", background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
-            aria-label="Email"
-          >
-            <Mail size={18} />
-          </button>
+  onClick={() => scrollToSection("feedback")}
+  style={{ color: "#fff", background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
+  aria-label="Email"
+>
+  <Mail size={18} />
+</button>
         </div>
         <p style={{ color: "#9b87b0", fontSize: 10.5, margin: 0 }}>{ORDER_EMAIL}</p>
       </footer>
@@ -1014,6 +1264,17 @@ export default function StickBeSite() {
           theme={theme}
         />
       )}
+      <Lightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
+        {wishlistOpen && (
+  <WishlistModal
+    wishlistItems={wishlistItems}
+    onClose={() => setWishlistOpen(false)}
+    onToggleWishlist={toggleWishlist}
+    onAdd={addToCart}
+    theme={theme}
+  />
+)}
+<Toast message={toast} onDone={() => setToast(null)} />
     </div>
   );
 }
