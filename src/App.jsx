@@ -64,6 +64,10 @@ const CATEGORIES = [
       { name: "Iced Coffee Girly Sticker", price: 10,image:"/products/iced-coffee.jpeg",inStock: true },
       { name: "Mood Alert Sticker", price: 10,image:"/products/not-in-mood.jpeg",inStock: true },
       { name: "Espresso Patronum Sticker", price: 10,image:"/products/espresso.jpeg",inStock: true },
+      { name: "Book Pill Sticker", price: 10,image:"/products/book-pill.jpeg",inStock: true },
+      { name: "No Prob-llama Sticker", price: 10,image:"/products/prob-lama.jpeg",inStock: true },
+      { name: "Time To Recharge Sticker", price: 10,image:"/products/recharge.jpeg",inStock: true },
+      { name: "Error 404 Sticker", price: 10,image:"/products/error-404.jpeg",inStock: true },
     ],
   },
   {
