@@ -52,7 +52,7 @@ const CATEGORIES = [
     label: "Stickers",
     icon: "sticker",
     items: [
-      { name: "Jiraya Sticker", price: 12,image:"/products/Jiraya.jpeg", inStock: false },
+      { name: "Jiraya Sticker", price: 12,image:"/products/Jiraya.jpeg", inStock: true },
       { name: "Itachi Sticker", price: 12,image:"/products/Itachi.jpeg",inStock: true },
       { name: "Itachi Uchiha Sticker", price: 12,image:"/products/Itachi-Uchiha.jpeg",inStock: true },
       { name: "Kakashi Hatake Sticker", price: 12,image:"/products/Kakashi-Hatake.jpeg",inStock: true },
