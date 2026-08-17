@@ -380,24 +380,25 @@ function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme 
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
   if (!cart) return null;
 
-  const getDeliveryFee = (city) => {
+const getDeliveryFee = (city) => {
   const normalized = city.trim().toLowerCase();
   if (normalized === "agra") return 20;
   return 40;
 };
 
-const DELIVERY_FEE = getDeliveryFee(form.city);
+const cityEntered = form.city.trim().length > 0;
+const deliveryFee = cityEntered ? getDeliveryFee(form.city) : null;
 const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-const total = cart.length > 0 ? subtotal + DELIVERY_FEE : 0;
+const total = cart.length > 0 ? subtotal + (deliveryFee ?? 0) : 0;
 
-  const orderItemsText = cart
-    .map((i) => `${i.name} × ${i.qty} (₹${i.price} each = ₹${i.price * i.qty})`)
-    .join("\n");
+const orderItemsText = cart
+  .map((i) => `${i.name} × ${i.qty} (₹${i.price} each = ₹${i.price * i.qty})`)
+  .join("\n");
 
-  const orderText =
-    cart.length === 0
-      ? "Your cart is empty."
-      : `Hi StickBe!\n\nI'd like to order:\n${orderItemsText}\n\nSubtotal: ₹${subtotal}\nDelivery: ₹${DELIVERY_FEE}\nTotal: ₹${total}\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nAddress: ${form.address}, ${form.city}, ${form.state} - ${form.pincode}\n\nThank you!`;
+const orderText =
+  cart.length === 0
+    ? "Your cart is empty."
+    : `Hi StickBe!\n\nI'd like to order:\n${orderItemsText}\n\nSubtotal: ₹${subtotal}\nDelivery: ₹${deliveryFee ?? 40}\nTotal: ₹${total}\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nAddress: ${form.address}, ${form.city}, ${form.state} - ${form.pincode}\n\nThank you!`;
 
   const requiredFilled = form.name && form.email && form.phone && form.instagram && form.address && form.city && form.state && form.pincode;
 
@@ -448,7 +449,7 @@ const handleField = (key) => (e) => {
         pincode: form.pincode,
         order_items: orderItemsText,
         subtotal: subtotal,
-        delivery_fee: DELIVERY_FEE,
+        delivery_fee: deliveryFee ?? 40,
         total: total,
       });
       setStatus("sent");
@@ -527,14 +528,18 @@ const handleField = (key) => (e) => {
                 <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.bodyMuted, fontSize: 13 }}>Subtotal</span>
                 <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.body, fontSize: 13 }}>₹{subtotal}</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.bodyMuted, fontSize: 13 }}>Delivery</span>
-                <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.body, fontSize: 13 }}>₹{DELIVERY_FEE}</span>
-              </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+  <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.bodyMuted, fontSize: 13 }}>Delivery</span>
+  <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.body, fontSize: 13 }}>
+    {cityEntered ? `₹${deliveryFee}` : "Enter city to see delivery fee"}
+  </span>
+</div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 6, borderTop: `1px solid ${theme.border}` }}>
-                <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: theme.heading, fontSize: 15 }}>Total</span>
-                <span style={{ fontFamily: "'Baloo 2', sans-serif", color: PEACH, fontSize: 19, fontWeight: 600 }}>₹{total}</span>
-              </div>
+  <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: theme.heading, fontSize: 15 }}>Total</span>
+  <span style={{ fontFamily: "'Baloo 2', sans-serif", color: PEACH, fontSize: 19, fontWeight: 600 }}>
+    {cityEntered ? `₹${total}` : `₹${subtotal} + delivery`}
+  </span>
+</div>
             </div>
 
             <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 14.5, margin: "0 0 10px" }}>
