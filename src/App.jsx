@@ -68,6 +68,11 @@ const CATEGORIES = [
       { name: "No Prob-llama Sticker", price: 12,image:"/products/prob-lama.jpeg",inStock: true },
       { name: "Time To Recharge Sticker", price: 12,image:"/products/recharge.jpeg",inStock: true },
       { name: "Error 404 Sticker", price: 12,image:"/products/error-404.jpeg",inStock: true },
+      { name: "Itachi Crimson Moon & Crows Sticker", price: 12,image:"/products/itachi-crimson.jpeg",inStock: true },
+      { name: "Drink More Water Sticker", price: 12,image:"/products/water.jpeg",inStock: true },
+      { name: "Anything is Possible Sticker", price: 12,image:"/products/possible.jpeg",inStock: true },
+      { name: "Supra Sticker", price: 12,image:"/products/Supra.jpeg",inStock: true },
+      { name: "Kehndi Hundi C Sticker", price: 12,image:"/products/kehndi.jpeg",inStock: true },
     ],
   },
   {
