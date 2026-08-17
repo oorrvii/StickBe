@@ -380,9 +380,15 @@ function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme 
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
   if (!cart) return null;
 
-  const DELIVERY_FEE = 40;
-  const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-  const total = cart.length > 0 ? subtotal + DELIVERY_FEE : 0;
+  const getDeliveryFee = (city) => {
+  const normalized = city.trim().toLowerCase();
+  if (normalized === "agra") return 20;
+  return 40;
+};
+
+const DELIVERY_FEE = getDeliveryFee(form.city);
+const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+const total = cart.length > 0 ? subtotal + DELIVERY_FEE : 0;
 
   const orderItemsText = cart
     .map((i) => `${i.name} × ${i.qty} (₹${i.price} each = ₹${i.price * i.qty})`)
