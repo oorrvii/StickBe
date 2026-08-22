@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useRef } from "react";
 import { Instagram, Mail, Heart, Sparkles, ShoppingBag, ShoppingCart, Plus, Minus, Trash2, Check, Camera, Home, MessageCircle, Send, Sun, Moon } from "lucide-react";
 
 const PLUM = "#5B3E7F";
@@ -200,6 +200,12 @@ const CATEGORIES = [
       { name: "Fresh Strawberry Notebook", price: 119,image:"/products/strawberry.png",inStock: true },
     ],
   },
+];
+
+const GALLERY_PHOTOS = [
+  // { image: "/gallery/pop-up-1.jpg", caption: "Our first pop-up! 🎉" },
+  // { image: "/gallery/packing-day.jpg", caption: "Packing day chaos" },
+  // Add your real photos here once you have them, same pattern as product images
 ];
 
 function CategoryIcon({ type }) {
@@ -490,6 +496,139 @@ function VariantPopup({ item, onClose, onChoose, theme, cart, onUpdateQty }) {
           ×
         </button>
       </div>
+    </div>
+  );
+}
+
+function GallerySlider({ photos, theme }) {
+  const [index, setIndex] = useState(0);
+  const touchStartX = useRef(null);
+  const touchDeltaX = useRef(0);
+
+  useEffect(() => {
+    if (photos.length <= 1) return;
+    const timer = setInterval(() => {
+      setIndex((i) => (i + 1) % photos.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [photos.length]);
+
+const handleTouchStart = (e) => {
+  touchStartX.current = e.touches[0].clientX;
+  touchDeltaX.current = 0;
+};
+
+const handleTouchMove = (e) => {
+  if (touchStartX.current === null) return;
+  touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+};
+
+const handleTouchEnd = () => {
+  const threshold = 40;
+  if (touchDeltaX.current > threshold) {
+    setIndex((i) => (i - 1 + photos.length) % photos.length);
+  } else if (touchDeltaX.current < -threshold) {
+    setIndex((i) => (i + 1) % photos.length);
+  }
+  touchStartX.current = null;
+  touchDeltaX.current = 0;
+};
+
+  if (photos.length === 0) {
+    return (
+      <div style={{
+        maxWidth: 480, margin: "0 auto", background: PEACH_LIGHT, borderRadius: 18,
+        aspectRatio: "4 / 3", display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: 8, position: "relative",
+      }}>
+        <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
+        <Camera size={28} strokeWidth={1.8} color="#a8916b" />
+        <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: "#a8916b", fontWeight: 700 }}>
+          Photos coming soon
+        </span>
+      </div>
+    );
+  }
+
+  const goPrev = () => setIndex((i) => (i - 1 + photos.length) % photos.length);
+  const goNext = () => setIndex((i) => (i + 1) % photos.length);
+
+  return (
+    <div style={{ maxWidth: 480, margin: "0 auto" }}>
+      <div
+  onTouchStart={handleTouchStart}
+  onTouchMove={handleTouchMove}
+  onTouchEnd={handleTouchEnd}
+  style={{
+    position: "relative", background: theme.surface, borderRadius: 18,
+    aspectRatio: "4 / 3", overflow: "hidden", boxShadow: "0 4px 14px rgba(91,62,127,0.08)",
+    touchAction: "pan-y",
+  }}
+>
+        <div className="stickbe-tape" style={{ left: 24, top: -6, zIndex: 2 }} />
+        <img
+          src={photos[index].image}
+          alt={photos[index].caption || "Gallery photo"}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+
+        {photos[index].caption && (
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            background: "linear-gradient(transparent, rgba(0,0,0,0.55))",
+            color: "#fff", fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700,
+            padding: "24px 16px 12px",
+          }}>
+            {photos[index].caption}
+          </div>
+        )}
+
+        {photos.length > 1 && (
+          <>
+            <button
+              onClick={goPrev}
+              style={{
+                position: "absolute", top: "50%", left: 10, transform: "translateY(-50%)",
+                background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%",
+                width: 32, height: 32, cursor: "pointer", display: "flex",
+                alignItems: "center", justifyContent: "center", fontSize: 16, color: PLUM,
+              }}
+              aria-label="Previous photo"
+            >
+              ‹
+            </button>
+            <button
+              onClick={goNext}
+              style={{
+                position: "absolute", top: "50%", right: 10, transform: "translateY(-50%)",
+                background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%",
+                width: 32, height: 32, cursor: "pointer", display: "flex",
+                alignItems: "center", justifyContent: "center", fontSize: 16, color: PLUM,
+              }}
+              aria-label="Next photo"
+            >
+              ›
+            </button>
+          </>
+        )}
+      </div>
+
+      {photos.length > 1 && (
+        <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 12 }}>
+          {photos.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              style={{
+                width: i === index ? 18 : 7, height: 7, borderRadius: 100,
+                background: i === index ? PLUM : `${LILAC}66`, border: "none",
+                cursor: "pointer", transition: "width 0.2s ease", padding: 0,
+              }}
+              aria-label={`Go to photo ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -914,6 +1053,7 @@ export default function StickBeSite() {
   const [toast, setToast] = useState(null);
   const [customPopup, setCustomPopup] = useState(false);
   const [variantPopup, setVariantPopup] = useState(null); 
+  const [galleryIndex, setGalleryIndex] = useState(0);
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
@@ -1468,36 +1608,14 @@ const searchResults = searchQuery.trim()
 
       {/* GALLERY */}
       <section id="gallery" style={{ padding: "20px 20px 50px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
-        <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
-          Moments & Events
-        </h2>
-        <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
-          Pop-ups, packing days, and everything in between.
-        </p>
-        <div className="stickbe-shop-grid">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              style={{
-                aspectRatio: "1 / 1",
-                background: theme.surfaceAlt,
-                borderRadius: 14,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                color: theme.heading,
-              }}
-            >
-              <Camera size={26} strokeWidth={1.8} />
-              <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 11, color: "#a8916b", fontWeight: 700 }}>
-                Photo coming soon
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
+  <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
+    Moments & Events
+  </h2>
+  <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
+    Pop-ups, packing days, and everything in between.
+  </p>
+  <GallerySlider photos={GALLERY_PHOTOS} theme={theme} />
+</section>
 
     <section style={{ padding: "10px 20px 50px", maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
   <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 24, margin: "0 0 12px" }}>
