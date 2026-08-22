@@ -132,7 +132,7 @@ const CATEGORIES = [
     icon: "tape",
     aspectRatio: "3 / 2",
     items: [
-      { name: "Floral Pink Heart Washi Tape", price: 120,image:"/products/pinkwashi.png",
+      { name: "Floral Pink Heart Washi Tape", price: 180,image:"/products/pinkwashi.png",
         hasVariants: true,
       variants: [
         { label: "Single roll", price: 20 },
@@ -140,7 +140,7 @@ const CATEGORIES = [
         { label: "Full set (10 pcs)", price: 180 },
       ],
         inStock: true },
-      { name: "Black and Gold Foil Washi Tape", price: 120,image:"/products/blackwashi.png", 
+      { name: "Black and Gold Foil Washi Tape", price: 180,image:"/products/blackwashi.png", 
         hasVariants: true,
       variants: [
         { label: "Single roll", price: 20 },
