@@ -52,6 +52,7 @@ const CATEGORIES = [
     label: "Stickers",
     icon: "sticker",
     items: [
+      { name: "Custom Sticker (1 piece)", price: 15, image: "/products/custom-sticker.png", isCustom: true },
       { name: "Jiraya Sticker", price: 12,image:"/products/Jiraya.jpeg", inStock: true },
       { name: "Itachi Sticker", price: 12,image:"/products/Itachi.jpeg",inStock: true },
       { name: "Itachi Uchiha Sticker", price: 12,image:"/products/Itachi-Uchiha.jpeg",inStock: true },
@@ -351,6 +352,42 @@ function Toast({ message, onDone }) {
     >
       <Check size={15} strokeWidth={2.5} />
       {message}
+    </div>
+  );
+}
+
+function CustomStickerPopup({ open, onClose, theme }) {
+  if (!open) return null;
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, background: "rgba(63,43,87,0.45)",
+        display: "flex", alignItems: "center", justifyContent: "center", zIndex: 55, padding: 20,
+      }}
+    >
+      <div onClick={(e) => e.stopPropagation()} style={{ background: theme.surface, borderRadius: 18, maxWidth: 380, width: "100%", padding: "32px 26px", textAlign: "center", position: "relative" }}>
+        <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
+        <div style={{ fontSize: 36, marginBottom: 10 }}>🎨</div>
+        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 17, margin: "0 0 10px", lineHeight: 1.4 }}>
+          Yay! We'll reach out to you shortly to design your custom sticker together 🎨
+        </p>
+        <p style={{ color: theme.body, fontSize: 13.5, margin: "0 0 22px", lineHeight: 1.6 }}>
+          Please DM us your image on Instagram <strong>@stickbe.co</strong> after placing your order, so we can bring it to life!
+        </p>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            onClick={() => window.open(INSTAGRAM, "_blank")}
+            className="stickbe-order-btn"
+            style={{ flex: 1, justifyContent: "center", background: PEACH }}
+          >
+            <Instagram size={13} /> Open Instagram
+          </button>
+          <button onClick={onClose} className="stickbe-order-btn" style={{ flex: 1, justifyContent: "center" }}>
+            Got it!
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -773,11 +810,12 @@ export default function StickBeSite() {
   const [lightboxImage, setLightboxImage] =     useState(null);
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [toast, setToast] = useState(null);
+  const [customPopup, setCustomPopup] = useState(false);
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
 
- const addToCart = (item) => {
+const addToCart = (item) => {
   setCart((prev) => {
     const existing = prev.find((i) => i.name === item.name);
     if (existing) {
@@ -785,7 +823,11 @@ export default function StickBeSite() {
     }
     return [...prev, { ...item, qty: 1 }];
   });
-  setToast(`${item.name} added to cart!`);
+  if (item.isCustom) {
+    setCustomPopup(true);
+  } else {
+    setToast(`${item.name} added to cart!`);
+  }
 };
 
   const updateQty = (name, qty) => {
@@ -1418,6 +1460,8 @@ const searchResults = searchQuery.trim()
   />
 )}
 <Toast message={toast} onDone={() => setToast(null)} />
+<CustomStickerPopup open={customPopup} onClose={() => setCustomPopup(false)} theme={theme} />
+
   <nav className="stickbe-mobile-nav" aria-label="Mobile navigation">
   <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="stickbe-mobile-nav-link">
     <Home size={18} strokeWidth={2} />
