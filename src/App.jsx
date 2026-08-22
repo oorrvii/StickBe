@@ -46,6 +46,8 @@ function getTheme(dark) {
       };
 }
 
+const ITEMS_PER_PAGE = 15;
+
 const CATEGORIES = [
   {
     id: "stickers",
@@ -1073,6 +1075,7 @@ export default function StickBeSite() {
   const [customPopup, setCustomPopup] = useState(false);
   const [variantPopup, setVariantPopup] = useState(null); 
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [shopPage, setShopPage] = useState(1);
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
@@ -1586,7 +1589,7 @@ const searchResults = searchQuery.trim()
     className="stickbe-input"
     placeholder="Search products..."
     value={searchQuery}
-    onChange={(e) => setSearchQuery(e.target.value)}
+    onChange={(e) => { setSearchQuery(e.target.value); setShopPage(1); }}
     style={{ textAlign: "center" }}
   />
 </div>
@@ -1594,7 +1597,7 @@ const searchResults = searchQuery.trim()
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setActive(cat.id)}
+              onClick={() => { setActive(cat.id); setShopPage(1); }}
               className={`stickbe-tab ${active === cat.id ? "stickbe-tab-active" : "stickbe-tab-inactive"}`}
             >
               {cat.label}
@@ -1602,27 +1605,78 @@ const searchResults = searchQuery.trim()
           ))}
         </div>
 
-        <div className="stickbe-shop-grid">
-  {(searchResults ?? activeCategory.items.map((item) => ({ ...item, iconOverride: activeCategory.icon, categoryLabel: activeCategory.label, aspectRatio: activeCategory.aspectRatio }))).map((item) => (
-    <ProductCard
-      key={item.name}
-      item={item}
-      categoryLabel={item.categoryLabel}
-      onAdd={handleAddClick}
-      theme={theme}
-      inWishlist={wishlist.includes(item.name)}
-      onToggleWishlist={toggleWishlist}
-      onImageClick={setLightboxImage}
-      cartQty={cart.find((c) => c.name ===      item.name)?.qty || 0}
-      onUpdateQty={updateQty}
-    />
-  ))}
-</div>
-{searchResults && searchResults.length === 0 && (
-  <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 14, marginTop: 20 }}>
-    No products found for "{searchQuery}"
-  </p>
-)}
+  {(() => {
+  const allItems = searchResults ?? activeCategory.items.map((item) => ({ ...item, iconOverride: activeCategory.icon, categoryLabel: activeCategory.label, aspectRatio: activeCategory.aspectRatio }));
+  const totalPages = Math.ceil(allItems.length / ITEMS_PER_PAGE);
+  const startIdx = (shopPage - 1) * ITEMS_PER_PAGE;
+  const pageItems = allItems.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+
+  return (
+    <>
+      <div className="stickbe-shop-grid">
+        {pageItems.map((item) => (
+          <ProductCard
+            key={item.name}
+            item={item}
+            categoryLabel={item.categoryLabel}
+            onAdd={handleAddClick}
+            theme={theme}
+            inWishlist={wishlist.includes(item.name)}
+            onToggleWishlist={toggleWishlist}
+            onImageClick={setLightboxImage}
+            cartQty={cart.find((c) => c.name === item.name)?.qty || 0}
+            onUpdateQty={updateQty}
+          />
+        ))}
+      </div>
+
+      {allItems.length === 0 && (
+        <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 14, marginTop: 20 }}>
+          No products found{searchQuery ? ` for "${searchQuery}"` : ""}.
+        </p>
+      )}
+
+      {totalPages > 1 && (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginTop: 32, flexWrap: "wrap" }}>
+          <button
+            onClick={() => setShopPage((p) => Math.max(1, p - 1))}
+            disabled={shopPage === 1}
+            className="stickbe-qty-btn"
+            style={{ width: 32, height: 32, opacity: shopPage === 1 ? 0.4 : 1, cursor: shopPage === 1 ? "not-allowed" : "pointer" }}
+            aria-label="Previous page"
+          >
+            ‹
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+            <button
+              key={pageNum}
+              onClick={() => setShopPage(pageNum)}
+              style={{
+                width: 32, height: 32, borderRadius: "50%", border: "none", cursor: "pointer",
+                fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13,
+                background: shopPage === pageNum ? PLUM : theme.surfaceAlt,
+                color: shopPage === pageNum ? "#fff" : theme.heading,
+              }}
+            >
+              {pageNum}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setShopPage((p) => Math.min(totalPages, p + 1))}
+            disabled={shopPage === totalPages}
+            className="stickbe-qty-btn"
+            style={{ width: 32, height: 32, opacity: shopPage === totalPages ? 0.4 : 1, cursor: shopPage === totalPages ? "not-allowed" : "pointer" }}
+            aria-label="Next page"
+          >
+            ›
+          </button>
+        </div>
+      )}
+    </>
+  );
+})()}
       </section>
 
       {/* GALLERY */}
