@@ -162,11 +162,23 @@ const CATEGORIES = [
   {
     id: "erasers",
     label: "Erasers",
-    icon: "cup",
+    icon: "eraser",
     items: [
       { name: "Tropical Eraser Set", price: 60,image:"/products/tropical.jpeg",inStock: true },
       { name: "Rainbow Eraser Set", price: 60,image:"/products/rainbow.jpeg",inStock: true },
       { name: "Mini Ruler Set", price: 79 },
+    ],
+  },
+  {
+    id: "notebook",
+    label: "Notebooks",
+    icon: "notebook",
+    items: [
+      { name: "Creamy Avacado Notebook", price: 119,image:"/products/avacado.png",inStock: true },
+      { name: "Plump Grape Notebook", price: 119,image:"/products/grapes.png",inStock: true },
+      { name: "Cheerful Cherry Notebook", price: 119,image:"/products/cherry.png",inStock: true },
+      { name: "Pastel Peach Notebook", price: 119,image:"/products/peach.png",inStock: true },
+      { name: "Fresh Strawberry Notebook", price: 119,image:"/products/strawberry.png",inStock: true },
     ],
   },
 ];
