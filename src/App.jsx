@@ -200,7 +200,7 @@ const CATEGORIES = [
       { name: "Cheerful Cherry Notebook", price: 119,image:"/products/cherry.png",inStock: true },
       { name: "Pastel Peach Notebook", price: 119,image:"/products/peach.png",inStock: true },
       { name: "Fresh Strawberry Notebook", price: 119,image:"/products/strawberry.png",inStock: true },
-      { name: "Sunflower and Bee Patterned Notebook", price: 119,image:"/products/Sunflower_nb.png",inStock: true },
+      { name: "Sunflower and Bee Notebook", price: 119,image:"/products/Sunflower_nb.png",inStock: true },
       { name: "Pink Bow Floral Notebook", price: 119,image:"/products/Pinkbow_nb.png",inStock: true },
       { name: "Peaceful Pink Spiral Notepad", price: 99,image:"/products/peace_np.png",inStock: true },
       { name: "Mint Bloom Hanging Plant Notepad", price: 99,image:"/products/bloom_np.png",inStock: true },
