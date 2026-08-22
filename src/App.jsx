@@ -203,8 +203,9 @@ const CATEGORIES = [
 ];
 
 const GALLERY_PHOTOS = [
-  // { image: "/gallery/pop-up-1.jpg", caption: "Our first pop-up! 🎉" },
-  // { image: "/gallery/packing-day.jpg", caption: "Packing day chaos" },
+  { image: "/gallery/stall.png", caption: "Our First Event! 🎉" },
+  { image: "/gallery/give.png", caption: "Happy Customer" },
+  { image: "/gallery/package.jpeg", caption: "Shipped!" },
   // Add your real photos here once you have them, same pattern as product images
 ];
 
@@ -507,32 +508,33 @@ function GallerySlider({ photos, theme }) {
 
   useEffect(() => {
     if (photos.length <= 1) return;
+    if (photos[index]?.type === "video") return;
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % photos.length);
     }, 3500);
     return () => clearInterval(timer);
-  }, [photos.length]);
+  }, [photos.length, index, photos]);
 
-const handleTouchStart = (e) => {
-  touchStartX.current = e.touches[0].clientX;
-  touchDeltaX.current = 0;
-};
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchDeltaX.current = 0;
+  };
 
-const handleTouchMove = (e) => {
-  if (touchStartX.current === null) return;
-  touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
-};
+  const handleTouchMove = (e) => {
+    if (touchStartX.current === null) return;
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+  };
 
-const handleTouchEnd = () => {
-  const threshold = 40;
-  if (touchDeltaX.current > threshold) {
-    setIndex((i) => (i - 1 + photos.length) % photos.length);
-  } else if (touchDeltaX.current < -threshold) {
-    setIndex((i) => (i + 1) % photos.length);
-  }
-  touchStartX.current = null;
-  touchDeltaX.current = 0;
-};
+  const handleTouchEnd = () => {
+    const threshold = 40;
+    if (touchDeltaX.current > threshold) {
+      setIndex((i) => (i - 1 + photos.length) % photos.length);
+    } else if (touchDeltaX.current < -threshold) {
+      setIndex((i) => (i + 1) % photos.length);
+    }
+    touchStartX.current = null;
+    touchDeltaX.current = 0;
+  };
 
   if (photos.length === 0) {
     return (
@@ -554,23 +556,37 @@ const handleTouchEnd = () => {
   const goNext = () => setIndex((i) => (i + 1) % photos.length);
 
   return (
-    <div style={{ maxWidth: 480, margin: "0 auto" }}>
-      <div
+   <div style={{ maxWidth: 560, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
+     <div
   onTouchStart={handleTouchStart}
   onTouchMove={handleTouchMove}
   onTouchEnd={handleTouchEnd}
   style={{
     position: "relative", background: theme.surface, borderRadius: 18,
-    aspectRatio: "4 / 3", overflow: "hidden", boxShadow: "0 4px 14px rgba(91,62,127,0.08)",
-    touchAction: "pan-y",
+    maxHeight: "65vh", maxWidth: "100%", overflow: "hidden", boxShadow: "0 4px 18px rgba(91,62,127,0.12)",
+    touchAction: "pan-y", display: "inline-flex", alignItems: "center", justifyContent: "center",
+    margin: "0 auto",
   }}
 >
         <div className="stickbe-tape" style={{ left: 24, top: -6, zIndex: 2 }} />
-        <img
-          src={photos[index].image}
-          alt={photos[index].caption || "Gallery photo"}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
+
+        {photos[index].type === "video" ? (
+          <video
+            key={photos[index].video}
+            src={photos[index].video}
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{ maxWidth: "100%", maxHeight: "65vh", width: "auto", height: "auto", display: "block" }}
+          />
+        ) : (
+          <img
+            src={photos[index].image}
+            alt={photos[index].caption || "Gallery photo"}
+            style={{ maxWidth: "100%", maxHeight: "65vh", width: "auto", height: "auto", display: "block" }}
+          />
+        )}
 
         {photos[index].caption && (
           <div style={{
@@ -589,9 +605,10 @@ const handleTouchEnd = () => {
               onClick={goPrev}
               style={{
                 position: "absolute", top: "50%", left: 10, transform: "translateY(-50%)",
-                background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%",
-                width: 32, height: 32, cursor: "pointer", display: "flex",
-                alignItems: "center", justifyContent: "center", fontSize: 16, color: PLUM,
+                background: PLUM, border: "2px solid #fff", borderRadius: "50%",
+                width: 30, height: 30, cursor: "pointer", display: "flex",
+                alignItems: "center", justifyContent: "center", fontSize: 15, color: "#fff",
+                boxShadow: "0 3px 8px rgba(0,0,0,0.2)", zIndex: 2,
               }}
               aria-label="Previous photo"
             >
@@ -601,9 +618,10 @@ const handleTouchEnd = () => {
               onClick={goNext}
               style={{
                 position: "absolute", top: "50%", right: 10, transform: "translateY(-50%)",
-                background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%",
-                width: 32, height: 32, cursor: "pointer", display: "flex",
-                alignItems: "center", justifyContent: "center", fontSize: 16, color: PLUM,
+                background: PLUM, border: "2px solid #fff", borderRadius: "50%",
+                width: 30, height: 30, cursor: "pointer", display: "flex",
+                alignItems: "center", justifyContent: "center", fontSize: 15, color: "#fff",
+                boxShadow: "0 3px 8px rgba(0,0,0,0.2)", zIndex: 2,
               }}
               aria-label="Next photo"
             >
@@ -614,7 +632,7 @@ const handleTouchEnd = () => {
       </div>
 
       {photos.length > 1 && (
-        <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 12 }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 14 }}>
           {photos.map((_, i) => (
             <button
               key={i}
