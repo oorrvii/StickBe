@@ -1147,6 +1147,11 @@ const searchResults = searchQuery.trim()
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const changeShopPage = (newPage) => {
+  setShopPage(newPage);
+  scrollToSection("shop");
+};
+
   useEffect(() => {
     if (window.emailjs) return;
     const script = document.createElement("script");
@@ -1639,7 +1644,7 @@ const searchResults = searchQuery.trim()
       {totalPages > 1 && (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginTop: 32, flexWrap: "wrap" }}>
           <button
-            onClick={() => setShopPage((p) => Math.max(1, p - 1))}
+            onClick={() => changeShopPage((p) => Math.max(1, p - 1))}
             disabled={shopPage === 1}
             className="stickbe-qty-btn"
             style={{ width: 32, height: 32, opacity: shopPage === 1 ? 0.4 : 1, cursor: shopPage === 1 ? "not-allowed" : "pointer" }}
@@ -1651,7 +1656,7 @@ const searchResults = searchQuery.trim()
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
             <button
               key={pageNum}
-              onClick={() => setShopPage(pageNum)}
+              onClick={() =>changeShopPage(pageNum)}
               style={{
                 width: 32, height: 32, borderRadius: "50%", border: "none", cursor: "pointer",
                 fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13,
@@ -1664,7 +1669,7 @@ const searchResults = searchQuery.trim()
           ))}
 
           <button
-            onClick={() => setShopPage((p) => Math.min(totalPages, p + 1))}
+            onClick={() => changeShopPage((p) => Math.min(totalPages, p + 1))}
             disabled={shopPage === totalPages}
             className="stickbe-qty-btn"
             style={{ width: 32, height: 32, opacity: shopPage === totalPages ? 0.4 : 1, cursor: shopPage === totalPages ? "not-allowed" : "pointer" }}
