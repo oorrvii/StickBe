@@ -205,6 +205,7 @@ const CATEGORIES = [
 const GALLERY_PHOTOS = [
   { image: "/gallery/stall.png", caption: "Our First Event! 🎉" },
   { image: "/gallery/give.png", caption: "Happy Customer" },
+  { type: "video", video: "/gallery/stall_vid.mp4", caption: "Glimpse of the Event!" },
   { image: "/gallery/package.jpeg", caption: "Shipped!" },
   // Add your real photos here once you have them, same pattern as product images
 ];
