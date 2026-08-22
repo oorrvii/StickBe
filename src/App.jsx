@@ -46,7 +46,7 @@ function getTheme(dark) {
       };
 }
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 20;
 
 const CATEGORIES = [
   {
