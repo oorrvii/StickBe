@@ -129,9 +129,27 @@ const CATEGORIES = [
     label: "Washi Tapes",
     icon: "tape",
     items: [
-      { name: "Gingham Pastel Roll", price: 120, inStock: true },
-      { name: "Floral Border Tape", price: 140, inStock: true },
-      { name: "Heart Pattern Tape", price: 110, inStock: true },
+      { name: "Gingham Pastel Roll", price: 120, 
+        hasVariants: true,
+      variants: [
+        { label: "Single roll", price: 15 },
+        { label: "Full set (10 pcs)", price: 120 },
+      ],
+        inStock: true },
+      { name: "Floral Border Tape", price: 120, 
+        hasVariants: true,
+      variants: [
+        { label: "Single roll", price: 15 },
+        { label: "Full set (10 pcs)", price: 120 },
+      ],
+        inStock: true },
+      { name: "Heart Pattern Tape", price: 120, 
+        hasVariants: true,
+      variants: [
+        { label: "Single roll", price: 15 },
+        { label: "Full set (10 pcs)", price: 120 },
+      ],
+        inStock: true },
     ],
   },
   {
@@ -387,6 +405,67 @@ function CustomStickerPopup({ open, onClose, theme }) {
             Got it!
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function VariantPopup({ item, onClose, onChoose, theme }) {
+  if (!item) return null;
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, background: "rgba(63,43,87,0.45)",
+        display: "flex", alignItems: "center", justifyContent: "center", zIndex: 55, padding: 20,
+      }}
+    >
+      <div onClick={(e) => e.stopPropagation()} style={{ background: theme.surface, borderRadius: 18, maxWidth: 380, width: "100%", padding: "28px 24px", textAlign: "center", position: "relative" }}>
+        <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
+        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 17, margin: "6px 0 4px" }}>
+          {item.name}
+        </p>
+        <p style={{ color: theme.bodyMuted, fontSize: 13, margin: "0 0 20px" }}>
+          How would you like it?
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+  {item.variants.map((variant) => (
+    <button
+      key={variant.label}
+      onClick={() => onChoose(item, variant)}
+      style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        background: theme.surfaceAlt, border: "none", borderRadius: 12,
+        padding: "12px 14px 12px 16px", cursor: "pointer", fontFamily: "'Nunito', sans-serif",
+      }}
+    >
+      <div style={{ textAlign: "left" }}>
+        <p style={{ color: theme.heading, fontWeight: 700, fontSize: 14, margin: 0 }}>{variant.label}</p>
+        <p style={{ color: PEACH, fontWeight: 700, fontSize: 13, margin: "2px 0 0", fontFamily: "'Baloo 2', sans-serif" }}>₹{variant.price}</p>
+      </div>
+      <span className="stickbe-order-btn" style={{ padding: "6px 12px", fontSize: 12 }}>
+        <Plus size={12} strokeWidth={2.5} /> Add
+      </span>
+    </button>
+  ))}
+        </div>
+
+        <button
+          onClick={onClose}
+          className="stickbe-order-btn"
+          style={{ width: "100%", justifyContent: "center", marginTop: 18, background: PEACH }}
+        >
+          Done
+        </button>
+
+        <button
+          onClick={onClose}
+          style={{ position: "absolute", top: 12, right: 14, background: "none", border: "none", color: "#c4b6cf", fontSize: 18, cursor: "pointer" }}
+          aria-label="Close"
+        >
+          ×
+        </button>
       </div>
     </div>
   );
@@ -811,6 +890,7 @@ export default function StickBeSite() {
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [customPopup, setCustomPopup] = useState(false);
+  const [variantPopup, setVariantPopup] = useState(null); 
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
@@ -829,6 +909,23 @@ const addToCart = (item) => {
     setToast(`${item.name} added to cart!`);
   }
 };
+
+const handleAddClick = (itemWithCategory) => {
+  if (itemWithCategory.hasVariants) {
+    setVariantPopup(itemWithCategory);
+  } else {
+    addToCart(itemWithCategory);
+  }
+};
+
+const handleChooseVariant = (item, variant) => {
+  addToCart({
+    name: `${item.name} (${variant.label})`,
+    price: variant.price,
+    categoryLabel: item.categoryLabel,
+  });
+};
+
 
   const updateQty = (name, qty) => {
     if (qty <= 0) {
@@ -1329,7 +1426,7 @@ const searchResults = searchQuery.trim()
       key={item.name}
       item={item}
       categoryLabel={item.categoryLabel}
-      onAdd={addToCart}
+      onAdd={handleAddClick}
       theme={theme}
       inWishlist={wishlist.includes(item.name)}
       onToggleWishlist={toggleWishlist}
@@ -1455,13 +1552,13 @@ const searchResults = searchQuery.trim()
     wishlistItems={wishlistItems}
     onClose={() => setWishlistOpen(false)}
     onToggleWishlist={toggleWishlist}
-    onAdd={addToCart}
+    onAdd={handleAddClick}
     theme={theme}
   />
 )}
 <Toast message={toast} onDone={() => setToast(null)} />
 <CustomStickerPopup open={customPopup} onClose={() => setCustomPopup(false)} theme={theme} />
-
+<VariantPopup item={variantPopup} onClose={() => setVariantPopup(null)} onChoose={handleChooseVariant} theme={theme} />
   <nav className="stickbe-mobile-nav" aria-label="Mobile navigation">
   <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="stickbe-mobile-nav-link">
     <Home size={18} strokeWidth={2} />
