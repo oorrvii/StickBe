@@ -190,7 +190,7 @@ const CATEGORIES = [
   },
   {
     id: "notebook",
-    label: "Notebooks",
+    label: "Notebooks & Notepads",
     icon: "notebook",
     items: [
       { name: "Creamy Avacado Notebook", price: 119,image:"/products/avacado.png",inStock: true },
@@ -410,7 +410,7 @@ function CustomStickerPopup({ open, onClose, theme }) {
   );
 }
 
-function VariantPopup({ item, onClose, onChoose, theme }) {
+function VariantPopup({ item, onClose, onChoose, theme, cart, onUpdateQty }) {
   if (!item) return null;
   return (
     <div
@@ -429,27 +429,50 @@ function VariantPopup({ item, onClose, onChoose, theme }) {
           How would you like it?
         </p>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-  {item.variants.map((variant) => (
-    <button
-      key={variant.label}
-      onClick={() => onChoose(item, variant)}
-      style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        background: theme.surfaceAlt, border: "none", borderRadius: 12,
-        padding: "12px 14px 12px 16px", cursor: "pointer", fontFamily: "'Nunito', sans-serif",
-      }}
-    >
-      <div style={{ textAlign: "left" }}>
-        <p style={{ color: theme.heading, fontWeight: 700, fontSize: 14, margin: 0 }}>{variant.label}</p>
-        <p style={{ color: PEACH, fontWeight: 700, fontSize: 13, margin: "2px 0 0", fontFamily: "'Baloo 2', sans-serif" }}>₹{variant.price}</p>
-      </div>
-      <span className="stickbe-order-btn" style={{ padding: "6px 12px", fontSize: 12 }}>
-        <Plus size={12} strokeWidth={2.5} /> Add
-      </span>
-    </button>
-  ))}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+  {item.variants.map((variant) => {
+    const variantCartName = `${item.name} (${variant.label})`;
+    const cartQty = cart.find((c) => c.name === variantCartName)?.qty || 0;
+
+    return (
+      <div
+        key={variant.label}
+        style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          background: theme.surfaceAlt, borderRadius: 12,
+          padding: "12px 14px 12px 16px", fontFamily: "'Nunito', sans-serif",
+        }}
+      >
+        <div style={{ textAlign: "left" }}>
+          <p style={{ color: theme.heading, fontWeight: 700, fontSize: 14, margin: 0 }}>{variant.label}</p>
+          <p style={{ color: PEACH, fontWeight: 700, fontSize: 13, margin: "2px 0 0", fontFamily: "'Baloo 2', sans-serif" }}>₹{variant.price}</p>
         </div>
+
+        {cartQty > 0 ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <button onClick={() => onUpdateQty(variantCartName, cartQty - 1)} className="stickbe-qty-btn" aria-label="Decrease quantity">
+              <Minus size={12} />
+            </button>
+            <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 14, textAlign: "center" }}>
+              {cartQty}
+            </span>
+            <button onClick={() => onUpdateQty(variantCartName, cartQty + 1)} className="stickbe-qty-btn" aria-label="Increase quantity">
+              <Plus size={12} />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => onChoose(item, variant)}
+            className="stickbe-order-btn"
+            style={{ padding: "6px 12px", fontSize: 12 }}
+          >
+            <Plus size={12} strokeWidth={2.5} /> Add
+          </button>
+        )}
+      </div>
+    );
+  })}
+</div>
 
         <button
           onClick={onClose}
@@ -1558,7 +1581,8 @@ const searchResults = searchQuery.trim()
 )}
 <Toast message={toast} onDone={() => setToast(null)} />
 <CustomStickerPopup open={customPopup} onClose={() => setCustomPopup(false)} theme={theme} />
-<VariantPopup item={variantPopup} onClose={() => setVariantPopup(null)} onChoose={handleChooseVariant} theme={theme} />
+<VariantPopup item={variantPopup} onClose={() => setVariantPopup(null)} onChoose={handleChooseVariant} theme={theme} cart={cart} onUpdateQty={updateQty} />
+
   <nav className="stickbe-mobile-nav" aria-label="Mobile navigation">
   <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="stickbe-mobile-nav-link">
     <Home size={18} strokeWidth={2} />
