@@ -135,16 +135,16 @@ const CATEGORIES = [
       { name: "Floral Pink Heart Washi Tape", price: 180,image:"/products/pinkwashi.png",
         hasVariants: true,
       variants: [
-        { label: "Single roll", price: 20 },
-        { label: "Five roll", price: 90 },
+        { label: "Single roll (1 piece)", price: 20 },
+        { label: "Five roll (5 pcs)", price: 90 },
         { label: "Full set (10 pcs)", price: 180 },
       ],
         inStock: true },
       { name: "Black and Gold Foil Washi Tape", price: 180,image:"/products/blackwashi.png", 
         hasVariants: true,
       variants: [
-        { label: "Single roll", price: 20 },
-        { label: "Five roll", price: 90 },
+        { label: "Single roll (1 piece)", price: 20 },
+        { label: "Five roll (5 pcs)", price: 90 },
         { label: "Full set (10 pcs)", price: 180 },
       ],
         inStock: true },
@@ -183,7 +183,7 @@ const CATEGORIES = [
     items: [
       { name: "Tropical Eraser Set", price: 60,image:"/products/tropical.jpeg",inStock: true },
       { name: "Rainbow Eraser Set", price: 60,image:"/products/rainbow.jpeg",inStock: true },
-      { name: "Mini Ruler Set", price: 79 },
+      { name: "Chocolate Bar Eraser", price: 65,image:"/products/choco-eraser.png",inStock: true },
     ],
   },
   {
@@ -202,8 +202,17 @@ const CATEGORIES = [
       { name: "Mint Bloom Plant Spiral Notepad", price: 99,image:"/products/bloom_np.png",inStock: true },
       { name: "Hug Me Cactus Notepad", price: 99,image:"/products/hugme_np.png",inStock: true },
       { name: "Grow Plant Spiral Notepad ", price: 99,image:"/products/grow_np.png",inStock: true },
-      
-
+    ],
+  },
+  {
+    id: "sticky",
+    label: "Sticky Notes",
+    icon: "sticky",
+    items: [
+      { name: "Pink Transparent Sticky Notes", price: 79,image:"/products/pink_sn.png",inStock: true },
+      { name: "Purple Transparent Sticky Notes", price: 79,image:"/products/purple_sn.png",inStock: true },
+      { name: "Yellow Transparent Sticky Notes", price: 79,image:"/products/yellow_sn.png",inStock: true },
+      { name: "Blue Transparent Sticky Notes", price: 79,image:"/products/blue_sn.png",inStock: true },
     ],
   },
 ];
