@@ -208,11 +208,12 @@ const CATEGORIES = [
     id: "sticky",
     label: "Sticky Notes",
     icon: "sticky",
+    aspectRatio: "3 / 2",
     items: [
-      { name: "Pink Transparent Sticky Notes", price: 79,image:"/products/pink_sn.png",inStock: true },
-      { name: "Purple Transparent Sticky Notes", price: 79,image:"/products/purple_sn.png",inStock: true },
-      { name: "Yellow Transparent Sticky Notes", price: 79,image:"/products/yellow_sn.png",inStock: true },
-      { name: "Blue Transparent Sticky Notes", price: 79,image:"/products/blue_sn.png",inStock: true },
+      { name: "Pink Transparent Sticky Note", price: 79,image:"/products/pink_sn.png",inStock: true },
+      { name: "Purple Transparent Sticky Note", price: 79,image:"/products/purple_sn.png",inStock: true },
+      { name: "Yellow Transparent Sticky Note", price: 79,image:"/products/yellow_sn.png",inStock: true },
+      { name: "Blue Transparent Sticky Note", price: 79,image:"/products/blue_sn.png",inStock: true },
     ],
   },
 ];
