@@ -214,6 +214,10 @@ const CATEGORIES = [
       { name: "Purple Transparent Sticky Note", price: 79,image:"/products/purple_sn.png",inStock: true },
       { name: "Yellow Transparent Sticky Note", price: 79,image:"/products/yellow_sn.png",inStock: true },
       { name: "Blue Transparent Sticky Note", price: 79,image:"/products/blue_sn.png",inStock: true },
+      { name: "Snow Fluff Sticky Note", price: 99,image:"/products/Snow_Fluff.png",inStock: true },
+      { name: "Star Nibble Sticky Note", price: 99,image:"/products/Star_Nibble.png",inStock: true },
+      { name: "Hug Brew Sticky Note", price: 99,image:"/products/Hug_Brew.png",inStock: true },
+      { name: "Sweet Hop Sticky Note", price: 99,image:"/products/Sweet_Hop.png",inStock: true },
     ],
   },
 ];
