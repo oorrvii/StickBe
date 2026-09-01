@@ -208,7 +208,7 @@ const CATEGORIES = [
     id: "sticky",
     label: "Sticky Notes",
     icon: "sticky",
-    aspectRatio: "3 / 2",
+    // aspectRatio: "3 / 2",
     items: [
       { name: "Pink Transparent Sticky Note", price: 79,image:"/products/pink_sn.png",inStock: true },
       { name: "Purple Transparent Sticky Note", price: 79,image:"/products/purple_sn.png",inStock: true },
