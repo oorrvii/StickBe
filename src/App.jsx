@@ -668,6 +668,102 @@ function GallerySlider({ photos, theme }) {
   );
 }
 
+function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, goToSection, shopMenuOpen, setShopMenuOpen, cartCount, setCartOpen, wishlistCount, setWishlistOpen }) {
+  return (
+    <>
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed", inset: 0, background: "rgba(63,43,87,0.45)",
+          zIndex: 40, opacity: open ? 1 : 0, pointerEvents: open ? "auto" : "none",
+          transition: "opacity 0.25s ease",
+        }}
+      />
+      <div style={{
+        position: "fixed", top: 0, left: 0, bottom: 0, width: 260, maxWidth: "80vw",
+        background: theme.sidebarBg, zIndex: 41, padding: "20px 16px",
+        transform: open ? "translateX(0)" : "translateX(-100%)",
+        transition: "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
+        overflowY: "auto", display: "flex", flexDirection: "column",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+          <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 19, color: theme.heading, fontWeight: 700 }}>
+            StickBe
+          </span>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: theme.bodyMuted, fontSize: 22, cursor: "pointer", padding: 4 }} aria-label="Close menu">
+            ×
+          </button>
+        </div>
+
+        <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  <p style={{
+    display: "flex", alignItems: "center", gap: 10, margin: "8px 8px 4px",
+    fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading,
+  }}>
+    <ShoppingBag size={17} /> All products
+  </p>
+
+  <div style={{ display: "flex", flexDirection: "column", paddingLeft: 30, gap: 2, marginBottom: 10 }}>
+    {CATEGORIES.map((cat) => (
+      <button
+        key={cat.id}
+        onClick={() => goToCategory(cat.id)}
+        style={{
+          background: "none", border: "none", cursor: "pointer", padding: "8px 6px",
+          textAlign: "left", fontFamily: "'Nunito', sans-serif", fontSize: 13.5, color: theme.body,
+        }}
+      >
+        {cat.label}
+      </button>
+    ))}
+  </div>
+          <button
+            onClick={() => { setWishlistOpen(true); onClose(); }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+          >
+            <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <Heart size={17} /> Wishlist
+            </span>
+            {wishlistCount > 0 && <span style={{ background: "#e07a7a", color: "#fff", fontSize: 10, fontWeight: 700, borderRadius: 100, padding: "2px 7px" }}>{wishlistCount}</span>}
+          </button>
+
+          <button
+            onClick={() => { setCartOpen(true); onClose(); }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+          >
+            <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <ShoppingCart size={17} /> Cart
+            </span>
+            {cartCount > 0 && <span style={{ background: PEACH, color: "#fff", fontSize: 10, fontWeight: 700, borderRadius: 100, padding: "2px 7px" }}>{cartCount}</span>}
+          </button>
+        </nav>
+
+        <div style={{ marginTop: "auto", display: "flex", flexDirection: "column" }}>
+  <button
+    onClick={() => window.open(INSTAGRAM, "_blank")}
+    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+  >
+    <Instagram size={17} /> Instagram
+  </button>
+  <button
+    onClick={() => { goToSection("feedback"); }}
+    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+  >
+    <Mail size={17} /> Email us
+  </button>
+  <button
+    onClick={() => setDarkMode((d) => !d)}
+    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+  >
+    {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+    {darkMode ? "Light mode" : "Dark mode"}
+  </button>
+</div>
+      </div>
+    </>
+  );
+}
+
 function Lightbox({ image, onClose }) {
   if (!image) return null;
   return (
@@ -1090,6 +1186,8 @@ export default function StickBeSite() {
   const [variantPopup, setVariantPopup] = useState(null); 
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [shopPage, setShopPage] = useState(1);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
@@ -1160,7 +1258,18 @@ const searchResults = searchQuery.trim()
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+  const goToCategory = (categoryId) => {
+  setActive(categoryId);
+  setShopPage(1);
+  setSidebarOpen(false);
+  setShopMenuOpen(false);
+  scrollToSection("shop");
+};
 
+const goToSection = (id) => {
+  setSidebarOpen(false);
+  scrollToSection(id);
+};
   const changeShopPage = (newPage) => {
   setShopPage(newPage);
   scrollToSection("shop");
@@ -1298,41 +1407,6 @@ const searchResults = searchQuery.trim()
         .stickbe-input:focus { border-color: ${LILAC}; }
         .stickbe-input::placeholder { color: ${theme.placeholder}; }
 
-        .stickbe-page-sidebar { display: none; }
-        @media (min-width: 900px) {
-          .stickbe-root { padding-left: 84px; }
-          .stickbe-page-sidebar {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 26px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 84px;
-            background: ${theme.sidebarBg};
-            border-right: 1px solid ${LILAC}22;
-            padding-top: 96px;
-            z-index: 20;
-          }
-          .stickbe-mobile-theme-toggle { display: none; }
-        }
-        .stickbe-sidebar-link {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 4px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          color: ${theme.bodyMuted};
-          font-family: 'Nunito', sans-serif;
-          font-size: 10.5px;
-          font-weight: 700;
-          padding: 6px;
-        }
-        .stickbe-sidebar-link:hover, .stickbe-sidebar-link.active { color: ${theme.heading}; }
         .stickbe-shop-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
@@ -1401,122 +1475,74 @@ const searchResults = searchQuery.trim()
         }
       `}</style>
 
-      {/* SITE SIDEBAR */}
-      <nav className="stickbe-page-sidebar" aria-label="Page navigation">
-        <img src={LOGO_URI} alt="StickBe" style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover" }} />
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="stickbe-sidebar-link">
-          <Home size={19} strokeWidth={2} />
-          Home
-        </button>
-        <button onClick={() => scrollToSection("shop")} className="stickbe-sidebar-link">
-          <ShoppingBag size={19} strokeWidth={2} />
-          Shop
-        </button>
-        <button onClick={() => scrollToSection("gallery")} className="stickbe-sidebar-link">
-          <Camera size={19} strokeWidth={2} />
-          Gallery
-        </button>
-        <button onClick={() => scrollToSection("feedback")} className="stickbe-sidebar-link">
-          <MessageCircle size={19} strokeWidth={2} />
-          Feedback
-        </button>
-        <button onClick={() => setCartOpen(true)} className="stickbe-sidebar-link" style={{ position: "relative" }}>
-          <ShoppingCart size={19} strokeWidth={2} />
-          Cart
-          {cartCount > 0 && (
-            <span style={{
-              position: "absolute", top: -2, right: 10, background: PEACH, color: "#fff",
-              fontSize: 9, fontWeight: 700, borderRadius: "50%", width: 14, height: 14,
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              {cartCount}
-            </span>
-          )}
-        </button>
-        <button onClick={() => setDarkMode((d) => !d)} className="stickbe-sidebar-link" style={{ marginTop: "auto", marginBottom: 20 }}>
-          {darkMode ? <Sun size={19} strokeWidth={2} /> : <Moon size={19} strokeWidth={2} />}
-          {darkMode ? "Light" : "Dark"}
-        </button>
-      </nav>
-
       {/* NAV */}
-      <nav
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 10,
-          background: theme.navBg,
-          backdropFilter: "blur(6px)",
-          borderBottom: `1px solid ${LILAC}33`,
-          padding: "12px 20px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <img src={LOGO_URI} alt="StickBe logo" style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover" }} />
-          <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 21, color: theme.heading, fontWeight: 700 }}>
-            StickBe
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <button
-            onClick={() => setDarkMode((d) => !d)}
-            className="stickbe-mobile-theme-toggle"
-            style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
-            aria-label="Toggle dark mode"
-          >
-            {darkMode ? <Sun size={19} strokeWidth={2.2} /> : <Moon size={19} strokeWidth={2.2} />}
-          </button>
-          <button
-            onClick={() => window.open(INSTAGRAM, "_blank")}
-            style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
-            aria-label="Instagram"
-          >
-            <Instagram size={19} strokeWidth={2.2} />
-          </button>
-          <button
-  onClick={() => scrollToSection("feedback")}
-  style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
-  aria-label="Email"
+   <nav
+  style={{
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
+    background: theme.navBg,
+    backdropFilter: "blur(6px)",
+    borderBottom: `1px solid ${LILAC}33`,
+    padding: "12px 20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  }}
 >
-  <Mail size={19} strokeWidth={2.2} />
-</button>
-<button
-  onClick={() => setWishlistOpen(true)}
-  style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
-  aria-label="Wishlist"
->
-  <Heart size={19} strokeWidth={2.2} fill={wishlist.length > 0 ? "#e07a7a" : "none"} stroke={wishlist.length > 0 ? "#e07a7a" : "currentColor"} />
-  {wishlist.length > 0 && (
-    <span style={{
-      position: "absolute", top: -4, right: -6, background: "#e07a7a", color: "#fff",
-      fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 16, height: 16,
-      display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Nunito', sans-serif",
-    }}>
-      {wishlist.length}
+  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+    <button
+      onClick={() => setSidebarOpen(true)}
+      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", color: theme.heading }}
+      aria-label="Open menu"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+    <img src={LOGO_URI} alt="StickBe logo" style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover" }} />
+    <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 21, color: theme.heading, fontWeight: 700 }}>
+      StickBe
     </span>
-  )}
-</button>
-          <button
-            onClick={() => setCartOpen(true)}
-            style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
-            aria-label="Cart"
-          >
-            <ShoppingCart size={19} strokeWidth={2.2} />
-            {cartCount > 0 && (
-              <span style={{
-                position: "absolute", top: -4, right: -6, background: PEACH, color: "#fff",
-                fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 16, height: 16,
-                display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Nunito', sans-serif",
-              }}>
-                {cartCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </nav>
+  </div>
+
+  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+    <button
+      onClick={() => setWishlistOpen(true)}
+      style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
+      aria-label="Wishlist"
+    >
+      <Heart size={19} strokeWidth={2.2} fill={wishlist.length > 0 ? "#e07a7a" : "none"} stroke={wishlist.length > 0 ? "#e07a7a" : "currentColor"} />
+      {wishlist.length > 0 && (
+        <span style={{
+          position: "absolute", top: -4, right: -6, background: "#e07a7a", color: "#fff",
+          fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 16, height: 16,
+          display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Nunito', sans-serif",
+        }}>
+          {wishlist.length}
+        </span>
+      )}
+    </button>
+    <button
+      onClick={() => setCartOpen(true)}
+      style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
+      aria-label="Cart"
+    >
+      <ShoppingCart size={19} strokeWidth={2.2} />
+      {cartCount > 0 && (
+        <span style={{
+          position: "absolute", top: -4, right: -6, background: PEACH, color: "#fff",
+          fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 16, height: 16,
+          display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Nunito', sans-serif",
+        }}>
+          {cartCount}
+        </span>
+      )}
+    </button>
+  </div>
+</nav>
 
       {/* MARQUEE DISCLAIMER */}
       <div style={{ background: PEACH, overflow: "hidden", padding: "6px 0" }}>
@@ -1790,40 +1816,23 @@ const searchResults = searchQuery.trim()
   />
 )}
 <Toast message={toast} onDone={() => setToast(null)} />
+  <SideMenu
+  open={sidebarOpen}
+  onClose={() => setSidebarOpen(false)}
+  theme={theme}
+  darkMode={darkMode}
+  setDarkMode={setDarkMode}
+  goToCategory={goToCategory}
+  goToSection={goToSection}
+  shopMenuOpen={shopMenuOpen}
+  setShopMenuOpen={setShopMenuOpen}
+  cartCount={cartCount}
+  setCartOpen={setCartOpen}
+  wishlistCount={wishlist.length}
+  setWishlistOpen={setWishlistOpen}
+/>
 <CustomStickerPopup open={customPopup} onClose={() => setCustomPopup(false)} theme={theme} />
 <VariantPopup item={variantPopup} onClose={() => setVariantPopup(null)} onChoose={handleChooseVariant} theme={theme} cart={cart} onUpdateQty={updateQty} />
-
-  <nav className="stickbe-mobile-nav" aria-label="Mobile navigation">
-  <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="stickbe-mobile-nav-link">
-    <Home size={18} strokeWidth={2} />
-    <span>Home</span>
-  </button>
-  <button onClick={() => scrollToSection("shop")} className="stickbe-mobile-nav-link">
-    <ShoppingBag size={18} strokeWidth={2} />
-    <span>Shop</span>
-  </button>
-  <button onClick={() => scrollToSection("gallery")} className="stickbe-mobile-nav-link">
-    <Camera size={18} strokeWidth={2} />
-    <span>Gallery</span>
-  </button>
-  <button onClick={() => scrollToSection("feedback")} className="stickbe-mobile-nav-link">
-    <MessageCircle size={18} strokeWidth={2} />
-    <span>Feedback</span>
-  </button>
-  <button onClick={() => setCartOpen(true)} className="stickbe-mobile-nav-link" style={{ position: "relative" }}>
-    <ShoppingCart size={18} strokeWidth={2} />
-    <span>Cart</span>
-    {cartCount > 0 && (
-      <span style={{
-        position: "absolute", top: 0, right: 12, background: PEACH, color: "#fff",
-        fontSize: 9, fontWeight: 700, borderRadius: "50%", width: 14, height: 14,
-        display: "flex", alignItems: "center", justifyContent: "center",
-      }}>
-        {cartCount}
-      </span>
-    )}
-  </button>
-</nav>
     </div>
   );
 }
