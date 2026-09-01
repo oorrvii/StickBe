@@ -1325,37 +1325,6 @@ const goToSection = (id) => {
           .stickbe-mobile-nav {
   display: none;
 }
-@media (max-width: 899px) {
-  .stickbe-mobile-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: ${theme.surface};
-    border-top: 1px solid ${LILAC}33;
-    justify-content: space-around;
-    padding: 8px 0;
-    z-index: 30;
-  }
-    .stickbe-root {
-    padding-bottom: 60px;
-  }
-}
-.stickbe-mobile-nav-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: ${theme.bodyMuted};
-  font-family: 'Nunito', sans-serif;
-  font-size: 9.5px;
-  font-weight: 700;
-  padding: 4px 8px;
-}
         .stickbe-thumb {
         background: ${PEACH_LIGHT};
         display: flex;
