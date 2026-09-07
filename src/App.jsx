@@ -131,6 +131,12 @@ const CATEGORIES = [
       { name: "Stranger Things Sticker", price: 12,image:"/products/stranger_things.png",inStock: true },
       { name: "The Boys Sticker", price: 12,image:"/products/The_boys.png",inStock: true },
       { name: "Work Mode On Sticker", price: 12,image:"/products/Work_mode_on.png",inStock: true },
+      { name: "Blossom Ride Sticker", price: 12,image:"/products/blossomride.jpeg",inStock: true },
+      { name: "FCB Sticker", price: 12,image:"/products/fcb.jpeg",inStock: true },
+      { name: "Football On Fire Sticker", price: 12,image:"/products/footballfire.jpeg",inStock: true },
+      { name: "Grow Girl Plant Sticker", price: 12,image:"/products/growgirlplant.jpeg",inStock: true },
+      { name: "K-Drama & Chill Sticker", price: 12,image:"/products/kdrama.jpeg",inStock: true },
+      { name: "Life Is About Goals Sticker", price: 12,image:"/products/lifegoals.jpeg",inStock: true },
     ],
   },
   {
