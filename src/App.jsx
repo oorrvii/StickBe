@@ -139,6 +139,18 @@ const CATEGORIES = [
       { name: "Life Is About Goals Sticker", price: 12,image:"/products/lifegoals.jpeg",inStock: true },
     ],
   },
+   {
+    id: "posters",
+    label: "Mini Poster Set",
+    icon: "poster",
+    aspectRatio: "4 / 5",
+    items: [
+      { name: "Retro Desi Pop Poster Set", price: 199,image:"/products/desi_poster.jpeg",inStock: true },
+      { name: "Classic Spiderman Poster Set", price: 199,image:"/products/spiderman-poster.jpeg",inStock: true },
+      { name: "Growth Mindset Poster Set", price: 199,image:"/products/growth_poster.jpeg",inStock: true },
+      { name: "Sweet & Spicy Poster Set", price: 199,image:"/products/heart_poster.jpeg",inStock: true },
+    ],
+  },
   {
     id: "washi",
     label: "Washi Tapes",
@@ -230,7 +242,7 @@ const CATEGORIES = [
     id: "sticky",
     label: "Sticky Notes",
     icon: "sticky",
-    // aspectRatio: "3 / 2",
+    aspectRatio: "4 / 3",
     items: [
       { name: "Pink Transparent Sticky Note", price: 79,image:"/products/pink_sn.png",inStock: true },
       { name: "Purple Transparent Sticky Note", price: 79,image:"/products/purple_sn.png",inStock: true },
@@ -325,7 +337,7 @@ const handleAdd = () => {
             src={item.image}
             alt={item.name}
             onError={() => setImgFailed(true)}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            style={{ width: "100%", height: "100%", objectFit: item.fit || "cover" }}
           />
         ) : (
           <CategoryIcon type={item.iconOverride} />
@@ -1269,7 +1281,7 @@ const searchResults = searchQuery.trim()
   ? CATEGORIES.flatMap((cat) =>
       cat.items
         .filter((item) => item.name.toLowerCase().includes(searchQuery.trim().toLowerCase()))
-        .map((item) => ({ ...item, categoryLabel: cat.label, iconOverride: cat.icon }))
+        .map((item) => ({ ...item, categoryLabel: cat.label, iconOverride: cat.icon, aspectRatio: cat.aspectRatio, fit: cat.fit }))
     )
   : null;
   const wishlistItems = CATEGORIES.flatMap((cat) =>
@@ -1646,7 +1658,7 @@ const goToSection = (id) => {
         </div>
 
   {(() => {
-  const allItems = searchResults ?? activeCategory.items.map((item) => ({ ...item, iconOverride: activeCategory.icon, categoryLabel: activeCategory.label, aspectRatio: activeCategory.aspectRatio }));
+ const allItems = searchResults ?? activeCategory.items.map((item) => ({ ...item, iconOverride: activeCategory.icon, categoryLabel: activeCategory.label, aspectRatio: activeCategory.aspectRatio, fit: activeCategory.fit }));
   const totalPages = Math.ceil(allItems.length / ITEMS_PER_PAGE);
   const startIdx = (shopPage - 1) * ITEMS_PER_PAGE;
   const pageItems = allItems.slice(startIdx, startIdx + ITEMS_PER_PAGE);
