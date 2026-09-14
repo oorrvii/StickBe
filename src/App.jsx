@@ -190,6 +190,12 @@ const CATEGORIES = [
       { name: "Zenitsu Agatsuma Bookmark", price: 49,image:"/products/yellow_bk.jpeg", inStock: true},
       { name: "Nezuko Kamado Bookmark", price: 49,image:"/products/pink_bk.jpeg", inStock: true},
       { name: "Tanjiro Kamado Bookmark", price: 49,image:"/products/green_bk.jpeg", inStock: true},
+      { name: "Mountain Trail Bookmark", price: 49,image:"/products/mountain_bm.jpeg", inStock: true},
+      { name: "Midnight Sakura Glow Bookmark", price: 49,image:"/products/midnight_bm.jpeg", inStock: true},
+      { name: "Japanese Landscape Bookmark", price: 49,image:"/products/japan_bm.jpeg", inStock: true},
+      { name: "Tokyo Twilight Bookmark", price: 49,image:"/products/tokyo_bm.jpeg", inStock: true},
+      { name: "Ink & Lemonade Bookmark", price: 49,image:"/products/ink_bm.jpeg", inStock: true},
+
     ],
   },
   {
