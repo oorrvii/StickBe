@@ -149,6 +149,8 @@ const CATEGORIES = [
       { name: "Classic Spiderman Poster Set", price: 179,image:"/products/spiderman-poster.jpeg",inStock: true },
       { name: "Growth Mindset Poster Set", price: 179,image:"/products/growth_poster.jpeg",inStock: true },
       { name: "Sweet & Spicy Poster Set", price: 179,image:"/products/heart_poster.jpeg",inStock: true },
+      { name: "Retro Rhythm Poster Set", price: 179,image:"/products/retro-poster.jpeg",inStock: true },
+      { name: "The Caffeine Club Set", price: 179,image:"/products/caffeine_poster.jpeg",inStock: true },
     ],
   },
   {
