@@ -269,7 +269,6 @@ const GALLERY_PHOTOS = [
   { type: "video", video: "/gallery/stall_vid.mp4", caption: "Glimpse of the Event!" },
   { image: "/gallery/package.jpeg", caption: "Shipped!" },
   { image: "/gallery/ctf-final.png", caption: "Shipped sticker packs to HCST!" },
-  // Add your real photos here once you have them, same pattern as product images
 ];
 
 function CategoryIcon({ type }) {
@@ -1600,7 +1599,7 @@ const goToSection = (id) => {
           Bringing little joys<br />to your everyday.
         </h1>
         <p style={{ maxWidth: 420, margin: "16px auto 26px", color: theme.body, fontSize: 15, lineHeight: 1.6 }}>
-          Cute homegrown stickers, washi tapes, memo pads, bookmarks and stationery — made with love, just for you.
+          Cute homegrown stickers, washi tapes, memo pads, bookmarks and stationery - made with love, just for you.
         </p>
         <button
           onClick={() => scrollToSection("shop")}
@@ -1782,7 +1781,7 @@ const goToSection = (id) => {
           Got feedback or a question?
         </h2>
         <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
-          We'd love to hear from you — good, bad, or just curious.
+          We'd love to hear from you - good, bad, or just curious.
         </p>
         <FeedbackForm theme={theme} />
       </section>
