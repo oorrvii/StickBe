@@ -268,6 +268,7 @@ const GALLERY_PHOTOS = [
   { image: "/gallery/give.png", caption: "Happy Customer" },
   { type: "video", video: "/gallery/stall_vid.mp4", caption: "Glimpse of the Event!" },
   { image: "/gallery/package.jpeg", caption: "Shipped!" },
+  { image: "/gallery/ctf-final.png", caption: "Shipped sticker packs to HCST!" },
   // Add your real photos here once you have them, same pattern as product images
 ];
 
