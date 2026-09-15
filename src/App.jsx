@@ -145,10 +145,10 @@ const CATEGORIES = [
     icon: "poster",
     aspectRatio: "4 / 5",
     items: [
-      { name: "Retro Desi Pop Poster Set", price: 199,image:"/products/desi_poster.jpeg",inStock: true },
-      { name: "Classic Spiderman Poster Set", price: 199,image:"/products/spiderman-poster.jpeg",inStock: true },
-      { name: "Growth Mindset Poster Set", price: 199,image:"/products/growth_poster.jpeg",inStock: true },
-      { name: "Sweet & Spicy Poster Set", price: 199,image:"/products/heart_poster.jpeg",inStock: true },
+      { name: "Retro Desi Pop Poster Set", price: 179,image:"/products/desi_poster.jpeg",inStock: true },
+      { name: "Classic Spiderman Poster Set", price: 179,image:"/products/spiderman-poster.jpeg",inStock: true },
+      { name: "Growth Mindset Poster Set", price: 179,image:"/products/growth_poster.jpeg",inStock: true },
+      { name: "Sweet & Spicy Poster Set", price: 179,image:"/products/heart_poster.jpeg",inStock: true },
     ],
   },
   {
