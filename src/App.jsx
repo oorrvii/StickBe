@@ -145,6 +145,7 @@ const CATEGORIES = [
     icon: "poster",
     aspectRatio: "4 / 5",
     items: [
+      { name: "Custom Poster (1 piece)", price: 50, image: "/products/custom-sticker.png", isCustom: true },
       { name: "Retro Desi Pop Poster Set", price: 179,image:"/products/desi_poster.jpeg",inStock: true },
       { name: "Classic Spiderman Poster Set", price: 179,image:"/products/spiderman-poster.jpeg",inStock: true },
       { name: "Growth Mindset Poster Set", price: 179,image:"/products/growth_poster.jpeg",inStock: true },
