@@ -899,7 +899,8 @@ function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme 
     name: "", email: "", phone: "", altPhone: "", instagram: "",
     address: "", city: "", state: "", pincode: "",
   });
-  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const [status, setStatus] = useState("idle"); 
+  const [orderSnapshot, setOrderSnapshot] = useState(null);
   if (!cart) return null;
 
 const getDeliveryFee = (city) => {
@@ -974,6 +975,13 @@ const handleField = (key) => (e) => {
         delivery_fee: deliveryFee ?? 40,
         total: total,
       });
+      setOrderSnapshot({
+      items: cart.map((i) => ({ name: i.name, price: i.price, qty: i.qty })),
+      subtotal,
+      deliveryFee: deliveryFee ?? 40,
+      total,
+      customer: { ...form },
+    });
       setStatus("sent");
       onOrderPlaced();
     } catch (err) {
@@ -981,24 +989,59 @@ const handleField = (key) => (e) => {
     }
   };
 
-  if (status === "sent") {
-    return (
-      <div style={{ position: "fixed", inset: 0, background: "rgba(63,43,87,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 20 }}>
-        <div style={{ background: theme.surface, borderRadius: 18, maxWidth: 360, width: "100%", padding: "36px 26px", textAlign: "center" }}>
-          <div style={{ fontSize: 40, marginBottom: 10 }}>🎀</div>
-          <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 19, margin: "0 0 8px" }}>
-            Thank you for ordering!
+if (status === "sent" && orderSnapshot) {
+  const s = orderSnapshot;
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(63,43,87,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 20 }}>
+      <div style={{ background: theme.surface, borderRadius: 18, maxWidth: 420, width: "100%", maxHeight: "85vh", overflowY: "auto", padding: "30px 26px", textAlign: "center", position: "relative" }}>
+        <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
+        <div style={{ fontSize: 40, marginBottom: 10 }}>🎀</div>
+        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 19, margin: "0 0 8px" }}>
+          Thank you for ordering!
+        </p>
+        <p style={{ color: theme.body, fontSize: 14, margin: "0 0 20px", lineHeight: 1.5 }}>
+          We'll contact you soon to confirm your order.
+        </p>
+
+        <div style={{ textAlign: "left", background: theme.surfaceAlt, borderRadius: 12, padding: "14px 16px", marginBottom: 18 }}>
+          <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 14.5, margin: "0 0 10px" }}>
+            Order summary
           </p>
-          <p style={{ color: theme.body, fontSize: 14, margin: "0 0 22px", lineHeight: 1.5 }}>
-            We'll contact you soon to confirm your order.
-          </p>
-          <button onClick={onClose} className="stickbe-order-btn" style={{ justifyContent: "center", width: "100%" }}>
-            Close
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 10 }}>
+            {s.items.map((i) => (
+              <div key={i.name} style={{ display: "flex", justifyContent: "space-between", fontFamily: "'Nunito', sans-serif", fontSize: 13, color: theme.body }}>
+                <span>{i.name} × {i.qty}</span>
+                <span>₹{i.price * i.qty}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, color: theme.bodyMuted, marginBottom: 2, fontFamily: "'Nunito', sans-serif" }}>
+            <span>Subtotal</span><span>₹{s.subtotal}</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, color: theme.bodyMuted, marginBottom: 8, fontFamily: "'Nunito', sans-serif" }}>
+            <span>Delivery</span><span>₹{s.deliveryFee}</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 8, borderTop: `1px solid ${theme.border}`, fontFamily: "'Nunito', sans-serif" }}>
+            <span style={{ fontWeight: 700, color: theme.heading, fontSize: 14 }}>Total</span>
+            <span style={{ fontFamily: "'Baloo 2', sans-serif", color: PEACH, fontSize: 16, fontWeight: 600 }}>₹{s.total}</span>
+          </div>
+
+          <div style={{ borderTop: `1px solid ${theme.border}`, marginTop: 12, paddingTop: 10, fontFamily: "'Nunito', sans-serif", fontSize: 12.5, color: theme.body, lineHeight: 1.6 }}>
+            <p style={{ margin: 0, fontWeight: 700, color: theme.heading }}>{s.customer.name}</p>
+            <p style={{ margin: 0 }}>{s.customer.email}</p>
+            <p style={{ margin: 0 }}>{s.customer.phone}{s.customer.altPhone ? ` / ${s.customer.altPhone}` : ""}</p>
+            <p style={{ margin: 0 }}>@{s.customer.instagram}</p>
+            <p style={{ margin: "4px 0 0" }}>{s.customer.address}, {s.customer.city}, {s.customer.state} - {s.customer.pincode}</p>
+          </div>
         </div>
+
+        <button onClick={onClose} className="stickbe-order-btn" style={{ justifyContent: "center", width: "100%" }}>
+          Close
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div
