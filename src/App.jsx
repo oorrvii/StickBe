@@ -174,7 +174,7 @@ const CATEGORIES = [
       { name: "Custom Poster (1 piece)", price: 119, image: "/products/custom-sticker.png", isCustom: true },
       { name: "Keep Flying Poster (12x18)", price: 99,image:"/products/flying.jpeg",inStock: true },
       { name: "Like Jennie Poster (12x18)", price: 99,image:"/products/jennie_p.jpeg",inStock: true },
-      { name: "Virat Kohli Poster (12x18)", price: 99,image:"/products/kohli_p.png",inStock: true },
+      { name: "Virat Kohli Poster (12x18)", price: 99,image:"/products/kohli_p.jpeg",inStock: true },
     ],
   },
    {
