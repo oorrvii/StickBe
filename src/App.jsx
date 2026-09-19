@@ -165,18 +165,18 @@ const CATEGORIES = [
       { name: "The Caffeine Club Set", price: 179,image:"/products/caffeine_poster.jpeg",inStock: true },
     ],
   },
-  //  {
-  //   id: "bigposters",
-  //   label: "Big Poster(12x18)",
-  //   icon: "bigposter",
-  //   aspectRatio: "3 / 4",
-  //   items: [
-  //     { name: "Custom Poster (1 piece)", price: 119, image: "/products/custom-sticker.png", isCustom: true },
-  //     { name: "Take Risk Poster", price: 99,image:"/products/risk_p.png",inStock: true },
-  //     { name: "Make Plan Poster", price: 99,image:"/products/plan_p.png",inStock: true },
-  //     { name: "Virat Kohli Poster", price: 99,image:"/products/kohli_p.png",inStock: true },
-  //   ],
-  // },
+   {
+    id: "bigposters",
+    label: "Big Wall Posters",
+    icon: "bigposter",
+    aspectRatio: "3 / 4",
+    items: [
+      { name: "Custom Poster (1 piece)", price: 119, image: "/products/custom-sticker.png", isCustom: true },
+      { name: "Keep Flying Poster (12x18)", price: 99,image:"/products/flying.jpeg",inStock: true },
+      { name: "Like Jennie Poster (12x18)", price: 99,image:"/products/jennie_p.jpeg",inStock: true },
+      { name: "Virat Kohli Poster (12x18)", price: 99,image:"/products/kohli_p.png",inStock: true },
+    ],
+  },
    {
     id: "frame",
     label: "Wall Frames",
@@ -184,9 +184,11 @@ const CATEGORIES = [
     aspectRatio: "3 / 4",
     items: [
       { name: "Custom Wall Frame (1 piece)", price: 419, image: "/products/custom-sticker.png", isCustom: true },
-      { name: "M.S Dhoni Wall Frame", price: 399,image:"/products/dhoni_f.png",inStock: true },
-      { name: "Virat Kohli Wall Frame", price: 399,image:"/products/virat_f.png",inStock: true },
-      { name: "Virat Kohli Believe Wall Frame", price: 399,image:"/products/kohli_f.png",inStock: true },
+      { name: "M.S Dhoni Wall Frame (12x18)", price: 399,image:"/products/dhoni_f.png",inStock: true },
+      { name: "Virat Kohli Wall Frame (12x18)", price: 399,image:"/products/virat_f.png",inStock: true },
+      { name: "Virat Kohli Believe Wall Frame (12x18)", price: 399,image:"/products/kohli_f.png",inStock: true },
+      { name: "Keep Flying Wall Frame (12x18)", price: 399,image:"/products/flying_f.jpeg",inStock: true },
+      { name: "Like Jennie Wall Frame (12x18)", price: 399,image:"/products/jennie_f.jpeg",inStock: true },
     ],
   },
   {
