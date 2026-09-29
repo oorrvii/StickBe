@@ -249,7 +249,7 @@ const CATEGORIES = [
       { name: "Ink & Lemonade Bookmark", price: 49,image:"/products/ink_bm_final.jpeg", inStock: true},
       { name: "Keep Reading Bookmark", price: 49,image:"/products/reading_bm.jpeg", inStock: true},
       { name: "You Are On This Page Bookmark", price: 49,image:"/products/page_bm.jpeg", inStock: true},
-      { name: "Sushi Platter Bookmark", price: 49,image:"/products/sushi.jpeg", inStock: true},
+      { name: "Sushi Platter Bookmark", price: 55,image:"/products/sushi.jpeg", inStock: true},
       { name: "Reading Fuel Bookmark", price: 49,image:"/products/fuel.jpeg", inStock: true},
 
 
