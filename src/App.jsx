@@ -191,46 +191,7 @@ const CATEGORIES = [
       { name: "Like Jennie Wall Frame (12x18)", price: 399,image:"/products/jennie_f.jpeg",inStock: true },
     ],
   },
-  {
-    id: "washi",
-    label: "Washi Tapes",
-    icon: "tape",
-    aspectRatio: "3 / 2",
-    items: [
-      { name: "Floral Pink Heart Washi Tape", price: 180,image:"/products/pinkwashi.png",
-        hasVariants: true,
-      variants: [
-        { label: "Single roll (1 piece)", price: 20 },
-        { label: "Five roll (5 pcs)", price: 90 },
-        { label: "Full set (10 pcs)", price: 180 },
-      ],
-        inStock: true },
-      { name: "Black and Gold Foil Washi Tape", price: 180,image:"/products/blackwashi.png", 
-        hasVariants: true,
-      variants: [
-        { label: "Single roll (1 piece)", price: 20 },
-        { label: "Five roll (5 pcs)", price: 90 },
-        { label: "Full set (10 pcs)", price: 180 },
-      ],
-        inStock: true },
-    ],
-  },
-  {
-    id: "memopads",
-    label: "Memo Pads",
-    icon: "pad",
-    items: [
-      { name: "Pastel Peach Rabbit Memo Pad", price: 59,image:"/products/peach.jpeg", inStock: true },
-      { name: "Pastel Pink Rabbit Memo Pad", price: 59,image:"/products/pink.jpeg",inStock: true },
-      { name: "Pastel Blue Rabbit Memo Pad", price: 59,image:"/products/blue.jpeg",inStock: true },
-      { name: "Pastel Yellow Rabbit Memo Pad", price: 59,image:"/products/yellow.jpeg",inStock: true },
-      { name: "Lazy Cat Memo Pad", price: 79,image:"/products/lazy-cat.jpeg",inStock: true },
-      { name: "Smart Cat Lined Memo Pad", price: 79,image:"/products/smart-cat.jpeg",inStock: true },
-      { name: "Shiba Inu Kawaii Memo Pad", price: 79,image:"/products/shiba-inu.jpeg",inStock: true },
-      { name: "Blue Bear Grid Memo Pad", price: 79,image:"/products/blue-bear.jpeg",inStock: true },
-    ],
-  },
-  {
+   {
     id: "bookmarks",
     label: "Bookmarks",
     icon: "bookmark",
@@ -256,13 +217,18 @@ const CATEGORIES = [
     ],
   },
   {
-    id: "erasers",
-    label: "Erasers",
-    icon: "eraser",
+    id: "memopads",
+    label: "Memo Pads",
+    icon: "pad",
     items: [
-      { name: "Tropical Eraser Set", price: 60,image:"/products/tropical.jpeg",inStock: true },
-      { name: "Rainbow Eraser Set", price: 60,image:"/products/rainbow.jpeg",inStock: true },
-      { name: "Chocolate Bar Eraser", price: 65,image:"/products/choco-eraser.png",inStock: true },
+      { name: "Pastel Peach Rabbit Memo Pad", price: 59,image:"/products/peach.jpeg", inStock: true },
+      { name: "Pastel Pink Rabbit Memo Pad", price: 59,image:"/products/pink.jpeg",inStock: true },
+      { name: "Pastel Blue Rabbit Memo Pad", price: 59,image:"/products/blue.jpeg",inStock: true },
+      { name: "Pastel Yellow Rabbit Memo Pad", price: 59,image:"/products/yellow.jpeg",inStock: true },
+      { name: "Lazy Cat Memo Pad", price: 79,image:"/products/lazy-cat.jpeg",inStock: true },
+      { name: "Smart Cat Lined Memo Pad", price: 79,image:"/products/smart-cat.jpeg",inStock: true },
+      { name: "Shiba Inu Kawaii Memo Pad", price: 79,image:"/products/shiba-inu.jpeg",inStock: true },
+      { name: "Blue Bear Grid Memo Pad", price: 79,image:"/products/blue-bear.jpeg",inStock: true },
     ],
   },
   {
@@ -288,7 +254,7 @@ const CATEGORIES = [
       { name: "Grow Plant Spiral Notepad ", price: 99,image:"/products/grow_np.png",inStock: true },
     ],
   },
-  {
+    {
     id: "sticky",
     label: "Sticky Notes",
     icon: "sticky",
@@ -302,6 +268,40 @@ const CATEGORIES = [
       { name: "Star Nibble Sticky Note", price: 99,image:"/products/Star_Nibble.png",inStock: true },
       { name: "Hug Brew Sticky Note", price: 99,image:"/products/Hug_Brew.png",inStock: true },
       { name: "Sweet Hop Sticky Note", price: 99,image:"/products/Sweet_Hop.png",inStock: true },
+    ],
+  },
+    {
+    id: "washi",
+    label: "Washi Tapes",
+    icon: "tape",
+    aspectRatio: "3 / 2",
+    items: [
+      { name: "Floral Pink Heart Washi Tape", price: 180,image:"/products/pinkwashi.png",
+        hasVariants: true,
+      variants: [
+        { label: "Single roll (1 piece)", price: 20 },
+        { label: "Five roll (5 pcs)", price: 90 },
+        { label: "Full set (10 pcs)", price: 180 },
+      ],
+        inStock: true },
+      { name: "Black and Gold Foil Washi Tape", price: 180,image:"/products/blackwashi.png", 
+        hasVariants: true,
+      variants: [
+        { label: "Single roll (1 piece)", price: 20 },
+        { label: "Five roll (5 pcs)", price: 90 },
+        { label: "Full set (10 pcs)", price: 180 },
+      ],
+        inStock: true },
+    ],
+  },
+  {
+    id: "erasers",
+    label: "Erasers",
+    icon: "eraser",
+    items: [
+      { name: "Tropical Eraser Set", price: 60,image:"/products/tropical.jpeg",inStock: true },
+      { name: "Rainbow Eraser Set", price: 60,image:"/products/rainbow.jpeg",inStock: true },
+      { name: "Chocolate Bar Eraser", price: 65,image:"/products/choco-eraser.png",inStock: true },
     ],
   },
 ];
