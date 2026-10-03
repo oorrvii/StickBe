@@ -147,7 +147,22 @@ const CATEGORIES = [
       { name: "Powerful Women Sticker", price: 12,image:"/products/powerful.jpeg",inStock: true },
       { name: "Sassy Sticker", price: 12,image:"/products/sassy.jpeg",inStock: true },
       { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
+      // { name: "Male Tears Sticker", price: 12,image:"/products/snitch.jpeg",inStock: true },
+      // { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
+      // { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
+      // { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
 
+
+    ],
+  },
+   {
+    id: "stickerpack",
+    label: "Sticker Pack",
+    icon: "stickerpack",
+    aspectRatio: "3 / 4",
+    items: [
+      // { name: "Custom Sticker Pack (1 piece)", price: 119, image: "/products/custom-sticker.png", isCustom: true },
+      { name: "Panda Sticker Set (9pcs)", price: 99,images: ["/products/panda-pack.jpeg","/products/panda-pack-2.jpeg"],inStock: true },
     ],
   },
    {
@@ -303,7 +318,7 @@ const CATEGORIES = [
       { name: "Rainbow Eraser Set", price: 60,image:"/products/rainbow.jpeg",inStock: true },
       { name: "Chocolate Bar Eraser", price: 65,image:"/products/choco-eraser.png",inStock: true },
     ],
-  },
+  }
 ];
 
 const GALLERY_PHOTOS = [
@@ -363,8 +378,21 @@ function CategoryIcon({ type }) {
 
 function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWishlist, onImageClick, cartQty, onUpdateQty }) {
   const [imgFailed, setImgFailed] = useState(false);
-const inStock = item.inStock !== false;
+  const [imgIndex, setImgIndex] = useState(0);
+  const inStock = item.inStock !== false;
+  const imageList = item.images && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
+  const hasMultiple = imageList.length > 1;
 
+  const touchStartX = useRef(null);
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (delta > 30) setImgIndex((i) => (i - 1 + imageList.length) % imageList.length);
+    else if (delta < -30) setImgIndex((i) => (i + 1) % imageList.length);
+    touchStartX.current = null;
+  };
+  
 const handleAdd = () => {
   if (!inStock) return;
   onAdd({ ...item, categoryLabel });
@@ -374,24 +402,69 @@ const handleAdd = () => {
 
   return (
     <div className="stickbe-card" style={!inStock ? { opacity: 0.75 } : undefined}>
-      <div
+     <div
   className="stickbe-thumb"
   style={{
-    ...(showImage ? { padding: 0, cursor: "zoom-in" } : { cursor: "default" }),
+    ...(imageList.length > 0 && !imgFailed ? { padding: 0, cursor: "zoom-in" } : { cursor: "default" }),
     aspectRatio: item.aspectRatio || "1 / 1",
+    ...(item.fit === "contain" ? { background: "#fff" } : {}),
   }}
-  onClick={() => showImage && onImageClick(item.image)}
+  onClick={() => imageList.length > 0 && !imgFailed && onImageClick(imageList[imgIndex])}
+  onTouchStart={hasMultiple ? handleTouchStart : undefined}
+  onTouchEnd={hasMultiple ? handleTouchEnd : undefined}
 >
-        {showImage ? (
-          <img
-            src={item.image}
-            alt={item.name}
-            onError={() => setImgFailed(true)}
-            style={{ width: "100%", height: "100%", objectFit: item.fit || "cover" }}
-          />
-        ) : (
-          <CategoryIcon type={item.iconOverride} />
-        )}
+  {imageList.length > 0 && !imgFailed ? (
+    <>
+      <img
+        src={imageList[imgIndex]}
+        alt={item.name}
+        onError={() => setImgFailed(true)}
+        style={{ width: "100%", height: "100%", objectFit: item.fit || "cover" }}
+      />
+      {hasMultiple && (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); setImgIndex((i) => (i - 1 + imageList.length) % imageList.length); }}
+            style={{
+              position: "absolute", top: "50%", left: 4, transform: "translateY(-50%)",
+              background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%",
+              width: 22, height: 22, cursor: "pointer", display: "flex",
+              alignItems: "center", justifyContent: "center", fontSize: 13, color: PLUM, zIndex: 2,
+            }}
+            aria-label="Previous image"
+          >
+            ‹
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); setImgIndex((i) => (i + 1) % imageList.length); }}
+            style={{
+              position: "absolute", top: "50%", right: 4, transform: "translateY(-50%)",
+              background: "rgba(255,255,255,0.85)", border: "none", borderRadius: "50%",
+              width: 22, height: 22, cursor: "pointer", display: "flex",
+              alignItems: "center", justifyContent: "center", fontSize: 13, color: PLUM, zIndex: 2,
+            }}
+            aria-label="Next image"
+          >
+            ›
+          </button>
+          <div style={{ position: "absolute", bottom: 6, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 4, zIndex: 2 }}>
+            {imageList.map((_, i) => (
+              <span
+                key={i}
+                style={{
+                  width: i === imgIndex ? 12 : 5, height: 5, borderRadius: 100,
+                  background: i === imgIndex ? "#fff" : "rgba(255,255,255,0.55)",
+                  transition: "width 0.2s ease",
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  ) : (
+    <CategoryIcon type={item.iconOverride} />
+  )}
 
         <button
           onClick={(e) => { e.stopPropagation(); onToggleWishlist(item.name); }}
