@@ -1014,6 +1014,7 @@ function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme 
   const [orderSnapshot, setOrderSnapshot] = useState(null);
   if (!cart) return null;
 
+const MIN_ORDER_VALUE = 99;
 const getDeliveryFee = (city) => {
   const normalized = city.trim().toLowerCase();
   if (normalized === "agra") return 20;
@@ -1034,7 +1035,8 @@ const orderText =
     ? "Your cart is empty."
     : `Hi StickBe!\n\nI'd like to order:\n${orderItemsText}\n\nSubtotal: ₹${subtotal}\nDelivery: ₹${deliveryFee ?? 40}\nTotal: ₹${total}\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\nAddress: ${form.address}, ${form.city}, ${form.state} - ${form.pincode}\n\nThank you!`;
 
-  const requiredFilled = form.name && form.email && form.phone && form.instagram && form.address && form.city && form.state && form.pincode;
+const meetsMinOrder = subtotal >= MIN_ORDER_VALUE;
+const requiredFilled = form.name && form.email && form.phone && form.instagram && form.address && form.city && form.state && form.pincode && meetsMinOrder;
 
 const handleField = (key) => (e) => {
   let value = e.target.value;
@@ -1207,10 +1209,21 @@ if (status === "sent" && orderSnapshot) {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 18 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.bodyMuted, fontSize: 13 }}>Subtotal</span>
-                <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.body, fontSize: 13 }}>₹{subtotal}</span>
-              </div>
+  {!meetsMinOrder && (
+    <div style={{
+      background: `${PEACH}22`, border: `1px solid ${PEACH}66`, borderRadius: 10,
+      padding: "8px 12px", marginBottom: 4,
+    }}>
+      <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: "#9a6a3f", fontWeight: 700, margin: 0 }}>
+        Add ₹{MIN_ORDER_VALUE - subtotal} more to reach the ₹{MIN_ORDER_VALUE} minimum order
+      </p>
+    </div>
+  )}
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.bodyMuted, fontSize: 13 }}>Subtotal</span>
+    <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.body, fontSize: 13 }}>₹{subtotal}</span>
+  </div>
+
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
   <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.bodyMuted, fontSize: 13 }}>Delivery</span>
   <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.body, fontSize: 13 }}>
@@ -1255,17 +1268,21 @@ if (status === "sent" && orderSnapshot) {
             </p>
 
             <button
-              onClick={handlePlaceOrder}
-              disabled={!requiredFilled || status === "sending"}
-              className="stickbe-order-btn"
-              style={{
-                width: "100%", justifyContent: "center", margin: "10px 0 14px", padding: "11px 13px", fontSize: 14,
-                opacity: !requiredFilled || status === "sending" ? 0.55 : 1,
-                cursor: !requiredFilled || status === "sending" ? "not-allowed" : "pointer",
-              }}
-            >
-              {status === "sending" ? "Sending..." : "Place order"}
-            </button>
+  onClick={handlePlaceOrder}
+  disabled={!requiredFilled || status === "sending"}
+  className="stickbe-order-btn"
+  style={{
+    width: "100%", justifyContent: "center", margin: "10px 0 14px", padding: "11px 13px", fontSize: 14,
+    opacity: !requiredFilled || status === "sending" ? 0.55 : 1,
+    cursor: !requiredFilled || status === "sending" ? "not-allowed" : "pointer",
+  }}
+>
+  {status === "sending"
+    ? "Sending..."
+    : !meetsMinOrder
+    ? `Add ₹${MIN_ORDER_VALUE - subtotal} more to order`
+    : "Place order"}
+</button>
 
             <details style={{ marginBottom: 4 }}>
               <summary style={{ fontSize: 12, color: theme.bodyMuted, cursor: "pointer", fontWeight: 700 }}>
