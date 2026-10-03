@@ -59,6 +59,7 @@ const CATEGORIES = [
       { name: "Itachi Sticker", price: 12,image:"/products/Itachi.jpeg",inStock: true },
       { name: "Itachi Uchiha Sticker", price: 12,image:"/products/Itachi-Uchiha.jpeg",inStock: true },
       { name: "Kakashi Hatake Sticker", price: 12,image:"/products/Kakashi-Hatake.jpeg",inStock: true },
+      { name: "Sukuna Peeker Sticker", price: 12,image:"/products/anime_s.jpeg",inStock: true },
       { name: "Porsche 911 Sticker", price: 12,image:"/products/porsche_911.jpeg",inStock: true },
       { name: "Floral Skull Sticker", price: 12,image:"/products/floral_skull.jpeg",inStock: true },
       { name: "Batman Sticker", price: 12,image:"/products/batman.jpeg",inStock: true },
@@ -147,12 +148,9 @@ const CATEGORIES = [
       { name: "Powerful Women Sticker", price: 12,image:"/products/powerful.jpeg",inStock: true },
       { name: "Sassy Sticker", price: 12,image:"/products/sassy.jpeg",inStock: true },
       { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
-      // { name: "Male Tears Sticker", price: 12,image:"/products/snitch.jpeg",inStock: true },
-      // { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
-      // { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
-      // { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
-
-
+      { name: "Messi Sticker", price: 12,image:"/products/messi.jpeg",inStock: true },
+      { name: "Spider-Man Advanced Suit Sticker", price: 12,image:"/products/spiderman_s.jpeg",inStock: true },
+      { name: "Stich Holding Scrump Sticker", price: 12,image:"/products/stitch.jpeg",inStock: true },
     ],
   },
    {
@@ -162,7 +160,7 @@ const CATEGORIES = [
     aspectRatio: "3 / 4",
     items: [
       // { name: "Custom Sticker Pack (1 piece)", price: 119, image: "/products/custom-sticker.png", isCustom: true },
-      { name: "Panda Sticker Set (9pcs)", price: 99,images: ["/products/panda-pack.jpeg","/products/panda-pack-2.jpeg"],inStock: true },
+      { name: "Panda Sticker Set (9pcs)", price: 99,images: ["/products/panda-pack-2.jpeg","/products/panda-pack.jpeg"],inStock: true },
     ],
   },
    {
