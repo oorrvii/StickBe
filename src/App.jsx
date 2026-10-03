@@ -150,7 +150,7 @@ const CATEGORIES = [
       { name: "Male Tears Sticker", price: 12,image:"/products/tears.jpeg",inStock: true },
       { name: "Messi Sticker", price: 12,image:"/products/messi.jpeg",inStock: true },
       { name: "Spider-Man Advanced Suit Sticker", price: 12,image:"/products/spiderman_s.jpeg",inStock: true },
-      { name: "Stich Holding Scrump Sticker", price: 12,image:"/products/stitch.jpeg",inStock: true },
+      { name: "Stich Holding Scrump Sticker", price: 12,image:"/products/stich.jpeg",inStock: true },
     ],
   },
    {
@@ -1094,6 +1094,13 @@ const handleField = (key) => (e) => {
       customer: { ...form },
     });
       setStatus("sent");
+      if (window.gtag) {
+  window.gtag("event", "purchase", {
+    value: total,
+    currency: "INR",
+    items: cart.map((i) => ({ item_name: i.name, price: i.price, quantity: i.qty })),
+  });
+}
       onOrderPlaced();
     } catch (err) {
       setStatus("error");
@@ -1402,6 +1409,15 @@ const addToCart = (item) => {
     }
     return [...prev, { ...item, qty: 1 }];
   });
+
+   if (window.gtag) {
+    window.gtag("event", "add_to_cart", {
+      item_name: item.name,
+      value: item.price,
+      currency: "INR",
+    });
+  }
+
   if (item.isCustom) {
     setCustomPopup(true);
   } else {
