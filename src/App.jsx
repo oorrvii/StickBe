@@ -1,5 +1,6 @@
 import React, { useState, useEffect , useRef } from "react";
 import { Instagram, Mail, Heart, Sparkles, ShoppingBag, ShoppingCart, Plus, Minus, Trash2, Check, Camera, Home, MessageCircle, Send, Sun, Moon } from "lucide-react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const PLUM = "#5B3E7F";
 const LILAC = "#B39BD0";
@@ -2020,6 +2021,7 @@ const goToSection = (id) => {
 />
 <CustomStickerPopup open={customPopup} onClose={() => setCustomPopup(false)} theme={theme} />
 <VariantPopup item={variantPopup} onClose={() => setVariantPopup(null)} onChoose={handleChooseVariant} theme={theme} cart={cart} onUpdateQty={updateQty} />
+<SpeedInsights />
     </div>
   );
 }
