@@ -1564,14 +1564,14 @@ const goToSection = (id) => {
     document.head.appendChild(script);
   }, []);
 
-  useEffect(() => {
-  if (window.emailjs) return;
-  const script = document.createElement("script");
-  script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
-  script.onload = () => {
-    if (window.emailjs) window.emailjs.init(EMAILJS_PUBLIC_KEY);
-  };
-  document.head.appendChild(script);
+useEffect(() => {
+  if (productSlug) {
+    const product = findProductBySlug(productSlug);
+    if (product) {
+      setActive(product.categoryId);
+      setTimeout(() => scrollToSection("shop"), 100);
+    }
+  }
 }, []);
 
   return (
