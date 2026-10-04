@@ -160,7 +160,7 @@ const CATEGORIES = [
     aspectRatio: "3 / 4",
     items: [
       // { name: "Custom Sticker Pack (1 piece)", price: 119, image: "/products/custom-sticker.png", isCustom: true },
-      { name: "Panda Sticker Set (9pcs)", price: 99,images: ["/products/panda-pack-2.jpeg","/products/panda-pack.jpeg"],slug: "panda-sticker-set",inStock: true },
+      { name: "Panda Sticker Set (9pcs)", price: 89,images: ["/products/panda-pack-2.jpeg","/products/panda-pack.jpeg"],slug: "panda-sticker-set",inStock: true },
     ],
   },
    {
