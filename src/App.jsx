@@ -478,39 +478,6 @@ const handleAdd = () => {
         >
           <Heart size={13} fill={inWishlist ? "#e07a7a" : "none"} stroke={inWishlist ? "#e07a7a" : "#8a7a97"} strokeWidth={2} />
         </button>
-         
-         <button
-  onClick={async (e) => {
-    e.stopPropagation();
-    const url = `https://stickbe.store/product/${item.slug}`;
-    const shareText = `Check out "${item.name}" at StickBe! ₹${item.price}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: item.name, text: shareText, url });
-      } catch (err) {}
-    } else {
-      try {
-        await navigator.clipboard.writeText(`${shareText} ${url}`);
-        alert("Link copied!");
-      } catch (err) {}
-    }
-  }}
-  style={{
-    position: "absolute", top: 8, right: 40, background: "rgba(255,255,255,0.85)",
-    border: "none", borderRadius: "50%", width: 26, height: 26, display: "flex",
-    alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 2,
-  }}
-  aria-label="Share product"
->
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a7a97" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="18" cy="5" r="3" />
-    <circle cx="6" cy="12" r="3" />
-    <circle cx="18" cy="19" r="3" />
-    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-  </svg>
-</button>
-
         {!inStock && (
           <div style={{
             position: "absolute", inset: 0, background: "rgba(40,30,50,0.55)",
@@ -525,7 +492,8 @@ const handleAdd = () => {
           </div>
         )}
       </div>
-      <div style={{ padding: "8px 10px 10px" }}>
+       
+        <div style={{ padding: "8px 10px 10px" }}>
         <p style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 13.5, color: theme.heading, margin: 0, lineHeight: 1.2 }}>
           {item.name}
         </p>
@@ -534,32 +502,65 @@ const handleAdd = () => {
     ₹{item.price}
   </span>
 
-  {cartQty > 0 ? (
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <button onClick={() => onUpdateQty(item.name, cartQty - 1)} className="stickbe-qty-btn" aria-label="Decrease quantity">
-        <Minus size={12} />
-      </button>
-      <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 14, textAlign: "center" }}>
-        {cartQty}
-      </span>
-      <button onClick={() => onUpdateQty(item.name, cartQty + 1)} className="stickbe-qty-btn" aria-label="Increase quantity">
-        <Plus size={12} />
-      </button>
-    </div>
-  ) : (
+  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
     <button
-      onClick={handleAdd}
-      disabled={!inStock}
-      className="stickbe-order-btn"
-      style={{
-        padding: "5px 10px", fontSize: 11.5,
-        ...(!inStock ? { opacity: 0.5, cursor: "not-allowed" } : {}),
+      onClick={async (e) => {
+        e.stopPropagation();
+        const url = `https://stickbe.store/product/${item.slug}`;
+        const shareText = `Check out "${item.name}" at StickBe! ₹${item.price}`;
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: item.name, text: shareText, url });
+          } catch (err) {}
+        } else {
+          try {
+            await navigator.clipboard.writeText(`${shareText} ${url}`);
+            alert("Link copied!");
+          } catch (err) {}
+        }
       }}
+      style={{
+        background: "none", border: "none", cursor: "pointer", padding: 2,
+        display: "flex", alignItems: "center", color: theme.bodyMuted,
+      }}
+      aria-label="Share product"
     >
-      <Plus size={11} strokeWidth={2.5} />
-      {inStock ? "Add" : "Sold out"}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="18" cy="5" r="3" />
+        <circle cx="6" cy="12" r="3" />
+        <circle cx="18" cy="19" r="3" />
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+      </svg>
     </button>
-  )}
+
+    {cartQty > 0 ? (
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <button onClick={() => onUpdateQty(item.name, cartQty - 1)} className="stickbe-qty-btn" aria-label="Decrease quantity">
+          <Minus size={12} />
+        </button>
+        <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 14, textAlign: "center" }}>
+          {cartQty}
+        </span>
+        <button onClick={() => onUpdateQty(item.name, cartQty + 1)} className="stickbe-qty-btn" aria-label="Increase quantity">
+          <Plus size={12} />
+        </button>
+      </div>
+    ) : (
+      <button
+        onClick={handleAdd}
+        disabled={!inStock}
+        className="stickbe-order-btn"
+        style={{
+          padding: "5px 10px", fontSize: 11.5,
+          ...(!inStock ? { opacity: 0.5, cursor: "not-allowed" } : {}),
+        }}
+      >
+        <Plus size={11} strokeWidth={2.5} />
+        {inStock ? "Add" : "Sold out"}
+      </button>
+       )}
+  </div>
 </div>
       </div>
     </div>
