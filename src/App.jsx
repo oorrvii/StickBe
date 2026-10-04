@@ -1,4 +1,5 @@
 import React, { useState, useEffect , useRef } from "react";
+import { useParams, useNavigate, Routes, Route } from "react-router-dom";
 import { Instagram, Mail, Heart, Sparkles, ShoppingBag, ShoppingCart, Plus, Minus, Trash2, Check, Camera, Home, MessageCircle, Send, Sun, Moon } from "lucide-react";
 
 const PLUM = "#5B3E7F";
@@ -477,6 +478,38 @@ const handleAdd = () => {
         >
           <Heart size={13} fill={inWishlist ? "#e07a7a" : "none"} stroke={inWishlist ? "#e07a7a" : "#8a7a97"} strokeWidth={2} />
         </button>
+         
+         <button
+  onClick={async (e) => {
+    e.stopPropagation();
+    const url = `https://stickbe.store/product/${item.slug}`;
+    const shareText = `Check out "${item.name}" at StickBe! ₹${item.price}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: item.name, text: shareText, url });
+      } catch (err) {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(`${shareText} ${url}`);
+        alert("Link copied!");
+      } catch (err) {}
+    }
+  }}
+  style={{
+    position: "absolute", top: 8, right: 40, background: "rgba(255,255,255,0.85)",
+    border: "none", borderRadius: "50%", width: 26, height: 26, display: "flex",
+    alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 2,
+  }}
+  aria-label="Share product"
+>
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a7a97" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="5" r="3" />
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="19" r="3" />
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+  </svg>
+</button>
 
         {!inStock && (
           <div style={{
@@ -1400,7 +1433,7 @@ function FeedbackForm({ theme }) {
   );
 }
 
-export default function StickBeSite() {
+function StickBeSite() {
   const [active, setActive] = useState(CATEGORIES[0].id);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
@@ -1416,6 +1449,8 @@ export default function StickBeSite() {
   const [shopPage, setShopPage] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
+  const { productSlug } = useParams();
+  const navigate = useNavigate();
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
@@ -1488,7 +1523,13 @@ const searchResults = searchQuery.trim()
     .filter((item) => wishlist.includes(item.name))
     .map((item) => ({ ...item, categoryLabel: cat.label, iconOverride: cat.icon }))
 );
-
+const findProductBySlug = (slug) => {
+  for (const cat of CATEGORIES) {
+    const found = cat.items.find((item) => item.slug === slug);
+    if (found) return { ...found, categoryLabel: cat.label, categoryId: cat.id, iconOverride: cat.icon, aspectRatio: cat.aspectRatio, fit: cat.fit };
+  }
+  return null;
+};
   const handleOrderPlaced = () => setCart([]);
 
   const scrollToSection = (id) => {
@@ -1521,6 +1562,16 @@ const goToSection = (id) => {
     };
     document.head.appendChild(script);
   }, []);
+
+  useEffect(() => {
+  if (window.emailjs) return;
+  const script = document.createElement("script");
+  script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+  script.onload = () => {
+    if (window.emailjs) window.emailjs.init(EMAILJS_PUBLIC_KEY);
+  };
+  document.head.appendChild(script);
+}, []);
 
   return (
    <div className="stickbe-root" style={{ background: theme.pageBg, minHeight: "100%", fontFamily: "'Nunito', sans-serif" }}>
@@ -2040,5 +2091,13 @@ const goToSection = (id) => {
 <CustomStickerPopup open={customPopup} onClose={() => setCustomPopup(false)} theme={theme} />
 <VariantPopup item={variantPopup} onClose={() => setVariantPopup(null)} onChoose={handleChooseVariant} theme={theme} cart={cart} onUpdateQty={updateQty} />
     </div>
+  );
+}
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<StickBeSite />} />
+      <Route path="/product/:productSlug" element={<StickBeSite />} />
+    </Routes>
   );
 }
