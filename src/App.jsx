@@ -158,10 +158,12 @@ const CATEGORIES = [
     id: "stickerpack",
     label: "Sticker Pack",
     icon: "stickerpack",
-    aspectRatio: "3 / 4",
+    aspectRatio: "1 / 1",
     items: [
       // { name: "Custom Sticker Pack (1 piece)", price: 119, image: "/products/custom-sticker.png", isCustom: true },
       { name: "Panda Sticker Set (9pcs)", price: 89,images: ["/products/panda-pack-2.jpeg","/products/panda-pack.jpeg"],slug: "panda-sticker-set",inStock: true },
+      { name: "Froggy Sticker Set (9pcs)", price: 89,images: ["/products/froggy-pack.jpeg","/products/froggy-pack-2.jpeg"],slug: "froggy-sticker-set",inStock: true },
+      { name: "friends Sticker Set (6pcs)", price: 79,images: ["/products/friends-pack.jpeg","/products/friends-pack-2.jpeg"],slug: "friends-sticker-set",inStock: true },
     ],
   },
    {
