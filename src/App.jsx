@@ -990,6 +990,34 @@ function Lightbox({ image, onClose }) {
   );
 }
 
+function NotFoundPage() {
+  const navigate = useNavigate();
+
+  return (
+    <div style={{
+      minHeight: "100vh", display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center", textAlign: "center",
+      padding: 24, background: CREAM, fontFamily: "'Nunito', sans-serif",
+    }}>
+      <img src={LOGO_URI} alt="StickBe" style={{ width: 64, height: 64, borderRadius: "50%", objectFit: "cover", marginBottom: 16 }} />
+      <div style={{ fontSize: 42, marginBottom: 6 }}>🧸</div>
+      <p style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 26, color: PLUM, margin: "0 0 8px" }}>
+        Oops, page not found!
+      </p>
+      <p style={{ color: "#8a7a97", fontSize: 14, margin: "0 0 28px", maxWidth: 320, lineHeight: 1.6 }}>
+        This page may have moved, or the link might be a little wonky. Let's get you back to the cute stuff.
+      </p>
+      <button
+        onClick={() => navigate("/")}
+        className="stickbe-order-btn"
+        style={{ padding: "12px 24px", fontSize: 14 }}
+      >
+        Back to StickBe
+      </button>
+    </div>
+  );
+}
+
 function WishlistModal({ wishlistItems, onClose, onToggleWishlist, onAdd, theme }) {
   return (
     <div
@@ -2120,6 +2148,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<StickBeSite />} />
       <Route path="/product/:productSlug" element={<StickBeSite />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
