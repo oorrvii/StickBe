@@ -377,7 +377,7 @@ function CategoryIcon({ type }) {
   );
 }
 
-function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWishlist, onImageClick, cartQty, onUpdateQty }) {
+function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWishlist, onImageClick, cartQty, onUpdateQty, highlighted }) {
   const [imgFailed, setImgFailed] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
   const inStock = item.inStock !== false;
@@ -402,7 +402,7 @@ const handleAdd = () => {
   const showImage = item.image && !imgFailed;
 
   return (
-    <div className="stickbe-card" style={!inStock ? { opacity: 0.75 } : undefined}>
+   <div id={`product-${item.slug}`} className={`stickbe-card ${highlighted ? "stickbe-card-highlighted" : ""}`} style={!inStock ? { opacity: 0.75 } : undefined}>
      <div
   className="stickbe-thumb"
   style={{
@@ -1569,7 +1569,18 @@ useEffect(() => {
     const product = findProductBySlug(productSlug);
     if (product) {
       setActive(product.categoryId);
-      setTimeout(() => scrollToSection("shop"), 100);
+
+      const category = CATEGORIES.find((c) => c.id === product.categoryId);
+      if (category) {
+        const indexInCategory = category.items.findIndex((item) => item.slug === productSlug);
+        const pageForProduct = Math.floor(indexInCategory / ITEMS_PER_PAGE) + 1;
+        setShopPage(pageForProduct);
+      }
+
+      setTimeout(() => {
+        const el = document.getElementById(`product-${productSlug}`);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
     }
   }
 }, []);
@@ -1578,6 +1589,15 @@ useEffect(() => {
    <div className="stickbe-root" style={{ background: theme.pageBg, minHeight: "100%", fontFamily: "'Nunito', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
+        
+        @keyframes stickbe-highlight-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(91,62,127,0.5); }
+  70% { box-shadow: 0 0 0 10px rgba(91,62,127,0); }
+  100% { box-shadow: 0 0 0 0 rgba(91,62,127,0); }
+}
+.stickbe-card-highlighted {
+  animation: stickbe-highlight-pulse 1.4s ease-out 2;
+}
 
         .stickbe-card {
           background: ${theme.surface};
@@ -1929,6 +1949,7 @@ useEffect(() => {
             onImageClick={setLightboxImage}
             cartQty={cart.find((c) => c.name === item.name)?.qty || 0}
             onUpdateQty={updateQty}
+            highlighted={item.slug === productSlug}
           />
         ))}
       </div>
