@@ -1,6 +1,8 @@
 import React, { useState, useEffect , useRef } from "react";
 import { useParams, useNavigate, Routes, Route } from "react-router-dom";
 import { Instagram, Mail, Heart, Sparkles, ShoppingBag, ShoppingCart, Plus, Minus, Trash2, Check, Camera, Home, MessageCircle, Send, Sun, Moon } from "lucide-react";
+import { db } from "./firebase";
+
 
 const PLUM = "#5B3E7F";
 const LILAC = "#B39BD0";
@@ -1485,6 +1487,7 @@ function StickBeSite() {
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
+
 
 const addToCart = (item) => {
   setCart((prev) => {
