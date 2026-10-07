@@ -4,6 +4,7 @@ import { Instagram, Mail, Heart, Sparkles, ShoppingBag, ShoppingCart, Plus, Minu
 import { db } from "./firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { CATEGORY_META } from "./categoryMeta.js";
+import AdminPage from "./AdminPage";
 
 const PLUM = "#5B3E7F";
 const LILAC = "#B39BD0";
@@ -1907,6 +1908,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<StickBeSite />} />
       <Route path="/product/:productSlug" element={<StickBeSite />} />
+      <Route path="/admin" element={<AdminPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
