@@ -1369,7 +1369,7 @@ useEffect(() => {
       }, 300);
     }
   }
-}, []);
+}, [categories]);
 
   return (
    <div className="stickbe-root" style={{ background: theme.pageBg, minHeight: "100%", fontFamily: "'Nunito', sans-serif" }}>
