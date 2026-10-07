@@ -1207,9 +1207,11 @@ function StickBeSite() {
         const snapshot = await getDocs(collection(db, "products"));
         const allProducts = snapshot.docs.map((doc) => doc.data());
         const merged = CATEGORY_META.map((meta) => ({
-          ...meta,
-          items: allProducts.filter((p) => p.category === meta.id),
-        }));
+  ...meta,
+  items: allProducts
+    .filter((p) => p.category === meta.id)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+}));
         setCategories(merged);
       } catch (err) {
         console.error("Failed to load products from Firestore:", err);

@@ -26,15 +26,16 @@ const db = getFirestore();
 function flattenProducts() {
   const products = [];
   for (const cat of CATEGORIES) {
-    for (const item of cat.items) {
+    cat.items.forEach((item, index) => {
       products.push({
         ...item,
         category: cat.id,          // e.g. "stickers"
         categoryLabel: cat.label,  // e.g. "Stickers"
         aspectRatio: cat.aspectRatio || null,
         fit: cat.fit || null,
+        order: index,              // preserves original position within its category
       });
-    }
+    });
   }
   return products;
 }
