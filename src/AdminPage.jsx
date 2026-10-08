@@ -121,22 +121,34 @@ const emptyForm = {
   order: 0,
   inStock: true,
   stock: "",
+  hasVariants: false,
+  variants: [],
 };
 
 function ProductForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState(() => {
-  if (!initial) return { ...emptyForm, extraImages: [] };
-  const images = Array.isArray(initial.images) ? initial.images : [];
-  let mainImage = initial.image;
-  let extra;
-  if (!mainImage && images.length > 0) {
-    mainImage = images[0];
-    extra = images.slice(1);
-  } else {
-    extra = images.filter((img) => img !== mainImage);
-  }
-  return { ...emptyForm, ...initial, image: mainImage || "", extraImages: extra };
-});
+    if (!initial) return { ...emptyForm, extraImages: [] };
+    const images = Array.isArray(initial.images) ? initial.images : [];
+    let mainImage = initial.image;
+    let extra;
+    if (!mainImage && images.length > 0) {
+      mainImage = images[0];
+      extra = images.slice(1);
+    } else {
+      extra = images.filter((img) => img !== mainImage);
+    }
+    const variants = Array.isArray(initial.variants)
+      ? initial.variants.map((v) => ({ label: v.label || "", price: v.price ?? "" }))
+      : [];
+    return {
+      ...emptyForm,
+      ...initial,
+      image: mainImage || "",
+      extraImages: extra,
+      hasVariants: Boolean(initial.hasVariants) || variants.length > 0,
+      variants,
+    };
+  });
   const isEditing = Boolean(initial);
 
   const update = (key) => (e) => {
@@ -156,16 +168,41 @@ function ProductForm({ initial, onSave, onCancel }) {
   const removeExtraImage = (idx) =>
     setForm((f) => ({ ...f, extraImages: f.extraImages.filter((_, i) => i !== idx) }));
 
+  const updateVariant = (idx, key) => (e) => {
+    const value = e.target.value;
+    setForm((f) => {
+      const next = [...f.variants];
+      next[idx] = { ...next[idx], [key]: value };
+      return { ...f, variants: next };
+    });
+  };
+  const addVariant = () => setForm((f) => ({ ...f, variants: [...f.variants, { label: "", price: "" }] }));
+  const removeVariant = (idx) =>
+    setForm((f) => ({ ...f, variants: f.variants.filter((_, i) => i !== idx) }));
+  const toggleHasVariants = (e) => {
+    const checked = e.target.checked;
+    setForm((f) => ({
+      ...f,
+      hasVariants: checked,
+      variants: checked && f.variants.length === 0 ? [{ label: "", price: "" }] : f.variants,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const cleanExtra = form.extraImages.map((s) => s.trim()).filter(Boolean);
-    const { extraImages, ...rest } = form;
+    const cleanVariants = form.variants
+      .filter((v) => v.label.trim() && v.price !== "")
+      .map((v) => ({ label: v.label.trim(), price: Number(v.price) }));
+    const { extraImages, variants, ...rest } = form;
     onSave({
       ...rest,
       price: Number(form.price),
       order: Number(form.order),
       stock: form.stock === "" ? null : Number(form.stock),
       images: cleanExtra.length > 0 ? [form.image, ...cleanExtra] : null,
+      hasVariants: cleanVariants.length > 0,
+      variants: cleanVariants.length > 0 ? cleanVariants : null,
     });
   };
 
@@ -237,7 +274,44 @@ function ProductForm({ initial, onSave, onCancel }) {
           ))}
         </select>
       </label>
+             <div>
+        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, color: PLUM, fontWeight: 600 }}>
+          <input type="checkbox" checked={form.hasVariants} onChange={toggleHasVariants} />
+          This product has variants (different sizes/pack counts at different prices)
+        </label>
 
+        {form.hasVariants && (
+          <div style={{ marginTop: 8 }}>
+            {form.variants.map((v, idx) => (
+              <div key={idx} style={{ display: "flex", gap: 8, marginTop: 6 }}>
+                <input
+                  value={v.label}
+                  onChange={updateVariant(idx, "label")}
+                  style={{ ...inputStyle, marginTop: 0, flex: 2 }}
+                  placeholder="e.g. Single roll (1 piece)"
+                />
+                <input
+                  type="number"
+                  value={v.price}
+                  onChange={updateVariant(idx, "price")}
+                  style={{ ...inputStyle, marginTop: 0, flex: 1 }}
+                  placeholder="Price ₹"
+                />
+                <button type="button" onClick={() => removeVariant(idx)} style={{ ...dangerBtn, padding: "8px 12px" }}>✕</button>
+              </div>
+            ))}
+            <button type="button" onClick={addVariant} style={{ ...ghostBtn, marginTop: 8 }}>+ Add variant</button>
+            <small style={{ color: BODY_MUTED, display: "block", marginTop: 6 }}>
+              The "Price" field above should match your highest/full-set variant price — it's used as the default list price.
+            </small>
+          </div>
+        )}
+      </div>
+
+      <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, color: PLUM, fontWeight: 600 }}>
+        <input type="checkbox" checked={form.inStock} onChange={update("inStock")} />
+        In stock (manual override — use to pause a listing regardless of count)
+      </label>
       <label style={labelStyle}>
         Stock count (leave blank for unlimited / not tracked)
         <input type="number" min="0" value={form.stock} onChange={update("stock")} style={inputStyle} />
@@ -477,6 +551,8 @@ function OrdersView() {
   );
 }
 
+const ADMIN_EMAIL = "stickbe.co@gmail.com";
+
 export default function AdminPage() {
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -491,8 +567,8 @@ export default function AdminPage() {
   }, []);
 
   if (checkingAuth) return null;
-  if (!user) return <AdminLogin />;
-
+  const isAdmin = user && user.email === ADMIN_EMAIL;
+  if (!isAdmin) return <AdminLogin />;
   return (
     <div className="admin-wrap">
       <GlobalStyle />
