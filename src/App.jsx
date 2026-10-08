@@ -1,10 +1,12 @@
 import React, { useState, useEffect , useRef } from "react";
 import { useParams, useNavigate, Routes, Route } from "react-router-dom";
+import { useCustomerAccount, AccountIcon, AuthModal, AccountPanel } from "./CustomerAuth.jsx";
 import { Instagram, Mail, Heart, Sparkles, ShoppingBag, ShoppingCart, Plus, Minus, Trash2, Check, Camera, Home, MessageCircle, Send, Sun, Moon } from "lucide-react";
 import { db } from "./firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { CATEGORY_META } from "./categoryMeta.js";
 import AdminPage from "./AdminPage";
+
 
 const PLUM = "#5B3E7F";
 const LILAC = "#B39BD0";
@@ -801,11 +803,12 @@ function WishlistModal({ wishlistItems, onClose, onToggleWishlist, onAdd, theme 
   );
 }
 
-function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme }) {
+function CartModal({ cart, onClose, onUpdateQty, onRemove, onOrderPlaced, theme, user, savedAddress, onSaveAddress }) {
   const [copied, setCopied] = useState(false);
   const [form, setForm] = useState({
-    name: "", email: "", phone: "", altPhone: "", instagram: "",
+    name: "", email: user?.email || "", phone: "", altPhone: "", instagram: "",
     address: "", city: "", state: "", pincode: "",
+    ...(savedAddress || {}),
   });
   const [status, setStatus] = useState("idle"); 
   const [orderSnapshot, setOrderSnapshot] = useState(null);
@@ -886,13 +889,15 @@ const handleField = (key) => (e) => {
         total: total,
       });
       setOrderSnapshot({
-      items: cart.map((i) => ({ name: i.name, price: i.price, qty: i.qty })),
-      subtotal,
-      deliveryFee: deliveryFee ?? 40,
-      total,
-      customer: { ...form },
-    });
-      setStatus("sent");
+  items: cart.map((i) => ({ name: i.name, price: i.price, qty: i.qty })),
+  subtotal,
+  deliveryFee: deliveryFee ?? 40,
+  total,
+  customer: { ...form },
+});
+if (user && onSaveAddress) onSaveAddress({ ...form });
+  setStatus("sent");
+
       if (window.gtag) {
   window.gtag("event", "purchase", {
     value: total,
@@ -1222,10 +1227,19 @@ function StickBeSite() {
     }
     fetchProducts();
   }, []);
-  const [cart, setCart] = useState([]);
+  const {
+  cart, setCart,
+  wishlist, setWishlist,
+  address, setAddress,
+  user, authModalOpen, setAuthModalOpen,
+  accountOpen, setAccountOpen,
+  logOut,
+} = useCustomerAccount();
+
+  // const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [wishlist, setWishlist] = useState([]);
+  // const [wishlist, setWishlist] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [lightboxImage, setLightboxImage] =     useState(null);
   const [wishlistOpen, setWishlistOpen] = useState(false);
@@ -1574,6 +1588,12 @@ useEffect(() => {
   </div>
 
   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+     <AccountIcon
+  user={user}
+  theme={theme}
+  onOpenAuth={() => setAuthModalOpen(true)}
+  onOpenAccount={() => setAccountOpen(true)}
+/>
     <button
       onClick={() => setWishlistOpen(true)}
       style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
@@ -1869,8 +1889,22 @@ useEffect(() => {
           onRemove={removeFromCart}
           onOrderPlaced={handleOrderPlaced}
           theme={theme}
+          user={user}
+          savedAddress={address}
+          onSaveAddress={setAddress}
         />
       )}
+      <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} theme={theme} />
+      <AccountPanel
+      open={accountOpen}
+      onClose={() => setAccountOpen(false)}
+      user={user}
+      address={address}
+      onSaveAddress={setAddress}
+      onLogOut={logOut}
+      theme={theme}
+     />
+
       <Lightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
         {wishlistOpen && (
   <WishlistModal
