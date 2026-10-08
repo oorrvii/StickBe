@@ -3,7 +3,7 @@ import { useParams, useNavigate, Routes, Route } from "react-router-dom";
 import { useCustomerAccount, AccountIcon, AuthModal, AccountPanel } from "./CustomerAuth.jsx";
 import { Instagram, Mail, Heart, Sparkles, ShoppingBag, ShoppingCart, Plus, Minus, Trash2, Check, Camera, Home, MessageCircle, Send, Sun, Moon } from "lucide-react";
 import { db } from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, writeBatch, increment } from "firebase/firestore";
 import { CATEGORY_META } from "./categoryMeta.js";
 import AdminPage from "./AdminPage";
 
@@ -115,7 +115,7 @@ function CategoryIcon({ type }) {
 function ProductCard({ item, categoryLabel, onAdd, theme, inWishlist, onToggleWishlist, onImageClick, cartQty, onUpdateQty, highlighted }) {
   const [imgFailed, setImgFailed] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
-  const inStock = item.inStock !== false;
+  const inStock = item.inStock !== false && (typeof item.stock !== "number" || item.stock > 0);
   const imageList = item.images && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
   const hasMultiple = imageList.length > 1;
 
@@ -896,6 +896,30 @@ const handleField = (key) => (e) => {
   customer: { ...form },
 });
 if (user && onSaveAddress) onSaveAddress({ ...form });
+
+try {
+  const batch = writeBatch(db);
+  const orderRef = doc(collection(db, "orders"));
+  batch.set(orderRef, {
+    items: cart.map((i) => ({ name: i.name, price: i.price, qty: i.qty, slug: i.slug || null })),
+    subtotal,
+    deliveryFee: deliveryFee ?? 40,
+    total,
+    customer: { ...form },
+    userId: user ? user.uid : null,
+    status: "new",
+    createdAt: Date.now(),
+  });
+  cart.forEach((i) => {
+    if (i.slug && !i.isCustom) {
+      batch.update(doc(db, "products", i.slug), { stock: increment(-i.qty) });
+    }
+  });
+  await batch.commit();
+} catch (err) {
+  console.error("Failed to record order / update stock:", err);
+}
+
   setStatus("sent");
 
       if (window.gtag) {

@@ -55,6 +55,7 @@ const emptyForm = {
   category: CATEGORY_META[0].id,
   order: 0,
   inStock: true,
+  stock: "",
 };
 
 function ProductForm({ initial, onSave, onCancel }) {
@@ -66,14 +67,15 @@ function ProductForm({ initial, onSave, onCancel }) {
     setForm((f) => ({ ...f, [key]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave({
-      ...form,
-      price: Number(form.price),
-      order: Number(form.order),
-    });
-  };
+ const handleSubmit = (e) => {
+  e.preventDefault();
+  onSave({
+    ...form,
+    price: Number(form.price),
+    order: Number(form.order),
+    stock: form.stock === "" ? null : Number(form.stock),
+  });
+};
 
   return (
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10, padding: 16, border: "1px solid #ddd", borderRadius: 10, marginBottom: 16 }}>
@@ -108,10 +110,13 @@ function ProductForm({ initial, onSave, onCancel }) {
       <label>Order (position within category — lower numbers show first)
         <input type="number" value={form.order} onChange={update("order")} style={inputStyle} />
       </label>
-      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <input type="checkbox" checked={form.inStock} onChange={update("inStock")} />
-        In stock
-      </label>
+      <label>Stock count (leave blank for unlimited/not tracked)
+  <input type="number" min="0" value={form.stock} onChange={update("stock")} style={inputStyle} />
+</label>
+<label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+  <input type="checkbox" checked={form.inStock} onChange={update("inStock")} />
+  In stock (manual override — use to pause a listing regardless of count)
+</label>
       <div style={{ display: "flex", gap: 10 }}>
         <button type="submit" style={buttonStyle}>Save</button>
         <button type="button" onClick={onCancel} style={{ ...buttonStyle, background: "#aaa" }}>Cancel</button>
@@ -226,9 +231,10 @@ export default function AdminPage() {
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600 }}>{p.name}</div>
                 <div style={{ fontSize: 13, color: "#777" }}>
-                  {p.categoryLabel || p.category} · ₹{p.price} · order {p.order ?? "—"} ·{" "}
-                  {p.inStock ? "In stock" : "Out of stock"}
-                </div>
+  {p.categoryLabel || p.category} · ₹{p.price} · order {p.order ?? "—"} ·{" "}
+  {typeof p.stock === "number" ? `${p.stock} left` : "unlimited"} ·{" "}
+  {p.inStock && (typeof p.stock !== "number" || p.stock > 0) ? "In stock" : "Out of stock"}
+</div>
               </div>
               <button onClick={() => toggleStock(p)} style={{ ...buttonStyle, padding: "6px 12px", fontSize: 13 }}>
                 {p.inStock ? "Mark sold out" : "Mark in stock"}
