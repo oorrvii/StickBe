@@ -1240,7 +1240,7 @@ function StickBeSite() {
   ...meta,
   items: allProducts
     .filter((p) => p.category === meta.id)
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.slug || "").localeCompare(b.slug || "")),
 }));
         setCategories(merged);
       } catch (err) {
@@ -1770,7 +1770,7 @@ useEffect(() => {
       <div className="stickbe-shop-grid">
         {pageItems.map((item) => (
           <ProductCard
-            key={item.name}
+            key={item.slug || item.name}
             item={item}
             categoryLabel={item.categoryLabel}
             onAdd={handleAddClick}

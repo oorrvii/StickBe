@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc, query, orderBy, writeBatch } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import { CATEGORY_META } from "./categoryMeta.js";
 
@@ -232,7 +232,7 @@ function ProductForm({ initial, onSave, onCancel }) {
         </label>
       </div>
 
-            <label style={labelStyle}>
+      <label style={labelStyle}>
         Main image path
         <input value={form.image} onChange={update("image")} required style={inputStyle} placeholder="/products/cute-cat.jpg" />
         <small style={{ color: BODY_MUTED, fontWeight: 400 }}>Upload the file to public/products via git first. This is the thumbnail and first photo shown.</small>
@@ -274,7 +274,13 @@ function ProductForm({ initial, onSave, onCancel }) {
           ))}
         </select>
       </label>
-             <div>
+
+      <label style={labelStyle}>
+        Stock count (leave blank for unlimited / not tracked)
+        <input type="number" min="0" value={form.stock} onChange={update("stock")} style={inputStyle} />
+      </label>
+
+      <div>
         <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, color: PLUM, fontWeight: 600 }}>
           <input type="checkbox" checked={form.hasVariants} onChange={toggleHasVariants} />
           This product has variants (different sizes/pack counts at different prices)
@@ -307,15 +313,6 @@ function ProductForm({ initial, onSave, onCancel }) {
           </div>
         )}
       </div>
-
-      <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, color: PLUM, fontWeight: 600 }}>
-        <input type="checkbox" checked={form.inStock} onChange={update("inStock")} />
-        In stock (manual override — use to pause a listing regardless of count)
-      </label>
-      <label style={labelStyle}>
-        Stock count (leave blank for unlimited / not tracked)
-        <input type="number" min="0" value={form.stock} onChange={update("stock")} style={inputStyle} />
-      </label>
 
       <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, color: PLUM, fontWeight: 600 }}>
         <input type="checkbox" checked={form.inStock} onChange={update("inStock")} />
@@ -390,10 +387,31 @@ function ProductsView() {
 
   useEffect(() => { loadProducts(); }, []);
 
+  // Jump to the form whenever Add/Edit opens
+  const formRef = useRef(null);
+  useEffect(() => {
+    if (editing && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [editing]);
+
   const handleSave = async (data) => {
     const meta = CATEGORY_META.find((c) => c.id === data.category);
     const payload = { ...data, categoryLabel: meta?.label || data.category, aspectRatio: meta?.aspectRatio || null };
-    await setDoc(doc(db, "products", data.slug), payload, { merge: true });
+    const batch = writeBatch(db);
+
+    // If another product in this category already sits at this order number,
+    // push it (and everything after it) down by one so nothing overlaps.
+    const others = products.filter((p) => p.category === data.category && p.id !== data.slug);
+    const collision = others.some((p) => p.order === data.order);
+    if (collision) {
+      others
+        .filter((p) => (p.order ?? 0) >= data.order)
+        .forEach((p) => batch.update(doc(db, "products", p.id), { order: (p.order ?? 0) + 1 }));
+    }
+
+    batch.set(doc(db, "products", data.slug), payload, { merge: true });
+    await batch.commit();
     setEditing(null);
     loadProducts();
   };
@@ -415,10 +433,12 @@ function ProductsView() {
 
   return (
     <div>
-      {editing === "new" && <ProductForm onSave={handleSave} onCancel={() => setEditing(null)} />}
-      {editing && editing !== "new" && (
-        <ProductForm initial={editing} onSave={handleSave} onCancel={() => setEditing(null)} />
-      )}
+      <div ref={formRef} style={{ scrollMarginTop: 16 }}>
+        {editing === "new" && <ProductForm onSave={handleSave} onCancel={() => setEditing(null)} />}
+        {editing && editing !== "new" && (
+          <ProductForm initial={editing} onSave={handleSave} onCancel={() => setEditing(null)} />
+        )}
+      </div>
 
       {!editing && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 16, alignItems: "center" }}>
@@ -551,8 +571,6 @@ function OrdersView() {
   );
 }
 
-const ADMIN_EMAIL = "stickbe.co@gmail.com";
-
 export default function AdminPage() {
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -567,8 +585,8 @@ export default function AdminPage() {
   }, []);
 
   if (checkingAuth) return null;
-  const isAdmin = user && user.email === ADMIN_EMAIL;
-  if (!isAdmin) return <AdminLogin />;
+  if (!user) return <AdminLogin />;
+
   return (
     <div className="admin-wrap">
       <GlobalStyle />
