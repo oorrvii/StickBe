@@ -54,7 +54,8 @@ function getTheme(dark) {
 }
 
 const ITEMS_PER_PAGE = 20;
-
+const DISCOUNT_PERCENT = 10; // set to 0 to turn the sale off everywhere
+const discounted = (price) => Math.round((price * (100 - DISCOUNT_PERCENT)) / 100);
 
 
 const GALLERY_PHOTOS = [
@@ -227,14 +228,31 @@ const handleAdd = () => {
           </div>
         )}
       </div>
-       
+         {DISCOUNT_PERCENT > 0 &&  (
+          <span style={{
+            position: "absolute", top: 8, left: 8, zIndex: 2, background: "#e0556b", color: "#fff",
+            fontFamily: "'Baloo 2', sans-serif", fontSize: 11.5, fontWeight: 700,
+            padding: "2px 8px", borderRadius: 100,
+          }}>
+            {DISCOUNT_PERCENT}% OFF
+          </span>
+        )}
         <div style={{ padding: "8px 10px 10px" }}>
         <p style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 13.5, color: theme.heading, margin: 0, lineHeight: 1.2 }}>
           {item.name}
         </p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
-  <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 14.5, color: PEACH, fontWeight: 600 }}>
-    ₹{item.price}
+    <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 14.5, color: PEACH, fontWeight: 600 }}>
+    {DISCOUNT_PERCENT > 0 ? (
+      <>
+        ₹{discounted(item.price)}{" "}
+        <span style={{ fontSize: 11.5, color: theme.bodyMuted, textDecoration: "line-through", fontWeight: 500 }}>
+          ₹{item.price}
+        </span>
+      </>
+    ) : (
+      <>₹{item.price}</>
+    )}
   </span>
 
   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -242,7 +260,7 @@ const handleAdd = () => {
       onClick={async (e) => {
         e.stopPropagation();
         const url = `https://stickbe.store/product/${item.slug}`;
-        const shareText = `Check out "${item.name}" at StickBe! ₹${item.price}`;
+        const shareText = `Check out "${item.name}" at StickBe! ₹${discounted(item.price)}${DISCOUNT_PERCENT > 0 ? ` (${DISCOUNT_PERCENT}% off!)` : ""}`;
         if (navigator.share) {
           try {
             await navigator.share({ title: item.name, text: shareText, url });
@@ -399,7 +417,12 @@ function VariantPopup({ item, onClose, onChoose, theme, cart, onUpdateQty }) {
       >
         <div style={{ textAlign: "left" }}>
           <p style={{ color: theme.heading, fontWeight: 700, fontSize: 14, margin: 0 }}>{variant.label}</p>
-          <p style={{ color: PEACH, fontWeight: 700, fontSize: 13, margin: "2px 0 0", fontFamily: "'Baloo 2', sans-serif" }}>₹{variant.price}</p>
+                    <p style={{ color: PEACH, fontWeight: 700, fontSize: 13, margin: "2px 0 0", fontFamily: "'Baloo 2', sans-serif" }}>
+            ₹{discounted(variant.price)}{" "}
+            {DISCOUNT_PERCENT > 0 && (
+              <span style={{ fontSize: 11.5, color: theme.bodyMuted, textDecoration: "line-through", fontWeight: 500 }}>₹{variant.price}</span>
+            )}
+          </p>
         </div>
 
         {cartQty > 0 ? (
@@ -778,7 +801,7 @@ function WishlistModal({ wishlistItems, onClose, onToggleWishlist, onAdd, theme 
               <div key={item.name} style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: `1px solid ${theme.border}`, paddingBottom: 10 }}>
                 <div style={{ flex: 1 }}>
                   <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 14, margin: 0 }}>{item.name}</p>
-                  <p style={{ fontSize: 12, color: theme.bodyMuted, margin: "2px 0 0" }}>₹{item.price} · {item.categoryLabel}</p>
+                  <p style={{ fontSize: 12, color: theme.bodyMuted, margin: "2px 0 0" }}>₹{discounted(item.price)}{DISCOUNT_PERCENT > 0 && <span style={{ textDecoration: "line-through", marginLeft: 4 }}>₹{item.price}</span>} · {item.categoryLabel}</p>
                 </div>
                 <button onClick={() => onAdd({ ...item })} className="stickbe-order-btn" style={{ padding: "5px 10px", fontSize: 11.5 }}>
                   <Plus size={11} strokeWidth={2.5} /> Add
@@ -1282,18 +1305,20 @@ function StickBeSite() {
 
 
 const addToCart = (item) => {
+    const finalItem = { ...item, price: discounted(item.price) };
+
   setCart((prev) => {
-    const existing = prev.find((i) => i.name === item.name);
+    const existing = prev.find((i) => i.name === finalItem.name);
     if (existing) {
-      return prev.map((i) => (i.name === item.name ? { ...i, qty: i.qty + 1 } : i));
+      return prev.map((i) => (i.name === finalItem.name ? { ...i, qty: i.qty + 1 } : i));
     }
-    return [...prev, { ...item, qty: 1 }];
+    return [...prev, { ...finalItem, qty: 1 }];
   });
 
    if (window.gtag) {
     window.gtag("event", "add_to_cart", {
-      item_name: item.name,
-      value: item.price,
+      item_name: finalItem.name,
+      value: finalItem.price,
       currency: "INR",
     });
   }
@@ -1577,7 +1602,6 @@ useEffect(() => {
           white-space: nowrap;
         }
       `}</style>
-
       {/* NAV */}
    <nav
   style={{
@@ -1732,6 +1756,28 @@ useEffect(() => {
 
       {/* SHOP */}
       <section id="shop" style={{ padding: "44px 20px 20px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
+                {DISCOUNT_PERCENT > 0 && (
+          <>
+            <style>{`
+              @keyframes stickbe-sale-pulse {
+                0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(224,85,107,0.35); }
+                50% { transform: scale(1.03); box-shadow: 0 12px 28px rgba(224,85,107,0.5); }
+              }
+            `}</style>
+            <div style={{
+              maxWidth: 560, margin: "0 auto 26px", padding: "16px 20px", textAlign: "center",
+              background: "linear-gradient(135deg, #e0556b, #f0866b)", color: "#fff",
+              borderRadius: 18, animation: "stickbe-sale-pulse 2.4s ease-in-out infinite",
+            }}>
+              <div style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 800, fontSize: 26, lineHeight: 1.1, letterSpacing: 0.5 }}>
+                🎉 {DISCOUNT_PERCENT}% OFF
+              </div>
+              <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14, marginTop: 4 }}>
+                on every item — prices below are already discounted!
+              </div>
+            </div>
+          </>
+        )}
         <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
           Shop the collection
         </h2>
