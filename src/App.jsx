@@ -54,7 +54,7 @@ function getTheme(dark) {
 }
 
 const ITEMS_PER_PAGE = 20;
-const DISCOUNT_PERCENT = 10; // set to 0 to turn the sale off everywhere
+const DISCOUNT_PERCENT = 0; // set to 0 to turn the sale off everywhere
 const discounted = (price) => Math.round((price * (100 - DISCOUNT_PERCENT)) / 100);
 
 
