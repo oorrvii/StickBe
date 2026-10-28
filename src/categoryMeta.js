@@ -5,6 +5,7 @@ export const CATEGORY_META = [
   { id: "bigposters", label: "Big Wall Posters", icon: "bigposter", aspectRatio: "3 / 4" },
   { id: "frame", label: "Wall Frames", icon: "frame", aspectRatio: "3 / 4" },
   { id: "bookmarks", label: "Bookmarks", icon: "bookmark", aspectRatio: "4 / 5" },
+  { id: "Coloring Book", label: "Coloring Books", icon: "coloringbookcol" },
   { id: "memopads", label: "Memo Pads", icon: "pad" },
   { id: "notebook", label: "Journals & Notepads", icon: "notebook" },
   { id: "sticky", label: "Sticky Notes", icon: "sticky", aspectRatio: "4 / 3" },
