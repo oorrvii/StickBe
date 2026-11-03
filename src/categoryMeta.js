@@ -7,7 +7,7 @@ export const CATEGORY_META = [
   { id: "bookmarks", label: "Bookmarks", icon: "bookmark", aspectRatio: "4 / 5" },
   { id: "Coloring Book", label: "Colouring Books", icon: "coloringbookcol", aspectRatio: "1 / 1" },
   { id: "memopads", label: "Memo Pads", icon: "pad" },
-  { id: "notebook", label: "Journals & Notepads", icon: "notebook" },
+  { id: "notebook", label: "Journals & Notepads", icon: "notebook", aspectRatio: "4 / 5" },
   { id: "sticky", label: "Sticky Notes", icon: "sticky", aspectRatio: "4 / 3" },
   { id: "washi", label: "Washi Tapes", icon: "tape", aspectRatio: "3 / 2" },
   { id: "erasers", label: "Erasers", icon: "eraser" },
