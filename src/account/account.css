@@ -1,0 +1,24 @@
+.sb-iconbtn { position: relative; }
+.sb-iconbtn__dot { position: absolute; top: 4px; right: 4px; width: 9px; height: 9px; border-radius: 50%; background: #2f8f4e; border: 2px solid var(--sb-ivory); }
+.sb-auth__sub { color: var(--sb-muted); font-size: var(--sb-text-sm); margin-bottom: var(--sb-space-4); }
+.sb-auth__form { display: grid; gap: var(--sb-space-3); }
+.sb-auth__or { display: flex; align-items: center; gap: var(--sb-space-3); color: var(--sb-muted); font-size: var(--sb-text-xs); margin: var(--sb-space-4) 0; }
+.sb-auth__or::before, .sb-auth__or::after { content: ""; flex: 1; height: 1px; background: var(--sb-line); }
+.sb-auth__show { display: inline-flex; align-items: center; gap: var(--sb-space-2); font-size: var(--sb-text-sm); min-height: 32px; cursor: pointer; }
+.sb-auth__show input { width: 18px; height: 18px; accent-color: var(--sb-violet); }
+.sb-auth__links { margin-top: var(--sb-space-4); text-align: center; font-size: var(--sb-text-sm); display: grid; gap: var(--sb-space-2); justify-items: center; }
+.sb-linkbtn { background: none; border: 0; padding: 4px; color: var(--sb-violet-dark); text-decoration: underline; cursor: pointer; font: inherit; }
+.sb-linkbtn--strong { font-weight: 700; }
+.sb-linkbtn:focus-visible { outline: 3px solid var(--sb-violet); outline-offset: 2px; border-radius: 4px; }
+.sb-account__h { font-size: var(--sb-text-lg); }
+.sb-account__row { display: grid; gap: var(--sb-space-3); grid-template-columns: 1fr 1fr; }
+.sb-account__row--3 { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 520px) { .sb-account__row, .sb-account__row--3 { grid-template-columns: 1fr; } }
+.sb-wish__list { display: grid; gap: var(--sb-space-3); list-style: none; margin: 0; padding: 0; }
+.sb-wish__item { display: grid; grid-template-columns: 72px 1fr auto; gap: var(--sb-space-3); align-items: center; padding: var(--sb-space-2); border: var(--sb-border); border-radius: var(--sb-radius-md); }
+.sb-wish__thumb { position: relative; width: 72px; height: 72px; border-radius: var(--sb-radius-sm); overflow: hidden; }
+.sb-wish__name { font-weight: 600; font-size: var(--sb-text-sm); }
+.sb-wish__price { color: var(--sb-violet-dark); font-weight: 700; }
+.sb-wish__price s { color: var(--sb-muted); font-weight: 400; font-size: var(--sb-text-xs); margin-left: 4px; }
+.sb-wish__actions { display: grid; gap: var(--sb-space-1); justify-items: end; }
+.sb-wish__nudge { margin-top: var(--sb-space-4); }

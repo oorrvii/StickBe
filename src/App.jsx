@@ -1,11 +1,23 @@
 import React, { useState, useEffect , useRef } from "react";
-import { useParams, useNavigate, Routes, Route } from "react-router-dom";
-import { useCustomerAccount, AccountIcon, AuthModal, AccountPanel } from "./CustomerAuth.jsx";
+import { useParams, useNavigate, useSearchParams, useLocation, Routes, Route } from "react-router-dom";
+import { AccountIcon } from "./CustomerAuth.jsx";
+import { AccountProvider, useAccount } from "./app/AccountContext.jsx";
+import { CatalogProvider, useCatalog } from "./shop/CatalogContext.jsx";
+import PageLayout from "./pages/PageLayout.jsx";
+import SignInPage from "./pages/SignInPage.jsx";
+import { AccountLayout, AccountOverview, AccountOrders, AccountOrderDetail, AccountAddresses, AccountProfile, AccountHelp } from "./pages/AccountPages.jsx";
+import WishlistPage from "./pages/WishlistPage.jsx";
+import CartPage from "./cart/CartPage.jsx";
+import CheckoutPage from "./cart/CheckoutPage.jsx";
+import ConfirmationPage from "./cart/ConfirmationPage.jsx";
+import { lineKey } from "./cart/cartLogic.js";
 import { Instagram, Mail, Heart, Sparkles, ShoppingBag, ShoppingCart, Plus, Minus, Trash2, Check, Camera, Home, MessageCircle, Send, Sun, Moon } from "lucide-react";
 import { db } from "./firebase";
-import { collection, getDocs, doc, writeBatch, increment } from "firebase/firestore";
+import { collection, doc, writeBatch, increment } from "firebase/firestore";
 import { CATEGORY_META } from "./categoryMeta.js";
 import AdminPage from "./AdminPage";
+import { ShopSection } from "./shop/index.js";
+import { SiteHeader, AnnouncementBar, Hero, TrustStrip, CategoryTiles, BrandStory, SiteFooter, useSiteSettings } from "./site/index.js";
 
 
 const PLUM = "#5B3E7F";
@@ -54,6 +66,7 @@ function getTheme(dark) {
 }
 
 const ITEMS_PER_PAGE = 20;
+const DARK_MODE_ENABLED = false;
 const DISCOUNT_PERCENT = 0; // set to 0 to turn the sale off everywhere
 const discounted = (price) => Math.round((price * (100 - DISCOUNT_PERCENT)) / 100);
 
@@ -704,6 +717,7 @@ function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, g
   >
     <Mail size={17} /> Email us
   </button>
+  {DARK_MODE_ENABLED && (
   <button
     onClick={() => setDarkMode((d) => !d)}
     style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
@@ -711,6 +725,7 @@ function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, g
     {darkMode ? <Sun size={17} /> : <Moon size={17} />}
     {darkMode ? "Light mode" : "Dark mode"}
   </button>
+  )}
 </div>
       </div>
     </>
@@ -1249,47 +1264,23 @@ function FeedbackForm({ theme }) {
 
 function StickBeSite() {
     const [active, setActive] = useState(CATEGORY_META[0].id);
-  const [categories, setCategories] = useState(
-    CATEGORY_META.map((cat) => ({ ...cat, items: [] }))
-  );
-  const [productsLoading, setProductsLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const snapshot = await getDocs(collection(db, "products"));
-        const allProducts = snapshot.docs.map((doc) => doc.data());
-        const merged = CATEGORY_META.map((meta) => ({
-  ...meta,
-  items: allProducts
-    .filter((p) => p.category === meta.id)
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.slug || "").localeCompare(b.slug || "")),
-}));
-        setCategories(merged);
-      } catch (err) {
-        console.error("Failed to load products from Firestore:", err);
-      } finally {
-        setProductsLoading(false);
-      }
-    }
-    fetchProducts();
-  }, []);
+  const { categories, loading: productsLoading, error: productsError, reload: loadProducts } = useCatalog();
+  const [searchParams] = useSearchParams();
+  const [shopCategory, setShopCategory] = useState(() => searchParams.get("category") || "all");
   const {
-  cart, setCart,
-  wishlist, setWishlist,
-  address, setAddress,
-  user, authModalOpen, setAuthModalOpen,
-  accountOpen, setAccountOpen,
-  logOut,
-} = useCustomerAccount();
+    cart, setCart,
+    wishlist, setWishlist,
+    address, setAddress,
+    user,
+  } = useAccount();
+  const settings = useSiteSettings();
 
   // const [cart, setCart] = useState([]);
-  const [cartOpen, setCartOpen] = useState(false);
+  const setCartOpen = () => navigate("/cart");
   const [darkMode, setDarkMode] = useState(false);
   // const [wishlist, setWishlist] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [lightboxImage, setLightboxImage] =     useState(null);
-  const [wishlistOpen, setWishlistOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [customPopup, setCustomPopup] = useState(false);
   const [variantPopup, setVariantPopup] = useState(null); 
@@ -1299,28 +1290,34 @@ function StickBeSite() {
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const { productSlug } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const setWishlistOpen = () => navigate("/wishlist");
   const theme = getTheme(darkMode);
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0);
+  useEffect(() => {
+    const id = location.hash.replace("#", "");
+    if (id) setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const activeCategory = categories.find((c) => c.id === active);
 
 
-const addToCart = (item) => {
-    const finalItem = { ...item, price: discounted(item.price) };
-
+const addToCart = (item, qty = 1) => {
+  const line = {
+    slug: item.slug || null,
+    variantLabel: item.variantLabel || null,
+    name: item.name,
+    categoryLabel: item.categoryLabel,
+    isCustom: !!item.isCustom,
+  };
+  const key = lineKey(line);
   setCart((prev) => {
-    const existing = prev.find((i) => i.name === finalItem.name);
-    if (existing) {
-      return prev.map((i) => (i.name === finalItem.name ? { ...i, qty: i.qty + 1 } : i));
-    }
-    return [...prev, { ...finalItem, qty: 1 }];
+    const existing = prev.find((l) => lineKey(l) === key);
+    if (existing) return prev.map((l) => (lineKey(l) === key ? { ...l, qty: l.qty + qty } : l));
+    return [...prev, { ...line, qty }];
   });
 
-   if (window.gtag) {
-    window.gtag("event", "add_to_cart", {
-      item_name: finalItem.name,
-      value: finalItem.price,
-      currency: "INR",
-    });
+  if (window.gtag) {
+    window.gtag("event", "add_to_cart", { item_name: line.name, value: discounted(item.price), currency: "INR" });
   }
 
   if (item.isCustom) {
@@ -1335,6 +1332,24 @@ const handleAddClick = (itemWithCategory) => {
     setVariantPopup(itemWithCategory);
   } else {
     addToCart(itemWithCategory);
+  }
+};
+
+const handleShopAdd = (item, qty = 1, variant = null) => {
+  if (variant) {
+    addToCart({ ...item, variantLabel: variant.label, name: `${item.name} (${variant.label})`, price: variant.price }, qty);
+  } else {
+    addToCart(item, qty);
+  }
+};
+
+const shareProduct = async (item) => {
+  const url = `https://stickbe.store/product/${item.slug}`;
+  const text = `Check out "${item.name}" at StickBe!${DISCOUNT_PERCENT > 0 ? ` ${DISCOUNT_PERCENT}% off right now.` : ""}`;
+  if (navigator.share) {
+    try { await navigator.share({ title: item.name, text, url }); } catch { /* cancelled */ }
+  } else {
+    try { await navigator.clipboard.writeText(`${text} ${url}`); setToast("Link copied!"); } catch { /* blocked */ }
   }
 };
 
@@ -1389,6 +1404,7 @@ const findProductBySlug = (slug) => {
   };
   const goToCategory = (categoryId) => {
   setActive(categoryId);
+  setShopCategory(categoryId);
   setShopPage(1);
   setSidebarOpen(false);
   setShopMenuOpen(false);
@@ -1414,26 +1430,7 @@ const goToSection = (id) => {
     document.head.appendChild(script);
   }, []);
 
-useEffect(() => {
-  if (productSlug) {
-    const product = findProductBySlug(productSlug);
-    if (product) {
-      setActive(product.categoryId);
 
-      const category = categories.find((c) => c.id === product.categoryId);
-      if (category) {
-        const indexInCategory = category.items.findIndex((item) => item.slug === productSlug);
-        const pageForProduct = Math.floor(indexInCategory / ITEMS_PER_PAGE) + 1;
-        setShopPage(pageForProduct);
-      }
-
-      setTimeout(() => {
-        const el = document.getElementById(`product-${productSlug}`);
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 300);
-    }
-  }
-}, [categories]);
 
   return (
    <div className="stickbe-root" style={{ background: theme.pageBg, minHeight: "100%", fontFamily: "'Nunito', sans-serif" }}>
@@ -1602,157 +1599,33 @@ useEffect(() => {
           white-space: nowrap;
         }
       `}</style>
-      {/* NAV */}
-   <nav
-  style={{
-    position: "sticky",
-    top: 0,
-    zIndex: 10,
-    background: theme.navBg,
-    backdropFilter: "blur(6px)",
-    borderBottom: `1px solid ${LILAC}33`,
-    padding: "12px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  }}
->
-  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-    <button
-      onClick={() => setSidebarOpen(true)}
-      style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", color: theme.heading }}
-      aria-label="Open menu"
-    >
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <line x1="3" y1="12" x2="21" y2="12" />
-        <line x1="3" y1="18" x2="21" y2="18" />
-      </svg>
-    </button>
-    <img src={LOGO_URI} alt="StickBe logo" style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover" }} />
-    <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 21, color: theme.heading, fontWeight: 700 }}>
-      StickBe
-    </span>
-  </div>
-
-  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-     <AccountIcon
-  user={user}
-  theme={theme}
-  onOpenAuth={() => setAuthModalOpen(true)}
-  onOpenAccount={() => setAccountOpen(true)}
-/>
-    <button
-      onClick={() => setWishlistOpen(true)}
-      style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
-      aria-label="Wishlist"
-    >
-      <Heart size={19} strokeWidth={2.2} fill={wishlist.length > 0 ? "#e07a7a" : "none"} stroke={wishlist.length > 0 ? "#e07a7a" : "currentColor"} />
-      {wishlist.length > 0 && (
-        <span style={{
-          position: "absolute", top: -4, right: -6, background: "#e07a7a", color: "#fff",
-          fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 16, height: 16,
-          display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Nunito', sans-serif",
-        }}>
-          {wishlist.length}
-        </span>
-      )}
-    </button>
-    <button
-      onClick={() => setCartOpen(true)}
-      style={{ color: theme.heading, background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", position: "relative" }}
-      aria-label="Cart"
-    >
-      <ShoppingCart size={19} strokeWidth={2.2} />
-      {cartCount > 0 && (
-        <span style={{
-          position: "absolute", top: -4, right: -6, background: PEACH, color: "#fff",
-          fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 16, height: 16,
-          display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Nunito', sans-serif",
-        }}>
-          {cartCount}
-        </span>
-      )}
-    </button>
-  </div>
-</nav>
-
-      {/* MARQUEE DISCLAIMER */}
-      <div style={{ background: PEACH, overflow: "hidden", padding: "6px 0" }}>
-        <div className="stickbe-marquee-track">
-          {[...Array(2)].map((_, dup) => (
-            <React.Fragment key={dup}>
-              {[...Array(4)].map((_, i) => (
-                <span key={i} className="stickbe-marquee-item">
-                  ⚠️ No COD available — prepayment required for all orders
-                </span>
-              ))}
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-
-      {/* HERO */}
-      <header style={{ position: "relative", textAlign: "center", padding: "56px 20px 40px", overflow: "hidden" }}>
-        <Sparkles
-          className="stickbe-float"
-          style={{ position: "absolute", top: 24, left: "12%", color: LILAC, ["--r"]: "-8deg" }}
-          size={22}
-        />
-        <Heart
-          className="stickbe-float stickbe-hero-heart"
-          style={{ position: "absolute", top: 60, right: "14%", color: PEACH, ["--r"]: "10deg", animationDelay: "1s" }}
-          size={20}
-          fill={PEACH}
-        />
-        <Sparkles
-          className="stickbe-float"
-          style={{ position: "absolute", bottom: 10, right: "20%", color: PEACH, ["--r"]: "6deg", animationDelay: "2s" }}
-          size={16}
-        />
-
-        <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, letterSpacing: 2, fontSize: 12, color: PEACH, textTransform: "uppercase", margin: "0 0 10px" }}>
-          Handmade in small batches
-        </p>
-        <h1 style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: "clamp(32px, 7vw, 52px)", color: theme.heading, margin: 0, lineHeight: 1.1 }}>
-          Bringing little joys<br />to your everyday.
-        </h1>
-        <p style={{ maxWidth: 420, margin: "16px auto 26px", color: theme.body, fontSize: 15, lineHeight: 1.6 }}>
-          Cute homegrown stickers, washi tapes, memo pads, bookmarks and stationery - made with love, just for you.
-        </p>
-        <button
-          onClick={() => scrollToSection("shop")}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            background: PLUM,
-            color: "#fff",
-            fontFamily: "'Baloo 2', sans-serif",
-            fontWeight: 600,
-            fontSize: 15,
-            padding: "12px 26px",
-            borderRadius: 100,
-            border: "none",
-            cursor: "pointer",
-            boxShadow: "0 6px 16px rgba(91,62,127,0.25)",
-          }}
-        >
-          <ShoppingBag size={16} />
-          Browse the shop
-        </button>
-      </header>
-
-      {/* VALUE STRIP */}
-      <div style={{ background: PLUM, padding: "14px 20px" }}>
-        <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "8px 26px" }}>
-          {["Cute", "Homegrown", "High quality", "Made to make you smile"].map((t) => (
-            <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, color: "#fff", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13 }}>
-              <Heart size={11} fill={PEACH} stroke="none" /> {t}
-            </span>
-          ))}
-        </div>
-      </div>
+      <SiteHeader
+        logoSrc={LOGO_URI}
+        accountSlot={
+          <AccountIcon
+            user={user}
+            onOpenAuth={() => navigate("/sign-in")}
+            onOpenAccount={() => navigate("/account")}
+          />
+        }
+        wishlistCount={wishlist.length}
+        cartCount={cartCount}
+        onOpenMenu={() => setSidebarOpen(true)}
+        onOpenWishlist={() => navigate("/wishlist")}
+        onOpenCart={() => navigate("/cart")}
+        onGoTo={scrollToSection}
+      />
+      <AnnouncementBar text={settings.announcement} />
+      <Hero
+        settings={settings}
+        categories={categories}
+        loading={productsLoading}
+        onShop={() => scrollToSection("shop")}
+        onBrowse={() => scrollToSection("categories")}
+        saleLabel={DISCOUNT_PERCENT > 0 ? `${DISCOUNT_PERCENT}% OFF on every item` : null}
+      />
+      <TrustStrip items={settings.trustItems} />
+      <CategoryTiles categories={categories} loading={productsLoading} onSelect={goToCategory} />
 
       {/* SHOP */}
       <section id="shop" style={{ padding: "44px 20px 20px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
@@ -1784,100 +1657,20 @@ useEffect(() => {
         <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
           Tap "Add" on anything you love, then check out from your cart.
         </p>
-        <div style={{ maxWidth: 320, margin: "0 auto 20px" }}>
-  <input
-    className="stickbe-input"
-    placeholder="Search products..."
-    value={searchQuery}
-    onChange={(e) => { setSearchQuery(e.target.value); setShopPage(1); }}
-    style={{ textAlign: "center" }}
-  />
-</div>
-        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 6, marginBottom: 28, justifyContent: "center", flexWrap: "wrap" }}>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => { setActive(cat.id); setShopPage(1); }}
-              className={`stickbe-tab ${active === cat.id ? "stickbe-tab-active" : "stickbe-tab-inactive"}`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
-  {(() => {
- const allItems = searchResults ?? activeCategory.items.map((item) => ({ ...item, iconOverride: activeCategory.icon, categoryLabel: activeCategory.label, aspectRatio: activeCategory.aspectRatio, fit: activeCategory.fit }));
-  const totalPages = Math.ceil(allItems.length / ITEMS_PER_PAGE);
-  const startIdx = (shopPage - 1) * ITEMS_PER_PAGE;
-  const pageItems = allItems.slice(startIdx, startIdx + ITEMS_PER_PAGE);
-
-  return (
-    <>
-      <div className="stickbe-shop-grid">
-        {pageItems.map((item) => (
-          <ProductCard
-            key={item.slug || item.name}
-            item={item}
-            categoryLabel={item.categoryLabel}
-            onAdd={handleAddClick}
-            theme={theme}
-            inWishlist={wishlist.includes(item.name)}
-            onToggleWishlist={toggleWishlist}
-            onImageClick={setLightboxImage}
-            cartQty={cart.find((c) => c.name === item.name)?.qty || 0}
-            onUpdateQty={updateQty}
-            highlighted={item.slug === productSlug}
-          />
-        ))}
-      </div>
-
-      {allItems.length === 0 && (
-        <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 14, marginTop: 20 }}>
-          No products found{searchQuery ? ` for "${searchQuery}"` : ""}.
-        </p>
-      )}
-
-      {totalPages > 1 && (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginTop: 32, flexWrap: "wrap" }}>
-          <button
-            onClick={() => changeShopPage((p) => Math.max(1, p - 1))}
-            disabled={shopPage === 1}
-            className="stickbe-qty-btn"
-            style={{ width: 32, height: 32, opacity: shopPage === 1 ? 0.4 : 1, cursor: shopPage === 1 ? "not-allowed" : "pointer" }}
-            aria-label="Previous page"
-          >
-            ‹
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-            <button
-              key={pageNum}
-              onClick={() =>changeShopPage(pageNum)}
-              style={{
-                width: 32, height: 32, borderRadius: "50%", border: "none", cursor: "pointer",
-                fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13,
-                background: shopPage === pageNum ? PLUM : theme.surfaceAlt,
-                color: shopPage === pageNum ? "#fff" : theme.heading,
-              }}
-            >
-              {pageNum}
-            </button>
-          ))}
-
-          <button
-            onClick={() => changeShopPage((p) => Math.min(totalPages, p + 1))}
-            disabled={shopPage === totalPages}
-            className="stickbe-qty-btn"
-            style={{ width: 32, height: 32, opacity: shopPage === totalPages ? 0.4 : 1, cursor: shopPage === totalPages ? "not-allowed" : "pointer" }}
-            aria-label="Next page"
-          >
-            ›
-          </button>
-        </div>
-      )}
-    </>
-  );
-})()}
+        <ShopSection
+          categories={categories}
+          loading={productsLoading}
+          error={productsError}
+          onRetry={loadProducts}
+          discountPercent={DISCOUNT_PERCENT}
+          wishlist={wishlist}
+          cart={cart}
+          activeCategory={shopCategory}
+          onCategoryChange={setShopCategory}
+          onToggleWishlist={toggleWishlist}
+          onAdd={handleShopAdd}
+          onShare={shareProduct}
+        />
       </section>
 
       {/* GALLERY */}
@@ -1891,31 +1684,7 @@ useEffect(() => {
   <GallerySlider photos={GALLERY_PHOTOS} theme={theme} />
 </section>
 
-    <section style={{ padding: "10px 20px 50px", maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
-  <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 24, margin: "0 0 12px" }}>
-    A little about us
-  </h2>
-  <p style={{ color: theme.body, fontSize: 14.5, lineHeight: 1.7, margin: 0 }}>
-    StickBe started as a small passion project — handmade stickers, washi tapes, and stationery made in
-    tiny batches, with a lot of love and zero shortcuts. Every order is packed by hand, one sheet at a time.
-    Thank you for supporting something small and homegrown. 💜
-  </p>
-</section>
-   
-<section style={{ padding: "10px 20px 50px", textAlign: "center" }}>
-  <div style={{ maxWidth: 420, margin: "0 auto", background: theme.surface, borderRadius: 18, padding: 28, boxShadow: "0 4px 14px rgba(91,62,127,0.08)" }}>
-    <Instagram size={28} color={PLUM} style={{ marginBottom: 10 }} />
-    <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 17, margin: "0 0 6px" }}>
-      Follow along on Instagram
-    </p>
-    <p style={{ color: theme.bodyMuted, fontSize: 13, margin: "0 0 16px" }}>
-      Packing days, new drops, and behind-the-scenes.
-    </p>
-    <button onClick={() => window.open(INSTAGRAM, "_blank")} className="stickbe-order-btn" style={{ justifyContent: "center" }}>
-      <Instagram size={14} /> @stickbe.co
-    </button>
-  </div>
-</section>
+      <BrandStory settings={settings} />
 
       {/* FEEDBACK */}
       <section id="feedback" style={{ padding: "10px 20px 56px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
@@ -1928,63 +1697,16 @@ useEffect(() => {
         <FeedbackForm theme={theme} />
       </section>
 
-      {/* FOOTER */}
-      <footer style={{ marginTop: 30, background: "#3F2B57", padding: "18px 20px", textAlign: "center" }}>
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: "#fff", fontSize: 15, margin: "0 0 4px" }}>StickBe</p>
-        <p style={{ color: "#cbb9de", fontSize: 11.5, margin: "0 0 10px" }}>Good things take time 💜</p>
-        <div style={{ display: "flex", justifyContent: "center", gap: 14, marginBottom: 8 }}>
-          <button
-            onClick={() => window.open(INSTAGRAM, "_blank")}
-            style={{ color: "#fff", background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
-            aria-label="Instagram"
-          >
-            <Instagram size={18} />
-          </button>
-          <button
-  onClick={() => scrollToSection("feedback")}
-  style={{ color: "#fff", background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex" }}
-  aria-label="Email"
->
-  <Mail size={18} />
-</button>
-        </div>
-        <p style={{ color: "#9b87b0", fontSize: 10.5, margin: 0 }}>{ORDER_EMAIL}</p>
-      </footer>
-
-      {cartOpen && (
-        <CartModal
-          cart={cart}
-          onClose={() => setCartOpen(false)}
-          onUpdateQty={updateQty}
-          onRemove={removeFromCart}
-          onOrderPlaced={handleOrderPlaced}
-          theme={theme}
-          user={user}
-          savedAddress={address}
-          onSaveAddress={setAddress}
-        />
-      )}
-      <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} theme={theme} />
-      <AccountPanel
-      open={accountOpen}
-      onClose={() => setAccountOpen(false)}
-      user={user}
-      address={address}
-      onSaveAddress={setAddress}
-      onLogOut={logOut}
-      theme={theme}
-     />
+      <SiteFooter
+        logoSrc={LOGO_URI}
+        settings={settings}
+        categories={categories}
+        onSelectCategory={goToCategory}
+        onGoTo={scrollToSection}
+      />
 
       <Lightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
-        {wishlistOpen && (
-  <WishlistModal
-    wishlistItems={wishlistItems}
-    onClose={() => setWishlistOpen(false)}
-    onToggleWishlist={toggleWishlist}
-    onAdd={handleAddClick}
-    theme={theme}
-  />
-)}
+
 <Toast message={toast} onDone={() => setToast(null)} />
   <SideMenu
   open={sidebarOpen}
@@ -2009,11 +1731,30 @@ useEffect(() => {
 }
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<StickBeSite />} />
-      <Route path="/product/:productSlug" element={<StickBeSite />} />
-      <Route path="/admin" element={<AdminPage />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <AccountProvider>
+      <CatalogProvider>
+        <Routes>
+          <Route path="/" element={<StickBeSite />} />
+          <Route path="/product/:productSlug" element={<StickBeSite />} />
+          <Route element={<PageLayout logoSrc={LOGO_URI} />}>
+            <Route path="/sign-in" element={<SignInPage />} />
+            <Route path="/wishlist" element={<WishlistPage discountPercent={DISCOUNT_PERCENT} />} />
+            <Route path="/cart" element={<CartPage discountPercent={DISCOUNT_PERCENT} />} />
+            <Route path="/checkout" element={<CheckoutPage discountPercent={DISCOUNT_PERCENT} />} />
+            <Route path="/order-confirmation/:orderNumber" element={<ConfirmationPage />} />
+            <Route path="/account" element={<AccountLayout />}>
+              <Route index element={<AccountOverview />} />
+              <Route path="orders" element={<AccountOrders />} />
+              <Route path="orders/:orderId" element={<AccountOrderDetail />} />
+              <Route path="addresses" element={<AccountAddresses />} />
+              <Route path="profile" element={<AccountProfile />} />
+              <Route path="help" element={<AccountHelp />} />
+            </Route>
+          </Route>
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </CatalogProvider>
+    </AccountProvider>
   );
 }
