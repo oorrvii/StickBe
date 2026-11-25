@@ -1,15 +1,30 @@
+/* Self-hosted fonts (installed with npm): Syne for display, DM Sans for text and UI, Fraunces for small editorial accents. */
+@import "@fontsource-variable/syne/index.css";
+@import "@fontsource-variable/dm-sans/index.css";
+@import "@fontsource-variable/fraunces/wght.css";
+@import "@fontsource-variable/fraunces/wght-italic.css";
+
 :root {
-  --sb-violet: #7250a0;
-  --sb-violet-dark: #5b3f82;
-  --sb-violet-tint: #f3eef8;
-  --sb-ink: #28252d;
-  --sb-ivory: #f6f2ea;
-  --sb-lavender: #d9cbe8;
-  --sb-terracotta: #df936e;
-  --sb-sage: #aab394;
+  /* Palette: deep plum, electric violet, warm coral, butter yellow, paper cream, muted olive.
+     Old token names are kept so every existing component picks up the new colours. */
+  --sb-plum: #2b1038;
+  --sb-plum-2: #43205a;
+  --sb-violet: #5b2fe6;
+  --sb-violet-dark: #4421b8;
+  --sb-violet-tint: #efeafd;
+  --sb-ink: #2b1038;
+  --sb-ivory: #f7f1e3;
+  --sb-cream-2: #efe6d0;
+  --sb-lavender: #dcd2f7;
+  --sb-coral: #ff6f59;
+  --sb-terracotta: #ff6f59;
+  --sb-butter: #ffd966;
+  --sb-butter-bg: #fff3c4;
+  --sb-olive: #6b7a3a;
+  --sb-sage: #6b7a3a;
   --sb-white: #ffffff;
-  --sb-muted: #6b6573;
-  --sb-line: #e4ddd0;
+  --sb-muted: #65596e;
+  --sb-line: #e3d7bf;
 
   --sb-success: #2f5d3a;
   --sb-success-bg: #e3f0e6;
@@ -17,14 +32,14 @@
   --sb-danger-bg: #fbe5e2;
   --sb-warning: #7a5200;
   --sb-warning-bg: #fbefd0;
-  --sb-terracotta-bg: #f8e3d8;
-  --sb-terracotta-ink: #8a4b2a;
-  --sb-sage-bg: #e6ead9;
-  --sb-sage-ink: #4c5a3a;
+  --sb-terracotta-bg: #ffe3dc;
+  --sb-terracotta-ink: #a12e1c;
+  --sb-sage-bg: #e8ecd5;
+  --sb-sage-ink: #46521f;
 
-  --sb-font-heading: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --sb-font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --sb-font-accent: "DM Serif Display", Georgia, serif;
+  --sb-font-heading: "Syne Variable", "Syne", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sb-font-body: "DM Sans Variable", "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sb-font-accent: "Fraunces Variable", "Fraunces", Georgia, serif;
 
   --sb-text-xs: 0.75rem;
   --sb-text-sm: 0.875rem;
@@ -33,7 +48,7 @@
   --sb-text-xl: 1.375rem;
   --sb-text-2xl: 1.75rem;
   --sb-text-3xl: clamp(1.9rem, 4vw, 2.6rem);
-  --sb-text-4xl: clamp(2.3rem, 6vw, 3.8rem);
+  --sb-text-4xl: clamp(2.2rem, 5.2vw, 3.6rem);
 
   --sb-space-1: 4px;
   --sb-space-2: 8px;
@@ -54,9 +69,9 @@
   --sb-radius-xl: 24px;
   --sb-radius-pill: 999px;
 
-  --sb-shadow-sm: 0 1px 2px rgba(40, 37, 45, 0.08);
-  --sb-shadow-md: 0 6px 18px rgba(40, 37, 45, 0.1);
-  --sb-shadow-lg: 0 18px 44px rgba(40, 37, 45, 0.18);
+  --sb-shadow-sm: 0 1px 2px rgba(43, 16, 56, 0.08);
+  --sb-shadow-md: 0 6px 18px rgba(43, 16, 56, 0.12);
+  --sb-shadow-lg: 0 18px 44px rgba(43, 16, 56, 0.22);
 
   --sb-border: 1px solid var(--sb-line);
 
@@ -79,19 +94,20 @@
 
 .sb2 :where(h1, h2, h3, h4) {
   font-family: var(--sb-font-heading);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
   margin: 0;
 }
 
-.sb2 :where(h1) { font-size: var(--sb-text-4xl); font-weight: 800; }
-.sb2 :where(h2) { font-size: var(--sb-text-3xl); font-weight: 800; }
+.sb2 :where(h1) { font-size: var(--sb-text-4xl); font-weight: 700; }
+.sb2 :where(h2) { font-size: var(--sb-text-3xl); font-weight: 700; }
 .sb2 :where(h3) { font-size: var(--sb-text-xl); font-weight: 700; }
 .sb2 :where(h4) { font-size: var(--sb-text-lg); font-weight: 700; }
 .sb2 :where(p) { margin: 0; }
 
 .sb2 .sb-accent {
   font-family: var(--sb-font-accent);
+  font-style: italic;
   font-weight: 400;
   letter-spacing: 0;
 }
@@ -126,7 +142,8 @@
   border: 1.5px solid transparent;
   border-radius: var(--sb-radius-pill);
   font-size: var(--sb-text-sm);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   line-height: 1;
   cursor: pointer;
   text-decoration: none;
@@ -151,13 +168,15 @@
 .sb-btn--secondary:hover:not(:disabled) { background: var(--sb-violet-tint); }
 
 .sb-btn--ghost { background: transparent; color: var(--sb-ink); }
-.sb-btn--ghost:hover:not(:disabled) { background: rgba(40, 37, 45, 0.07); }
+.sb-btn--ghost:hover:not(:disabled) { background: rgba(43, 16, 56, 0.08); }
 
 .sb-btn--danger { background: var(--sb-danger); color: var(--sb-white); }
 .sb-btn--danger:hover:not(:disabled) { background: #8f2d25; }
 
-.sb-btn--accent { background: var(--sb-terracotta); color: var(--sb-ink); }
-.sb-btn--accent:hover:not(:disabled) { background: #d4835a; }
+.sb-btn--accent { background: var(--sb-coral); color: var(--sb-ink); }
+.sb-btn--accent:hover:not(:disabled) { background: #ff5a41; }
+.sb-btn--butter { background: var(--sb-butter); color: var(--sb-ink); }
+.sb-btn--butter:hover:not(:disabled) { background: #ffcc3d; }
 
 .sb-spinner {
   width: 1em;
@@ -240,7 +259,7 @@ textarea.sb-input { min-height: 96px; resize: vertical; }
   align-items: center;
   justify-content: center;
   padding: var(--sb-space-4);
-  background: rgba(40, 37, 45, 0.55);
+  background: rgba(43, 16, 56, 0.6);
   animation: sb-fade var(--sb-dur) var(--sb-ease);
 }
 
@@ -276,7 +295,7 @@ textarea.sb-input { min-height: 96px; resize: vertical; }
   line-height: 1;
   cursor: pointer;
 }
-.sb-dialog__close:hover { background: rgba(40, 37, 45, 0.07); }
+.sb-dialog__close:hover { background: rgba(43, 16, 56, 0.08); }
 .sb-dialog__actions { display: flex; flex-wrap: wrap; gap: var(--sb-space-3); justify-content: flex-end; margin-top: var(--sb-space-5); }
 
 @keyframes sb-fade { from { opacity: 0; } to { opacity: 1; } }
@@ -311,7 +330,7 @@ textarea.sb-input { min-height: 96px; resize: vertical; }
 .sb-skeleton {
   display: block;
   border-radius: var(--sb-radius-md);
-  background: linear-gradient(90deg, #ebe5da 25%, #f6f2ea 50%, #ebe5da 75%);
+  background: linear-gradient(90deg, #ece2cb 25%, #f7f1e3 50%, #ece2cb 75%);
   background-size: 200% 100%;
   animation: sb-shimmer 1.4s linear infinite;
 }

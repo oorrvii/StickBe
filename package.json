@@ -2,8 +2,12 @@
   "name": "stickbe",
   "private": true,
   "version": "0.0.0",
-  "engines": { "node": "22.x" },
-  "overrides": { "jwks-rsa": "3.2.2" },
+  "engines": {
+    "node": "22.x"
+  },
+  "overrides": {
+    "jwks-rsa": "3.2.2"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,12 +18,15 @@
     "prebuild": "node scripts/list-product-images.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.3.0",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/syne": "^5.3.0",
     "@vercel/speed-insights": "^2.0.0",
     "firebase": "^12.19.0",
+    "firebase-admin": "^14.5.1",
     "lucide-react": "^0.500.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "firebase-admin": "^14.5.1",
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {

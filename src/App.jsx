@@ -1670,7 +1670,7 @@ const goToSection = (id) => {
       {/* GALLERY */}
       <section id="gallery" style={{ padding: "20px var(--sb-gutter) 50px", maxWidth: "var(--sb-page-max)", margin: "0 auto", scrollMarginTop: 90 }}>
   <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
-    Moments & Events
+    StickBe Journal
   </h2>
   <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
     Pop-ups, packing days, and everything in between.

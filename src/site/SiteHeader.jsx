@@ -3,7 +3,7 @@ import { Heart, ShoppingCart, Menu } from "lucide-react";
 const LINKS = [
   { id: "shop", label: "Shop" },
   { id: "story", label: "Our story" },
-  { id: "gallery", label: "Moments" },
+  { id: "gallery", label: "Journal" },
   { id: "feedback", label: "Contact" },
 ];
 
