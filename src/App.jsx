@@ -1643,7 +1643,7 @@ const goToSection = (id) => {
       <SaleBanner sale={settings.sale} percent={discountPercent} onShop={() => scrollToSection("shop")} />
 
       {/* SHOP */}
-      <section id="shop" style={{ padding: "44px 20px 20px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
+      <section id="shop" style={{ padding: "44px var(--sb-gutter) 20px", maxWidth: "var(--sb-page-max)", margin: "0 auto", scrollMarginTop: 90 }}>
         <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
           Shop the collection
         </h2>
@@ -1668,7 +1668,7 @@ const goToSection = (id) => {
       </section>
 
       {/* GALLERY */}
-      <section id="gallery" style={{ padding: "20px 20px 50px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
+      <section id="gallery" style={{ padding: "20px var(--sb-gutter) 50px", maxWidth: "var(--sb-page-max)", margin: "0 auto", scrollMarginTop: 90 }}>
   <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
     Moments & Events
   </h2>
@@ -1681,7 +1681,7 @@ const goToSection = (id) => {
       <BrandStory settings={settings} />
 
       {/* FEEDBACK */}
-      <section id="feedback" style={{ padding: "10px 20px 56px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
+      <section id="feedback" style={{ padding: "10px var(--sb-gutter) 56px", maxWidth: "var(--sb-page-max)", margin: "0 auto", scrollMarginTop: 90 }}>
         <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
           Got feedback or a question?
         </h2>

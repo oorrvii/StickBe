@@ -1,6 +1,6 @@
 .sb-pagewrap { min-height: 100vh; display: flex; flex-direction: column; }
 .sb-pagemain { flex: 1; }
-.sb-page { max-width: 1100px; margin: 0 auto; padding: var(--sb-space-7) var(--sb-space-4); }
+.sb-page { max-width: var(--sb-page-max); margin: 0 auto; padding: var(--sb-space-7) var(--sb-gutter); }
 .sb-page h1 { font-size: var(--sb-text-3xl); margin-bottom: var(--sb-space-3); }
 .sb-eyebrow { font-size: var(--sb-text-xs); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--sb-violet-dark); margin-bottom: var(--sb-space-2); }
 .sb-page__note { margin: var(--sb-space-3) 0 var(--sb-space-4); }

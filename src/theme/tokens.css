@@ -44,6 +44,10 @@
   --sb-space-7: 48px;
   --sb-space-8: 72px;
 
+  /* Page width: content grows with the screen up to this cap, with a gutter that scales too. */
+  --sb-page-max: 1720px;
+  --sb-gutter: clamp(16px, 3.5vw, 64px);
+
   --sb-radius-sm: 6px;
   --sb-radius-md: 10px;
   --sb-radius-lg: 16px;
@@ -343,3 +347,9 @@ textarea.sb-input { min-height: 96px; resize: vertical; }
   }
   .sb-card--interactive:hover { transform: none; }
 }
+
+/* Full-width page frame. These win over leftover Vite starter styles (a narrow #root or a centred flex body). */
+html { -webkit-text-size-adjust: 100%; }
+html body { display: block; margin: 0; min-width: 320px; overflow-x: clip; }
+html body #root { width: 100%; max-width: none; margin: 0; padding: 0; text-align: left; border: 0; }
+.sb2 :where(img) { max-width: 100%; }

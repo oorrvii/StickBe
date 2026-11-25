@@ -31,9 +31,9 @@
 }
 
 .sb-header__inner {
-  max-width: 1200px;
+  max-width: var(--sb-page-max);
   margin: 0 auto;
-  padding: 10px var(--sb-space-4);
+  padding: 10px var(--sb-gutter);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -126,9 +126,9 @@
   margin-bottom: var(--sb-space-3);
 }
 
-.sb-hero { padding: var(--sb-space-6) var(--sb-space-4) var(--sb-space-7); }
+.sb-hero { padding: var(--sb-space-6) var(--sb-gutter) var(--sb-space-7); }
 .sb-hero__inner {
-  max-width: 1200px;
+  max-width: var(--sb-page-max);
   margin: 0 auto;
   display: grid;
   gap: var(--sb-space-6);
@@ -188,13 +188,13 @@
 .sb-hero__tile--empty:hover { transform: none; }
 
 @media (min-width: 900px) {
-  .sb-hero { padding: var(--sb-space-8) var(--sb-space-5) var(--sb-space-8); }
+  .sb-hero { padding: var(--sb-space-8) var(--sb-gutter) var(--sb-space-8); }
   .sb-hero__inner { grid-template-columns: 1.05fr 1fr; gap: var(--sb-space-7); }
 }
 
-.sb-trust { background: var(--sb-white); border-block: var(--sb-border); padding: var(--sb-space-5) var(--sb-space-4); }
+.sb-trust { background: var(--sb-white); border-block: var(--sb-border); padding: var(--sb-space-5) var(--sb-gutter); }
 .sb-trust__list {
-  max-width: 1200px;
+  max-width: var(--sb-page-max);
   margin: 0 auto;
   padding: 0;
   list-style: none;
@@ -217,10 +217,10 @@
 .sb-trust__title { font-family: var(--sb-font-heading); font-weight: 700; font-size: var(--sb-text-md); }
 .sb-trust__text { color: var(--sb-muted); font-size: var(--sb-text-sm); margin-top: 2px; }
 
-.sb-cats { padding: var(--sb-space-7) var(--sb-space-4); scroll-margin-top: 80px; }
-.sb-section-head { max-width: 1200px; margin: 0 auto var(--sb-space-5); }
+.sb-cats { padding: var(--sb-space-7) var(--sb-gutter); scroll-margin-top: 80px; }
+.sb-section-head { max-width: var(--sb-page-max); margin: 0 auto var(--sb-space-5); }
 .sb-cats__grid {
-  max-width: 1200px;
+  max-width: var(--sb-page-max);
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -263,9 +263,9 @@
 }
 .sb-cat__count { padding: 0 var(--sb-space-3); color: var(--sb-muted); font-size: var(--sb-text-xs); }
 
-.sb-story { padding: var(--sb-space-7) var(--sb-space-4); background: var(--sb-lavender); }
+.sb-story { padding: var(--sb-space-7) var(--sb-gutter); background: var(--sb-lavender); }
 .sb-story__inner {
-  max-width: 1100px;
+  max-width: var(--sb-page-max);
   margin: 0 auto;
   display: grid;
   gap: var(--sb-space-6);
@@ -290,9 +290,9 @@
   .sb-story__inner { grid-template-columns: 1.4fr 1fr; gap: var(--sb-space-8); }
 }
 
-.sb-footer { background: var(--sb-ink); color: var(--sb-ivory); padding: var(--sb-space-7) var(--sb-space-4) var(--sb-space-5); }
+.sb-footer { background: var(--sb-ink); color: var(--sb-ivory); padding: var(--sb-space-7) var(--sb-gutter) var(--sb-space-5); }
 .sb-footer__inner {
-  max-width: 1200px;
+  max-width: var(--sb-page-max);
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -330,7 +330,7 @@
 .sb-footer a:hover,
 .sb-footer button:hover { color: var(--sb-lavender); text-decoration: underline; }
 .sb-footer__legal {
-  max-width: 1200px;
+  max-width: var(--sb-page-max);
   margin: var(--sb-space-6) auto 0;
   padding-top: var(--sb-space-4);
   border-top: 1px solid rgba(246, 242, 234, 0.18);
@@ -369,7 +369,7 @@
 .sb-salestrip { display: block; width: 100%; border: 0; cursor: pointer; background: var(--sb-lavender); color: var(--sb-ink); text-align: center; padding: 9px var(--sb-space-4); font: 600 var(--sb-text-sm) var(--sb-font-body); }
 .sb-salestrip__cta { color: var(--sb-violet-dark); text-decoration: underline; text-underline-offset: 3px; }
 .sb-salestrip:focus-visible { outline: none; box-shadow: inset 0 0 0 3px var(--sb-violet); }
-.sb-salebanner { background: transparent; padding: var(--sb-space-6) var(--sb-space-4); max-width: 1100px; margin: 0 auto; }
+.sb-salebanner { background: transparent; padding: var(--sb-space-6) var(--sb-gutter); max-width: var(--sb-page-max); margin: 0 auto; }
 .sb-salebanner__card { display: grid; gap: var(--sb-space-5); align-items: center; padding: var(--sb-space-6) var(--sb-space-5); background: var(--sb-terracotta-bg); border-radius: var(--sb-radius-xl); box-shadow: var(--sb-shadow-md); }
 .sb-salebanner__eyebrow { font-size: var(--sb-text-xl); color: var(--sb-violet-dark); margin: 0 0 var(--sb-space-2); }
 .sb-salebanner h2 { margin: 0; color: var(--sb-ink); }
