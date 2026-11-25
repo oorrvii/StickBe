@@ -35,3 +35,19 @@ export function cleanSale(remote) {
     endsAt: remote.endsAt ?? "",
   };
 }
+
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+/** "30 November": the last day of the sale in India, or "" when the sale has no end date. */
+export function saleEndLabel(sale) {
+  const end = toMillis(sale && sale.endsAt);
+  if (end === null) return "";
+  const lastDay = new Date(end + 5.5 * 3600e3 - 1); // endsAt is midnight after the last day
+  return `${lastDay.getUTCDate()} ${MONTHS[lastDay.getUTCMonth()]}`;
+}
+
+/** The sale headline, for example "Diwali sale, 30% off". The percent is exact: it applies to every item. */
+export function saleHeadline(sale, percent) {
+  const label = sale && typeof sale.label === "string" ? sale.label.trim() : "";
+  return `${label || "Sale"}, ${percent}% off`;
+}

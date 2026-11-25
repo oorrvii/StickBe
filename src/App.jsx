@@ -28,7 +28,7 @@ import AdminPages from "./admin/AdminPages.jsx";
 import AdminSettings from "./admin/AdminSettings.jsx";
 import ContentPage from "./pages/ContentPage.jsx";
 import { ShopSection } from "./shop/index.js";
-import { SiteHeader, AnnouncementBar, Hero, TrustStrip, CategoryTiles, BrandStory, SiteFooter, useSiteSettings, useSalePercent } from "./site/index.js";
+import { SiteHeader, AnnouncementBar, Hero, TrustStrip, CategoryTiles, BrandStory, SiteFooter, SaleBanner, SaleStrip, useSiteSettings, useSalePercent } from "./site/index.js";
 
 
 const PLUM = "#5B3E7F";
@@ -1629,6 +1629,7 @@ const goToSection = (id) => {
         onGoTo={scrollToSection}
       />
       <AnnouncementBar text={settings.announcement} />
+      <SaleStrip sale={settings.sale} percent={discountPercent} onShop={() => scrollToSection("shop")} />
       <Hero
         settings={settings}
         categories={categories}
@@ -1639,31 +1640,10 @@ const goToSection = (id) => {
       />
       <TrustStrip items={settings.trustItems} />
       <CategoryTiles categories={categories} loading={productsLoading} onSelect={goToCategory} />
+      <SaleBanner sale={settings.sale} percent={discountPercent} onShop={() => scrollToSection("shop")} />
 
       {/* SHOP */}
       <section id="shop" style={{ padding: "44px 20px 20px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
-                {discountPercent > 0 && (
-          <>
-            <style>{`
-              @keyframes stickbe-sale-pulse {
-                0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(224,85,107,0.35); }
-                50% { transform: scale(1.03); box-shadow: 0 12px 28px rgba(224,85,107,0.5); }
-              }
-            `}</style>
-            <div style={{
-              maxWidth: 560, margin: "0 auto 26px", padding: "16px 20px", textAlign: "center",
-              background: "linear-gradient(135deg, #e0556b, #f0866b)", color: "#fff",
-              borderRadius: 18, animation: "stickbe-sale-pulse 2.4s ease-in-out infinite",
-            }}>
-              <div style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 800, fontSize: 26, lineHeight: 1.1, letterSpacing: 0.5 }}>
-                🎉 {discountPercent}% OFF
-              </div>
-              <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14, marginTop: 4 }}>
-                {settings.sale.label ? `${settings.sale.label} · ` : ""}on every item. Prices below are already discounted!
-              </div>
-            </div>
-          </>
-        )}
         <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
           Shop the collection
         </h2>

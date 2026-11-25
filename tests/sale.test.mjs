@@ -17,3 +17,11 @@ for (const [sale, want] of cases) {
   assert.equal(server.activeSalePercent(sale, now), want, "server " + JSON.stringify(sale));
 }
 console.log("ok: sale rules agree on client and server");
+
+import { saleEndLabel, saleHeadline } from "../src/site/saleLogic.js";
+assert.equal(saleEndLabel({ endsAt: "2026-12-01T00:00:00+05:30" }), "30 November");
+assert.equal(saleEndLabel({ endsAt: "2027-01-01T00:00:00+05:30" }), "31 December");
+assert.equal(saleEndLabel({ endsAt: "" }), "");
+assert.equal(saleHeadline({ label: " Diwali sale " }, 30), "Diwali sale, 30% off");
+assert.equal(saleHeadline({ label: "" }, 10), "Sale, 10% off");
+console.log("ok: sale banner wording and end date");

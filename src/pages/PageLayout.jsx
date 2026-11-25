@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { SiteHeader, AnnouncementBar, SiteFooter, useSiteSettings } from "../site/index.js";
+import { SiteHeader, AnnouncementBar, SaleStrip, SiteFooter, useSiteSettings, useSalePercent } from "../site/index.js";
 import { AccountIcon } from "../CustomerAuth.jsx";
 import { useAccount } from "../app/AccountContext.jsx";
 import { useCatalog } from "../shop/CatalogContext.jsx";
@@ -17,6 +17,7 @@ export default function PageLayout({ logoSrc }) {
   const { cart, wishlist, user } = useAccount();
   const { categories } = useCatalog();
   const settings = useSiteSettings();
+  const salePercent = useSalePercent(settings);
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,6 +35,7 @@ export default function PageLayout({ logoSrc }) {
   return (
     <div className="sb2 sb-pagewrap">
       <AnnouncementBar text={settings.announcement} />
+      <SaleStrip sale={settings.sale} percent={salePercent} onShop={() => goTo("shop")} />
       <SiteHeader
         logoSrc={logoSrc}
         accountSlot={<AccountIcon user={user} onOpenAuth={() => navigate("/sign-in")} onOpenAccount={() => navigate("/account")} />}
