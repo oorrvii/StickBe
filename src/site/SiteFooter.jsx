@@ -1,7 +1,10 @@
-import { Instagram, Mail } from "lucide-react";
+import { Instagram, Mail, Phone, MessageCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { usePublishedPages } from "./usePublishedPages.js";
 
 export default function SiteFooter({ logoSrc, settings, categories, onSelectCategory, onGoTo }) {
   const year = new Date().getFullYear();
+  const pages = usePublishedPages();
   const shopCategories = categories.filter((c) => c.items.length > 0);
 
   return (
@@ -37,6 +40,9 @@ export default function SiteFooter({ logoSrc, settings, categories, onSelectCate
             <li>
               <button type="button" onClick={() => onGoTo("feedback")}>Feedback & questions</button>
             </li>
+            {pages.map((p) => (
+              <li key={p.slug}><Link to={`/${p.slug}`}>{p.title}</Link></li>
+            ))}
           </ul>
         </nav>
 
@@ -48,6 +54,16 @@ export default function SiteFooter({ logoSrc, settings, categories, onSelectCate
                 <Instagram size={16} aria-hidden="true" /> @{settings.instagramHandle}
               </a>
             </li>
+            {settings.phone && (
+              <li>
+                <a href={`tel:+91${settings.phone}`}><Phone size={16} aria-hidden="true" /> {settings.phone}</a>
+              </li>
+            )}
+            {settings.whatsapp && (
+              <li>
+                <a href={`https://wa.me/91${settings.whatsapp}`} target="_blank" rel="noopener noreferrer"><MessageCircle size={16} aria-hidden="true" /> WhatsApp</a>
+              </li>
+            )}
             <li>
               <a href={`mailto:${settings.contactEmail}`}>
                 <Mail size={16} aria-hidden="true" /> {settings.contactEmail}

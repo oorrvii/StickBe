@@ -3,7 +3,7 @@ import FitImage from "./FitImage.jsx";
 import { categoryCover } from "./heroPhotos.js";
 
 export default function CategoryTiles({ categories, loading, onSelect }) {
-  const visible = categories.filter((cat) => loading || cat.items.length > 0);
+  const visible = categories.filter((cat) => cat.showOnHome !== false && (loading || cat.items.length > 0));
 
   return (
     <section id="categories" className="sb2 sb-cats" aria-labelledby="sb-cats-title">
@@ -13,7 +13,7 @@ export default function CategoryTiles({ categories, loading, onSelect }) {
       </div>
       <div className="sb-cats__grid">
         {visible.map((cat) => {
-          const cover = categoryCover(cat);
+          const cover = cat.image || categoryCover(cat);
           return (
             <button key={cat.id} type="button" className="sb-cat" onClick={() => onSelect(cat.id)}>
               <span className="sb-cat__img">

@@ -68,6 +68,11 @@ r = await call(db, good({ items: [{ slug: "panda", qty: 99 }], requestId: "req-2
 r = await call(db, good({ items: [{ slug: "mug", qty: 1 }], requestId: "req-33333333" })); assert.equal(r.json.error, "BELOW_MINIMUM");
 r = await call(db, good({ items: [{ slug: "nope", qty: 1 }], requestId: "req-44444444" })); assert.equal(r.json.error, "ITEM_UNAVAILABLE");
 r = await call(db, good({ items: [{ slug: "pack", qty: 1 }], requestId: "req-55555555" })); assert.equal(r.json.error, "ITEM_UNAVAILABLE", "variant required");
+for (const [k, patch] of [["draft", { status: "draft" }], ["archived", { status: "archived" }], ["paused", { inStock: false }]]) {
+  const d2 = fakeDb(baseProducts()); d2.store.products.set("panda", { ...d2.store.products.get("panda"), ...patch });
+  r = await call(d2, good({ requestId: `req-${k}-0001` })); assert.equal(r.status, 409, k); assert.equal(r.json.error, "ITEM_UNAVAILABLE", k);
+}
+console.log("ok: draft, archived and paused products can't be ordered");
 r = await call(db, good({ items: [{ slug: "pack", variantLabel: "Large", qty: 2 }], requestId: "req-66666666", customer: { ...customer, city: "Delhi", state: "Delhi" } }));
 assert.equal(r.status, 200); assert.equal(r.json.order.items[0].price, 90); assert.equal(r.json.order.deliveryFee, 40); assert.equal(r.json.order.total, 220);
 console.log("ok: stock, minimum, unknown item, variants, non-Agra fee");

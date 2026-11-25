@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Button, Skeleton } from "../ui/index.js";
-import { useCatalog } from "../shop/CatalogContext.jsx";
 import { statusId } from "../app/orderUtils.js";
-import { useOrderService } from "./ServiceContext.jsx";
+import { useOrderService, useCatalogService } from "./ServiceContext.jsx";
+import { statusOfProduct } from "./productForm.js";
 import { useAsync } from "./useAsync.js";
 
 export const LOW_STOCK_AT = 5;
@@ -21,11 +21,14 @@ export default function AdminOverview() {
   const service = useOrderService();
   const load = useCallback(() => service.listOrders(), [service]);
   const { data: orders, loading, error, retry } = useAsync(load);
-  const { categories, loading: catalogLoading } = useCatalog();
+  const catalog = useCatalogService();
+  const loadProducts = useCallback(() => catalog.listProducts(), [catalog]);
+  const { data: products, loading: catalogLoading } = useAsync(loadProducts);
 
-  const items = categories.flatMap((c) => c.items).filter((i) => !i.isCustom);
+  const items = (products || []).filter((p) => statusOfProduct(p) === "published");
+  const drafts = (products || []).filter((p) => statusOfProduct(p) === "draft").length;
   const count = (id) => (orders || []).filter((o) => statusId(o) === id).length;
-  const lowStock = items.filter((i) => typeof i.stock === "number" && i.stock > 0 && i.stock <= LOW_STOCK_AT).length;
+  const lowStock = items.filter((i) => typeof i.stock === "number" && i.stock > 0 && i.stock <= (typeof i.lowStockAt === "number" ? i.lowStockAt : LOW_STOCK_AT)).length;
   const outOfStock = items.filter((i) => typeof i.stock === "number" && i.stock <= 0).length;
 
   return (
@@ -57,9 +60,10 @@ export default function AdminOverview() {
         <Skeleton height={110} style={{ display: "block" }} />
       ) : (
         <div className="sb-stats">
-          <Stat to="/admin/classic" value={items.length} label="Products listed" />
-          <Stat to="/admin/classic" value={lowStock} label={`Low stock (${LOW_STOCK_AT} or fewer)`} tone={lowStock ? "terracotta" : undefined} />
-          <Stat to="/admin/classic" value={outOfStock} label="Out of stock" tone={outOfStock ? "terracotta" : undefined} />
+          <Stat to="/admin/products" value={items.length} label="Published products" />
+          <Stat to="/admin/products" value={drafts} label="Drafts" />
+          <Stat to="/admin/inventory" value={lowStock} label="Low stock" tone={lowStock ? "terracotta" : undefined} />
+          <Stat to="/admin/inventory" value={outOfStock} label="Out of stock" tone={outOfStock ? "terracotta" : undefined} />
         </div>
       )}
     </>

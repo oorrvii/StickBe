@@ -7,7 +7,11 @@ import "./admin.css";
 const NAV = [
   { to: "/admin", label: "Overview", end: true },
   { to: "/admin/orders", label: "Orders" },
-  { to: "/admin/classic", label: "Products" },
+  { to: "/admin/products", label: "Products" },
+  { to: "/admin/categories", label: "Categories" },
+  { to: "/admin/inventory", label: "Inventory" },
+  { to: "/admin/pages", label: "Pages" },
+  { to: "/admin/settings", label: "Settings" },
 ];
 
 export default function AdminLayout() {

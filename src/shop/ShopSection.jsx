@@ -15,7 +15,7 @@ function slugFromPath() {
 
 export default function ShopSection({
   categories, loading, error, discountPercent, wishlist, cart,
-  activeCategory, onCategoryChange, onToggleWishlist, onAdd, onShare, onRetry,
+  activeCategory, onCategoryChange, onToggleWishlist, onAdd, onShare, onRetry, shippingNote = "",
 }) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("featured");
@@ -138,6 +138,7 @@ export default function ShopSection({
         item={opened}
         cartQty={opened ? qtyOf(opened) : 0}
         discountPercent={discountPercent}
+        shippingNote={shippingNote}
         inWishlist={opened ? wishlist.includes(opened.name) : false}
         onToggleWishlist={onToggleWishlist}
         onAdd={(item, qty, variant) => onAdd(item, qty, variant)}

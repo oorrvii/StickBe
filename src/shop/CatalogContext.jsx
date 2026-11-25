@@ -2,20 +2,26 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { CATEGORY_META } from "../categoryMeta.js";
+import { isLive, mergeCategories } from "./categoryLogic.js";
 
 const CatalogContext = createContext(null);
 
 const EMPTY = CATEGORY_META.map((cat) => ({ ...cat, items: [] }));
 
 function fetchCategories() {
-  return getDocs(collection(db, "products")).then((snapshot) => {
-    const all = snapshot.docs.map((d) => d.data());
-    return CATEGORY_META.map((meta) => ({
-      ...meta,
-      items: all
-        .filter((p) => p.category === meta.id)
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.slug || "").localeCompare(b.slug || "")),
-    }));
+  const remote = getDocs(collection(db, "categories"))
+    .then((snap) => snap.docs.map((d) => ({ ...d.data(), id: d.id })))
+    .catch(() => []); // categories are optional; the built-in list is the fallback
+  return Promise.all([getDocs(collection(db, "products")), remote]).then(([snapshot, remoteCats]) => {
+    const all = snapshot.docs.map((d) => d.data()).filter(isLive);
+    return mergeCategories(CATEGORY_META, remoteCats)
+      .filter((c) => c.active !== false)
+      .map((meta) => ({
+        ...meta,
+        items: all
+          .filter((p) => p.category === meta.id)
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.slug || "").localeCompare(b.slug || "")),
+      }));
   });
 }
 

@@ -9,7 +9,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predev": "node scripts/list-product-images.mjs",
+    "prebuild": "node scripts/list-product-images.mjs"
   },
   "dependencies": {
     "@vercel/speed-insights": "^2.0.0",

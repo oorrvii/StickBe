@@ -28,6 +28,18 @@ service cloud.firestore {
       }
     }
 
+    // Extra categories you create in Admin > Categories.
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Pages written in Admin > Pages. The public only sees published ones.
+    match /pages/{pageId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
     match /settings/{docId} {
       allow read: if true;
       allow write: if isAdmin();

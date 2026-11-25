@@ -17,6 +17,10 @@ export function priceInfo(item, percent) {
   const variants = Array.isArray(item.variants) ? item.variants.filter((v) => v && Number.isFinite(Number(v.price))) : [];
   const hasVariants = variants.length > 0;
   const original = hasVariants ? Math.min(...variants.map((v) => Number(v.price))) : Number(item.price);
+  const listPrice = Number(item.originalPrice);
+  // A permanent "was" price set on the product; a running sale takes over when there is one.
+  const showWas = !hasVariants && !(percent > 0) && Number.isFinite(listPrice) && listPrice > original;
+  if (showWas) return { from: false, original: listPrice, current: original, hasDiscount: true };
   return {
     from: hasVariants,
     original,
@@ -27,7 +31,7 @@ export function priceInfo(item, percent) {
 
 export function stockNote(item) {
   if (!isAvailable(item)) return { tone: "danger", text: "Sold out" };
-  if (typeof item.stock === "number" && item.stock <= 5) return { tone: "warning", text: `Only ${item.stock} left` };
+  if (typeof item.stock === "number" && item.stock <= (typeof item.lowStockAt === "number" ? item.lowStockAt : 5)) return { tone: "warning", text: `Only ${item.stock} left` };
   return null;
 }
 

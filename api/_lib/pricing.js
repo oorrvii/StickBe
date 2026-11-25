@@ -82,6 +82,9 @@ export function priceOrder({ items, products, discountPercent }) {
   for (const item of items) {
     const p = products.get(item.slug);
     if (!p) throw new OrderError(409, "ITEM_UNAVAILABLE", "An item in your cart is no longer available.", { slug: item.slug });
+    if (p.status === "draft" || p.status === "archived" || p.inStock === false) {
+      throw new OrderError(409, "ITEM_UNAVAILABLE", `${p.name || "An item"} is no longer available.`, { slug: item.slug });
+    }
     const variants = Array.isArray(p.variants) ? p.variants : [];
     let base;
     let name = p.name;

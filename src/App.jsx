@@ -20,6 +20,13 @@ import AdminLayout from "./admin/AdminLayout.jsx";
 import AdminOverview from "./admin/AdminOverview.jsx";
 import AdminOrders from "./admin/AdminOrders.jsx";
 import AdminOrderRoute from "./admin/AdminOrderRoute.jsx";
+import AdminProducts from "./admin/AdminProducts.jsx";
+import AdminProductEdit from "./admin/AdminProductEdit.jsx";
+import AdminCategories from "./admin/AdminCategories.jsx";
+import AdminInventory from "./admin/AdminInventory.jsx";
+import AdminPages from "./admin/AdminPages.jsx";
+import AdminSettings from "./admin/AdminSettings.jsx";
+import ContentPage from "./pages/ContentPage.jsx";
 import { ShopSection } from "./shop/index.js";
 import { SiteHeader, AnnouncementBar, Hero, TrustStrip, CategoryTiles, BrandStory, SiteFooter, useSiteSettings, useSalePercent } from "./site/index.js";
 
@@ -1669,6 +1676,7 @@ const goToSection = (id) => {
           error={productsError}
           onRetry={loadProducts}
           discountPercent={discountPercent}
+          shippingNote={settings.shippingNote}
           wishlist={wishlist}
           cart={cart}
           activeCategory={shopCategory}
@@ -1761,10 +1769,19 @@ export default function App() {
             </Route>
           </Route>
           <Route element={<PageLayout logoSrc={LOGO_URI} />}>
+            {["about", "contact", "faq", "shipping", "returns", "privacy", "terms"].map((slug) => (
+              <Route key={slug} path={`/${slug}`} element={<ContentPage slug={slug} />} />
+            ))}
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminOverview />} />
               <Route path="orders" element={<AdminOrders />} />
               <Route path="orders/:orderNumber" element={<AdminOrderRoute />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="products/:slug" element={<AdminProductEdit />} />
+              <Route path="categories" element={<AdminCategories />} />
+              <Route path="inventory" element={<AdminInventory />} />
+              <Route path="pages" element={<AdminPages />} />
+              <Route path="settings" element={<AdminSettings />} />
             </Route>
           </Route>
           <Route path="/admin/classic" element={<AdminPage />} />

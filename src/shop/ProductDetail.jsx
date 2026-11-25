@@ -16,7 +16,7 @@ function galleryOf(item) {
   return list;
 }
 
-export default function ProductDetail({ item, discountPercent, inWishlist, onToggleWishlist, onAdd, onClose, onShare, cartQty = 0 }) {
+export default function ProductDetail({ item, discountPercent, inWishlist, onToggleWishlist, onAdd, onClose, onShare, cartQty = 0, shippingNote = "" }) {
   const [index, setIndex] = useState(0);
   const [qty, setQty] = useState(1);
   const [variantLabel, setVariantLabel] = useState(null);
@@ -112,10 +112,16 @@ export default function ProductDetail({ item, discountPercent, inWishlist, onTog
                 <p>{item.description}</p>
               </details>
             )}
+            {item.careInstructions && (
+              <details className="sb-acc">
+                <summary>Care and storage <ChevronDown size={18} aria-hidden="true" /></summary>
+                <p>{item.careInstructions}</p>
+              </details>
+            )}
             <details className="sb-acc" open>
               <summary>Shipping and payment <ChevronDown size={18} aria-hidden="true" /></summary>
               <ul>
-                {SHIPPING_POINTS.map((t) => <li key={t}>{t}</li>)}
+                {(shippingNote ? [...SHIPPING_POINTS, shippingNote] : SHIPPING_POINTS).map((t) => <li key={t}>{t}</li>)}
               </ul>
             </details>
           </div>
