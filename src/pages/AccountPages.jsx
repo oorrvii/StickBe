@@ -10,7 +10,8 @@ import FitImage from "../site/FitImage.jsx";
 import { useCatalog } from "../shop/CatalogContext.jsx";
 import { itemImage } from "../shop/shopLogic.js";
 import { INDIAN_STATES, formatAddress, newAddressId, normalizePhone } from "../app/addressUtils.js";
-import { formatOrderDate, orderNumber, statusOf, ORDER_STATUS } from "../app/orderUtils.js";
+import { formatOrderDate, orderNumber, statusId, statusOf, historyOf, ORDER_STATUS } from "../app/orderUtils.js";
+import { isAdminUser } from "../admin/adminConfig.js";
 
 const NAV = [
   { to: "/account", label: "Overview", end: true },
@@ -120,7 +121,7 @@ export function AccountOrders() {
   const { user } = useAccount();
   const { orders, loading, error, retry } = useMyOrders(user.uid);
   const [filter, setFilter] = useState("all");
-  const shown = useMemo(() => orders.filter((o) => filter === "all" || (o.status || "new") === filter), [orders, filter]);
+  const shown = useMemo(() => orders.filter((o) => filter === "all" || statusId(o) === filter), [orders, filter]);
 
   return (
     <>
@@ -193,6 +194,7 @@ export function AccountOverview() {
         </Card>
       </div>
       <div className="sb-account__signout">
+        {isAdminUser(user) && <Link className="sb-btn sb-btn--primary" to="/admin">Open admin</Link>}
         <Button variant="secondary" onClick={async () => { await logOut(); navigate("/"); }}>Log out</Button>
       </div>
     </>
@@ -414,7 +416,13 @@ export function AccountHelp() {
 
 const STATUS_MESSAGE = {
   new: "We are reviewing your request. We will contact you using the details you gave us.",
-  fulfilled: "This order has been fulfilled. Thank you for shopping with StickBe!",
+  approved: "Your request is approved. We will message you the payment details. Please do not pay anyone before you hear from us.",
+  rejected: "We could not accept this request. Nothing has been charged.",
+  paid: "We have verified your payment. We will start preparing your order.",
+  processing: "We are preparing your order.",
+  dispatched: "Your order is on its way.",
+  delivered: "This order has been delivered. Thank you for shopping with StickBe!",
+  cancelled: "This order was cancelled.",
 };
 
 export function AccountOrderDetail() {
@@ -447,14 +455,17 @@ export function AccountOrderDetail() {
   const number = order.orderNumber || orderNumber(order);
   const c = order.customer || {};
   const flat = categories.flatMap((cat) => cat.items);
-  const events = [{ label: "Order request received", at: order.createdAt }];
-  if ((order.status || "new") === "fulfilled") events.push({ label: "Fulfilled", at: null });
+  const events = historyOf(order);
+  const sid = statusId(order);
 
   return (
     <>
       <Link className="sb-linkbtn sb-linkbtn--strong" to="/account/orders">All orders</Link>
       <PageHead eyebrow="Order" title={number} lead={order.createdAt ? `Placed ${formatOrderDate(order.createdAt)}` : undefined} action={<Badge tone={status.tone}>{status.label}</Badge>} />
-      <Alert tone="info">{STATUS_MESSAGE[order.status || "new"] || STATUS_MESSAGE.new}</Alert>
+      <Alert tone={sid === "cancelled" || sid === "rejected" ? "warning" : "info"}>
+        {STATUS_MESSAGE[sid]}
+        {order.cancelReason && (sid === "cancelled" || sid === "rejected") ? ` Reason: ${order.cancelReason}` : ""}
+      </Alert>
       <div className="sb-account__cards sb-orderdetail">
         <Card padded>
           <h3>Items</h3>
@@ -476,6 +487,7 @@ export function AccountOrderDetail() {
             <div><dt>Delivery</dt><dd>₹{order.deliveryFee ?? 0}</dd></div>
             <div className="sb-summary__total"><dt>Total</dt><dd>₹{order.total}</dd></div>
           </dl>
+          {order.adjustmentReason && <p className="sb-addr__text">Total adjusted: {order.adjustmentReason}</p>}
         </Card>
         <div className="sb-orderdetail__side">
           <Card padded>
@@ -484,13 +496,26 @@ export function AccountOrderDetail() {
             <p className="sb-addr__text">{c.address}</p>
             <p className="sb-addr__text">{c.city}, {c.state} {c.pincode}</p>
             <p className="sb-addr__text">+91 {c.phone}</p>
-            {order.note && <p className="sb-addr__text">Note: {order.note}</p>}
+            {order.note && <p className="sb-addr__text">Your note: {order.note}</p>}
           </Card>
+          {(order.customerNote || order.dispatch?.courier) && (
+            <Card padded>
+              <h3>From StickBe</h3>
+              {order.customerNote && <p className="sb-addr__text">{order.customerNote}</p>}
+              {order.dispatch?.courier && (
+                <p className="sb-addr__text">
+                  Courier: {order.dispatch.courier}
+                  {order.dispatch.trackingNumber ? ` · Tracking: ${order.dispatch.trackingNumber}` : ""}
+                  {order.dispatch.trackingUrl ? <> · <a href={order.dispatch.trackingUrl} target="_blank" rel="noopener noreferrer">Track your parcel</a></> : null}
+                </p>
+              )}
+            </Card>
+          )}
           <Card padded>
             <h3>Progress</h3>
             <ol className="sb-timeline">
               {events.map((e) => (
-                <li key={e.label}><strong>{e.label}</strong>{e.at ? <span>{formatOrderDate(e.at)}</span> : null}</li>
+                <li key={`${e.status}-${e.at}`}><strong>{e.text}</strong>{e.at ? <span>{formatOrderDate(e.at)}</span> : null}</li>
               ))}
             </ol>
           </Card>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useRef } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import { useParams, useNavigate, useSearchParams, useLocation, Routes, Route } from "react-router-dom";
 import { AccountIcon } from "./CustomerAuth.jsx";
 import { AccountProvider, useAccount } from "./app/AccountContext.jsx";
@@ -16,8 +16,12 @@ import { db } from "./firebase";
 import { collection, doc, writeBatch, increment } from "firebase/firestore";
 import { CATEGORY_META } from "./categoryMeta.js";
 import AdminPage from "./AdminPage";
+import AdminLayout from "./admin/AdminLayout.jsx";
+import AdminOverview from "./admin/AdminOverview.jsx";
+import AdminOrders from "./admin/AdminOrders.jsx";
+import AdminOrderRoute from "./admin/AdminOrderRoute.jsx";
 import { ShopSection } from "./shop/index.js";
-import { SiteHeader, AnnouncementBar, Hero, TrustStrip, CategoryTiles, BrandStory, SiteFooter, useSiteSettings } from "./site/index.js";
+import { SiteHeader, AnnouncementBar, Hero, TrustStrip, CategoryTiles, BrandStory, SiteFooter, useSiteSettings, useSalePercent } from "./site/index.js";
 
 
 const PLUM = "#5B3E7F";
@@ -1262,6 +1266,8 @@ function FeedbackForm({ theme }) {
   );
 }
 
+const SiteContext = createContext(null);
+
 function StickBeSite() {
     const [active, setActive] = useState(CATEGORY_META[0].id);
   const { categories, loading: productsLoading, error: productsError, reload: loadProducts } = useCatalog();
@@ -1273,7 +1279,7 @@ function StickBeSite() {
     address, setAddress,
     user,
   } = useAccount();
-  const settings = useSiteSettings();
+  const { settings, discountPercent } = useContext(SiteContext);
 
   // const [cart, setCart] = useState([]);
   const setCartOpen = () => navigate("/cart");
@@ -1345,7 +1351,7 @@ const handleShopAdd = (item, qty = 1, variant = null) => {
 
 const shareProduct = async (item) => {
   const url = `https://stickbe.store/product/${item.slug}`;
-  const text = `Check out "${item.name}" at StickBe!${DISCOUNT_PERCENT > 0 ? ` ${DISCOUNT_PERCENT}% off right now.` : ""}`;
+  const text = `Check out "${item.name}" at StickBe!${discountPercent > 0 ? ` ${discountPercent}% off right now.` : ""}`;
   if (navigator.share) {
     try { await navigator.share({ title: item.name, text, url }); } catch { /* cancelled */ }
   } else {
@@ -1622,14 +1628,14 @@ const goToSection = (id) => {
         loading={productsLoading}
         onShop={() => scrollToSection("shop")}
         onBrowse={() => scrollToSection("categories")}
-        saleLabel={DISCOUNT_PERCENT > 0 ? `${DISCOUNT_PERCENT}% OFF on every item` : null}
+        saleLabel={discountPercent > 0 ? `${discountPercent}% OFF${settings.sale.label ? ` · ${settings.sale.label}` : " on every item"}` : null}
       />
       <TrustStrip items={settings.trustItems} />
       <CategoryTiles categories={categories} loading={productsLoading} onSelect={goToCategory} />
 
       {/* SHOP */}
       <section id="shop" style={{ padding: "44px 20px 20px", maxWidth: 1100, margin: "0 auto", scrollMarginTop: 90 }}>
-                {DISCOUNT_PERCENT > 0 && (
+                {discountPercent > 0 && (
           <>
             <style>{`
               @keyframes stickbe-sale-pulse {
@@ -1643,10 +1649,10 @@ const goToSection = (id) => {
               borderRadius: 18, animation: "stickbe-sale-pulse 2.4s ease-in-out infinite",
             }}>
               <div style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 800, fontSize: 26, lineHeight: 1.1, letterSpacing: 0.5 }}>
-                🎉 {DISCOUNT_PERCENT}% OFF
+                🎉 {discountPercent}% OFF
               </div>
               <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14, marginTop: 4 }}>
-                on every item — prices below are already discounted!
+                {settings.sale.label ? `${settings.sale.label} · ` : ""}on every item. Prices below are already discounted!
               </div>
             </div>
           </>
@@ -1662,7 +1668,7 @@ const goToSection = (id) => {
           loading={productsLoading}
           error={productsError}
           onRetry={loadProducts}
-          discountPercent={DISCOUNT_PERCENT}
+          discountPercent={discountPercent}
           wishlist={wishlist}
           cart={cart}
           activeCategory={shopCategory}
@@ -1730,17 +1736,20 @@ const goToSection = (id) => {
   );
 }
 export default function App() {
+  const settings = useSiteSettings();
+  const discountPercent = useSalePercent(settings);
   return (
     <AccountProvider>
       <CatalogProvider>
+        <SiteContext.Provider value={{ settings, discountPercent }}>
         <Routes>
           <Route path="/" element={<StickBeSite />} />
           <Route path="/product/:productSlug" element={<StickBeSite />} />
           <Route element={<PageLayout logoSrc={LOGO_URI} />}>
             <Route path="/sign-in" element={<SignInPage />} />
-            <Route path="/wishlist" element={<WishlistPage discountPercent={DISCOUNT_PERCENT} />} />
-            <Route path="/cart" element={<CartPage discountPercent={DISCOUNT_PERCENT} />} />
-            <Route path="/checkout" element={<CheckoutPage discountPercent={DISCOUNT_PERCENT} />} />
+            <Route path="/wishlist" element={<WishlistPage discountPercent={discountPercent} />} />
+            <Route path="/cart" element={<CartPage discountPercent={discountPercent} />} />
+            <Route path="/checkout" element={<CheckoutPage discountPercent={discountPercent} />} />
             <Route path="/order-confirmation/:orderNumber" element={<ConfirmationPage />} />
             <Route path="/account" element={<AccountLayout />}>
               <Route index element={<AccountOverview />} />
@@ -1751,9 +1760,17 @@ export default function App() {
               <Route path="help" element={<AccountHelp />} />
             </Route>
           </Route>
-          <Route path="/admin" element={<AdminPage />} />
+          <Route element={<PageLayout logoSrc={LOGO_URI} />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminOverview />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="orders/:orderNumber" element={<AdminOrderRoute />} />
+            </Route>
+          </Route>
+          <Route path="/admin/classic" element={<AdminPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </SiteContext.Provider>
       </CatalogProvider>
     </AccountProvider>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { DEFAULT_SALE, activeSalePercent, cleanSale } from "./saleLogic.js";
 
 export const DEFAULT_SETTINGS = {
   announcement: "No COD available — prepayment required for all orders",
@@ -23,6 +24,7 @@ export const DEFAULT_SETTINGS = {
   instagramUrl: "https://instagram.com/stickbe.co",
   contactEmail: "stickbe.co@gmail.com",
   footerTagline: "Good things take time.",
+  sale: DEFAULT_SALE,
 };
 
 function mergeSettings(remote) {
@@ -36,6 +38,7 @@ function mergeSettings(remote) {
       merged[key] = value.filter((v) => v && typeof v.title === "string" && v.title.trim() !== "");
     }
   }
+  merged.sale = cleanSale(remote.sale);
   if (merged.trustItems.length === 0) merged.trustItems = DEFAULT_SETTINGS.trustItems;
   return merged;
 }
@@ -45,15 +48,32 @@ export function useSiteSettings() {
 
   useEffect(() => {
     let cancelled = false;
-    getDoc(doc(db, "settings", "site"))
-      .then((snap) => {
-        if (!cancelled && snap.exists()) setSettings(mergeSettings(snap.data()));
-      })
-      .catch(() => {});
+    const load = () =>
+      getDoc(doc(db, "settings", "site"))
+        .then((snap) => {
+          if (!cancelled && snap.exists()) setSettings(mergeSettings(snap.data()));
+        })
+        .catch(() => {});
+    load();
+    // Checkout fires this when the server says prices changed (for example a sale just ended).
+    window.addEventListener(SETTINGS_STALE_EVENT, load);
     return () => {
       cancelled = true;
+      window.removeEventListener(SETTINGS_STALE_EVENT, load);
     };
   }, []);
 
   return settings;
+}
+
+export const SETTINGS_STALE_EVENT = "stickbe:settings-stale";
+
+/** The sale percent right now. Re-checks every minute so a sale starts and ends on time. */
+export function useSalePercent(settings) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60000);
+    return () => clearInterval(id);
+  }, []);
+  return activeSalePercent(settings.sale, now);
 }

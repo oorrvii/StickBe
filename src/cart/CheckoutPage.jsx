@@ -5,6 +5,7 @@ import { useAccount } from "../app/AccountContext.jsx";
 import { useCatalog } from "../shop/CatalogContext.jsx";
 import { INDIAN_STATES, normalizePhone } from "../app/addressUtils.js";
 import OrderSummary from "./OrderSummary.jsx";
+import { SETTINGS_STALE_EVENT } from "../site/siteSettings.js";
 import { notifyShop } from "./notify.js";
 import { resolveLines, summarize } from "./cartLogic.js";
 import "./cart.css";
@@ -105,7 +106,10 @@ function CheckoutForm({ discountPercent, onPlaced }) {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         if (data.problems) setErrors(data.problems);
-        if (["PRICES_CHANGED", "OUT_OF_STOCK", "ITEM_UNAVAILABLE", "BELOW_MINIMUM", "EMPTY_CART", "BAD_ITEM"].includes(data.error)) reload();
+        if (["PRICES_CHANGED", "OUT_OF_STOCK", "ITEM_UNAVAILABLE", "BELOW_MINIMUM", "EMPTY_CART", "BAD_ITEM"].includes(data.error)) {
+          reload();
+          window.dispatchEvent(new Event(SETTINGS_STALE_EVENT));
+        }
         setProblem({ tone: "error", text: data.message || "We couldn't send your order. Please try again.", cartLink: data.error && data.error !== "INVALID_DETAILS" && data.error !== "BAD_LOGIN" });
         return;
       }
