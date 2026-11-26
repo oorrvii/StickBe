@@ -382,11 +382,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: var(--sb-fit-pad, 10px);
   box-sizing: border-box;
-  background: var(--sb-white);
+  background: var(--sb-fit-bg, var(--sb-white));
 }
-.sb-fit__img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+/* The photo fills its frame and is never cropped: object-fit keeps the whole product visible. */
+.sb-fit__img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+
+/* Product photography: one frame shape and a soft tinted backdrop per category, so photos of any shape sit consistently. */
+[data-tone="0"] { --sb-fit-bg: #fff3c4; }
+[data-tone="1"] { --sb-fit-bg: #ebe5fb; }
+[data-tone="2"] { --sb-fit-bg: #ffe3dc; }
+[data-tone="3"] { --sb-fit-bg: #e8ecd5; }
+[data-tone="4"] { --sb-fit-bg: #efe6d0; }
+
 
 /* Sale strip and banner */
 .sb-salestrip { display: block; width: 100%; border: 0; cursor: pointer; background: var(--sb-lavender); color: var(--sb-ink); text-align: center; padding: 9px var(--sb-space-4); font: 600 var(--sb-text-sm) var(--sb-font-body); }

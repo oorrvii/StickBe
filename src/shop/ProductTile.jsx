@@ -1,6 +1,6 @@
 import { Heart } from "lucide-react";
 import FitImage from "../site/FitImage.jsx";
-import { itemImage, isAvailable, priceInfo, stockNote } from "./shopLogic.js";
+import { itemImage, isAvailable, priceInfo, stockNote, toneOf } from "./shopLogic.js";
 
 export default function ProductTile({ item, discountPercent, inWishlist, onToggleWishlist, cartQty, onOpen }) {
   const available = isAvailable(item);
@@ -10,7 +10,7 @@ export default function ProductTile({ item, discountPercent, inWishlist, onToggl
 
   return (
     <article id={`product-${item.slug}`} className={`sb-tile${available ? "" : " sb-tile--soldout"}`}>
-      <div className="sb-tile__media">
+      <div className="sb-tile__media" data-tone={toneOf(item)}>
         <button type="button" className="sb-tile__open" onClick={() => onOpen(item)} aria-label={`View ${item.name}`}>
           {cover ? <FitImage src={cover} alt="" /> : <span className="sb-fit"><span className="sb-fit__missing">Photo coming soon</span></span>}
         </button>

@@ -3,7 +3,7 @@ import { Heart, Share2, ChevronDown } from "lucide-react";
 import QtyInput from "./QtyInput.jsx";
 import { Dialog } from "../ui/index.js";
 import FitImage from "../site/FitImage.jsx";
-import { isAvailable, priceInfo, discountedPrice, stockNote } from "./shopLogic.js";
+import { isAvailable, priceInfo, discountedPrice, stockNote, toneOf } from "./shopLogic.js";
 
 const SHIPPING_POINTS = [
   "Flat ₹40 delivery, ₹20 within Agra. Minimum order ₹99.",
@@ -45,7 +45,7 @@ export default function ProductDetail({ item, discountPercent, inWishlist, onTog
   return (
     <Dialog open onClose={onClose} size="lg" ariaLabel={item.name} zIndex={45}>
       <div className="sb-detail">
-        <div className="sb-detail__gallery">
+        <div className="sb-detail__gallery" data-tone={toneOf(item)}>
           <div className="sb-detail__stage">
             {images.length > 0 ? <FitImage key={images[index]} src={images[index]} alt={`${item.name}, photo ${index + 1} of ${images.length}`} loading="eager" /> : <span className="sb-fit"><span className="sb-fit__missing">Photo coming soon</span></span>}
           </div>
