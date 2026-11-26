@@ -63,11 +63,3 @@ export function pageWindow(current, total) {
   });
   return out;
 }
-
-/** Which soft backdrop tint (0 to 4) a product photo sits on. Same category, same tint. */
-export function toneOf(item) {
-  const key = String((item && item.category) || "");
-  let sum = 0;
-  for (let i = 0; i < key.length; i += 1) sum += key.charCodeAt(i);
-  return sum % 5;
-}
