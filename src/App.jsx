@@ -28,7 +28,7 @@ import AdminPages from "./admin/AdminPages.jsx";
 import AdminSettings from "./admin/AdminSettings.jsx";
 import ContentPage from "./pages/ContentPage.jsx";
 import { ShopSection } from "./shop/index.js";
-import { SiteHeader, AnnouncementBar, Hero, TrustStrip, CategoryTiles, BrandStory, SiteFooter, SaleBanner, SaleStrip, useSiteSettings, useSalePercent } from "./site/index.js";
+import { SiteHeader, AnnouncementBar, Hero, TrustStrip, CategoryTiles, BrandStory, SiteFooter, SaleBanner, SaleStrip, FeaturedRow, useSiteSettings, useSalePercent } from "./site/index.js";
 
 
 const PLUM = "#5B3E7F";
@@ -1640,6 +1640,14 @@ const goToSection = (id) => {
       <TrustStrip items={settings.trustItems} />
       <CategoryTiles categories={categories} loading={productsLoading} onSelect={goToCategory} />
       <SaleBanner sale={settings.sale} percent={discountPercent} onShop={() => scrollToSection("shop")} />
+      <FeaturedRow
+        categories={categories}
+        discountPercent={discountPercent}
+        wishlist={wishlist}
+        cart={cart}
+        onToggleWishlist={toggleWishlist}
+        onSeeAll={() => scrollToSection("shop")}
+      />
 
       {/* SHOP */}
       <section id="shop" style={{ padding: "44px var(--sb-gutter) 20px", maxWidth: "var(--sb-page-max)", margin: "0 auto", scrollMarginTop: 90 }}>

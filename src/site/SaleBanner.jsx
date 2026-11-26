@@ -10,7 +10,7 @@ export function SaleStrip({ sale, percent, onShop }) {
   );
 }
 
-/** Home page banner. Percent is the live percent, so it always matches the prices. */
+/** Home page campaign panel. Percent is the live percent, so it always matches the prices. */
 export default function SaleBanner({ sale, percent, onShop }) {
   if (!(percent > 0)) return null;
   const ends = saleEndLabel(sale);
@@ -18,15 +18,17 @@ export default function SaleBanner({ sale, percent, onShop }) {
   return (
     <section className="sb2 sb-salebanner" aria-labelledby="sb-sale-title">
       <div className="sb-salebanner__card">
-        <div>
-          <p className="sb-accent sb-salebanner__eyebrow">Sale on now</p>
-          <h2 id="sb-sale-title">{label || "Sale"}: {percent}% off every item</h2>
+        <span className="sb-salebanner__shape sb-salebanner__shape--a" aria-hidden="true" />
+        <span className="sb-salebanner__shape sb-salebanner__shape--b" aria-hidden="true" />
+        <h2 id="sb-sale-title" className="sb-salebanner__big" aria-label={`${label || "Sale"}, ${percent}% off every item`}>
+          <span className="sb-accent sb-salebanner__kicker" aria-hidden="true">{label || "Sale"}</span>
+          <span className="sb-salebanner__pct" aria-hidden="true">{percent}<small>%</small></span>
+          <span className="sb-accent sb-salebanner__off" aria-hidden="true">off</span>
+        </h2>
+        <div className="sb-salebanner__side">
+          <p className="sb-salebanner__line">on every item</p>
           <p className="sb-salebanner__sub">{ends ? `Prices are already reduced. Ends ${ends}.` : "Prices are already reduced."}</p>
-          <button type="button" className="sb-btn sb-btn--primary sb-btn--lg" onClick={onShop}>Shop the sale</button>
-        </div>
-        <div className="sb-salebanner__badge" aria-hidden="true">
-          <span className="sb-salebanner__pct">{percent}%</span>
-          <span className="sb-salebanner__off">OFF</span>
+          <button type="button" className="sb-btn sb-btn--accent sb-btn--lg" onClick={onShop}>Shop the sale</button>
         </div>
       </div>
     </section>

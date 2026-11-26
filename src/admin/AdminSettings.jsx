@@ -58,7 +58,7 @@ function SettingsForm({ service, initial }) {
         <Card padded className="sb-adminsec">
           <h2>Home page</h2>
           <Input label="Small heading above the headline" value={f.heroEyebrow} onChange={set("heroEyebrow")} error={E("heroEyebrow")} />
-          <Input label="Headline" value={f.heroTitle} onChange={set("heroTitle")} error={E("heroTitle")} />
+          <Input label="Headline" value={f.heroTitle} onChange={set("heroTitle")} error={E("heroTitle")} hint="Put stars around a word, like *joys*, to show it in the serif accent style." />
           <Textarea label="Sub-heading" rows={3} value={f.heroSubtitle} onChange={set("heroSubtitle")} error={E("heroSubtitle")} />
           <h3>Highlights under the headline</h3>
           {f.trustItems.map((t, i) => (

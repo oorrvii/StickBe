@@ -3,7 +3,7 @@ import { DEFAULT_SALE } from "./saleLogic.js";
 export const DEFAULT_SETTINGS = {
   announcement: "No COD available — prepayment required for all orders",
   heroEyebrow: "Handmade with love",
-  heroTitle: "Bringing little joys to your everyday.",
+  heroTitle: "Bringing little *joys* to your everyday.",
   heroSubtitle:
     "Cute homegrown stickers, washi tapes, memo pads, bookmarks and stationery — made with love, just for you.",
   trustItems: [

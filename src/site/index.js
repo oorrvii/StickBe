@@ -7,5 +7,6 @@ export { default as TrustStrip } from "./TrustStrip.jsx";
 export { default as CategoryTiles } from "./CategoryTiles.jsx";
 export { default as BrandStory } from "./BrandStory.jsx";
 export { default as SaleBanner, SaleStrip } from "./SaleBanner.jsx";
+export { default as FeaturedRow } from "./FeaturedRow.jsx";
 export { default as SiteFooter } from "./SiteFooter.jsx";
 export { useSiteSettings, useSalePercent, SETTINGS_STALE_EVENT, DEFAULT_SETTINGS } from "./siteSettings.js";

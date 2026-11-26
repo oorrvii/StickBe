@@ -21,7 +21,7 @@ export const statusOfProduct = (p) => (p.status === "draft" || p.status === "arc
 export function emptyProduct(categoryId) {
   return {
     name: "", slug: "", category: categoryId || "", description: "", careInstructions: "",
-    price: "", originalPrice: "", stock: "", lowStockAt: String(DEFAULT_LOW_STOCK), inStock: true,
+    price: "", originalPrice: "", stock: "", lowStockAt: String(DEFAULT_LOW_STOCK), inStock: true, featured: false,
     hasVariants: false, variants: [{ label: "", price: "" }], image: "", extraImages: [], order: "0", status: "draft",
   };
 }
@@ -39,6 +39,7 @@ export function productToForm(p) {
     stock: typeof p.stock === "number" ? String(p.stock) : "",
     lowStockAt: typeof p.lowStockAt === "number" ? String(p.lowStockAt) : String(DEFAULT_LOW_STOCK),
     inStock: p.inStock !== false,
+    featured: p.featured === true,
     hasVariants: Array.isArray(p.variants) && p.variants.length > 0,
     variants, image: cover, extraImages: extra,
     order: String(p.order ?? 0), status: statusOfProduct(p),
@@ -108,7 +109,7 @@ export function validateProduct(form, ctx) {
   return {
     data: {
       name, slug, category: form.category, description: form.description.trim(), careInstructions: form.careInstructions.trim(),
-      price, originalPrice, stock, lowStockAt, inStock: !!form.inStock,
+      price, originalPrice, stock, lowStockAt, inStock: !!form.inStock, featured: !!form.featured,
       hasVariants: variants !== null, variants, image: form.image.trim(), images: extra.length ? [form.image.trim(), ...extra] : null,
       order, status: form.status,
     },

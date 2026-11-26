@@ -3,6 +3,9 @@ import { ArrowRight } from "lucide-react";
 import { Skeleton } from "../ui/index.js";
 import FitImage from "./FitImage.jsx";
 import { pickHeroProducts, itemImage } from "./heroPhotos.js";
+import { splitAccent } from "./accentText.js";
+
+const BADGE_TEXT = "HANDMADE • PACKED BY HAND • HANDMADE • PACKED BY HAND • ";
 
 export default function Hero({ settings, categories, loading, onShop, onBrowse, saleLabel }) {
   const photos = useMemo(() => pickHeroProducts(categories, { count: 4, windowDays: 2 }), [categories]);
@@ -12,7 +15,11 @@ export default function Hero({ settings, categories, loading, onShop, onBrowse, 
       <div className="sb-hero__inner">
         <div className="sb-hero__copy">
           <p className="sb-eyebrow">{settings.heroEyebrow}</p>
-          <h1 id="sb-hero-title">{settings.heroTitle}</h1>
+          <h1 id="sb-hero-title">
+            {splitAccent(settings.heroTitle).map((p, i) =>
+              p.accent ? <span key={i} className="sb-accent">{p.text}</span> : <span key={i}>{p.text}</span>
+            )}
+          </h1>
           <p className="sb-hero__sub">{settings.heroSubtitle}</p>
           {saleLabel && <p className="sb-hero__sale">{saleLabel}</p>}
           <div className="sb-hero__cta">
@@ -26,20 +33,28 @@ export default function Hero({ settings, categories, loading, onShop, onBrowse, 
         </div>
 
         <div className="sb-hero__collage" aria-label="Featured products">
+          <span className="sb-hero__blob sb-hero__blob--a" aria-hidden="true" />
+          <span className="sb-hero__blob sb-hero__blob--b" aria-hidden="true" />
           {photos.length >= 2
-            ? photos.map((item) => (
-                <a key={item.slug} className="sb-hero__tile" href={`/product/${item.slug}`}>
+            ? photos.map((item, i) => (
+                <a key={item.slug} className={`sb-hero__tile sb-hero__tile--${i + 1}`} href={`/product/${item.slug}`}>
                   <span className="sb-hero__img">
                     <FitImage src={itemImage(item)} alt={item.name} loading="eager" />
                   </span>
                   <span className="sb-hero__label">{item.categoryLabel}</span>
                 </a>
               ))
-            : [0, 1, 2, 3].map((i) => (
-                <div key={i} className="sb-hero__tile sb-hero__tile--empty">
+            : [1, 2, 3, 4].map((i) => (
+                <div key={i} className={`sb-hero__tile sb-hero__tile--${i} sb-hero__tile--empty`}>
                   {loading && <Skeleton width="100%" height="100%" style={{ borderRadius: 0 }} />}
                 </div>
               ))}
+          <svg className="sb-hero__badge" viewBox="0 0 120 120" aria-hidden="true">
+            <defs><path id="sb-badge-ring" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
+            <circle cx="60" cy="60" r="58" className="sb-hero__badge-bg" />
+            <text className="sb-hero__badge-text"><textPath href="#sb-badge-ring" startOffset="0">{BADGE_TEXT}</textPath></text>
+            <path className="sb-hero__badge-star" d="M60 38l5.5 16.5L82 60l-16.5 5.5L60 82l-5.5-16.5L38 60l16.5-5.5z" />
+          </svg>
         </div>
       </div>
     </section>

@@ -171,6 +171,10 @@ function Editor({ service, product, categories: initialCategories, takenSlugs })
               {STATUSES.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
             </Select>
             <Input label="Sort order" inputMode="numeric" value={form.order} onChange={set("order")} error={err("order")} hint="Lower numbers appear first." />
+            <label className="sb-check">
+              <input type="checkbox" checked={form.featured} onChange={set("featured")} />
+              <span>Feature on home page<small className="sb-check__sub">Shows in the Featured row, up to 8 products.</small></span>
+            </label>
             <Button loading={busy} onClick={() => save("published")}>Save and publish</Button>
             <Button variant="secondary" loading={busy} onClick={() => save()}>{isNew ? "Save" : "Save changes"}</Button>
             {!isNew && form.status === "published" && <a className="sb-linkbtn sb-linkbtn--strong" href={`/product/${encodeURIComponent(form.slug)}`} target="_blank" rel="noopener noreferrer">View on the shop</a>}
