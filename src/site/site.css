@@ -52,8 +52,8 @@
   text-decoration: none;
   font-family: var(--sb-font-heading);
   font-weight: 800;
-  font-size: clamp(1.05rem, 4.6vw, 1.45rem);
-  letter-spacing: -0.04em;
+  font-size: clamp(1.1rem, 4.6vw, 1.5rem);
+  letter-spacing: -0.03em;
   min-width: 0;
 }
 .sb-brand img { border-radius: 50%; object-fit: cover; }
@@ -109,7 +109,7 @@
   color: var(--sb-ink);
   font-family: var(--sb-font-body);
   font-size: var(--sb-text-sm);
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   position: relative;
   transition: color var(--sb-dur) var(--sb-ease);
@@ -139,7 +139,7 @@
   font-family: var(--sb-font-body);
   font-size: var(--sb-text-xs);
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--sb-violet);
   margin-bottom: var(--sb-space-3);
@@ -237,7 +237,7 @@
   background: var(--sb-violet-tint);
   color: var(--sb-violet);
 }
-.sb-trust__title { font-family: var(--sb-font-heading); font-weight: 700; font-size: var(--sb-text-md); }
+.sb-trust__title { font-family: var(--sb-font-body); font-weight: 700; font-size: var(--sb-text-md); }
 .sb-trust__text { color: var(--sb-muted); font-size: var(--sb-text-sm); margin-top: 2px; }
 
 .sb-cats { padding: var(--sb-space-7) var(--sb-gutter); scroll-margin-top: 80px; }
@@ -279,7 +279,7 @@
 .sb-cat__label {
   padding: 0 var(--sb-space-3);
   min-height: 2.4em;
-  font-family: var(--sb-font-heading);
+  font-family: var(--sb-font-body);
   font-weight: 700;
   font-size: var(--sb-text-md);
   line-height: 1.2;
@@ -322,9 +322,9 @@
   gap: var(--sb-space-6) var(--sb-space-5);
 }
 .sb-footer__brand { grid-column: 1 / -1; }
-.sb-footer__logo { display: flex; align-items: center; gap: 10px; font-family: var(--sb-font-heading); font-weight: 800; font-size: 2rem; letter-spacing: -0.04em; }
+.sb-footer__logo { display: flex; align-items: center; gap: 10px; font-family: var(--sb-font-heading); font-weight: 800; font-size: 2rem; letter-spacing: -0.03em; }
 .sb-footer__logo img { border-radius: 50%; }
-.sb-footer__brand .sb-accent { margin-top: var(--sb-space-2); font-size: var(--sb-text-xl); color: var(--sb-butter); }
+.sb-footer__brand .sb-accent { margin-top: var(--sb-space-2); font-size: var(--sb-text-2xl); color: var(--sb-butter); }
 .sb-footer__col h3 {
   font-family: var(--sb-font-body);
   font-size: var(--sb-text-xs);
@@ -394,14 +394,20 @@
 .sb-salestrip:focus-visible { outline: none; box-shadow: inset 0 0 0 3px var(--sb-violet); }
 .sb-salebanner { background: transparent; padding: var(--sb-space-6) var(--sb-gutter); max-width: var(--sb-page-max); margin: 0 auto; }
 .sb-salebanner__card { display: grid; gap: var(--sb-space-5); align-items: center; padding: var(--sb-space-6) var(--sb-space-5); background: var(--sb-terracotta-bg); border-radius: var(--sb-radius-xl); box-shadow: var(--sb-shadow-md); }
-.sb-salebanner__eyebrow { font-size: var(--sb-text-xl); color: var(--sb-violet-dark); margin: 0 0 var(--sb-space-2); }
+.sb-salebanner__eyebrow { font-size: var(--sb-text-2xl); color: var(--sb-violet-dark); margin: 0 0 var(--sb-space-2); }
 .sb-salebanner h2 { margin: 0; color: var(--sb-ink); }
 .sb-salebanner__sub { margin: var(--sb-space-3) 0 var(--sb-space-4); color: var(--sb-muted); font-size: var(--sb-text-lg); }
 .sb-salebanner__badge { justify-self: start; display: grid; place-content: center; text-align: center; width: 112px; height: 112px; border-radius: 50%; background: var(--sb-violet); color: var(--sb-ivory); }
-.sb-salebanner__pct { font-family: var(--sb-font-accent); font-size: 2.6rem; line-height: 1; }
-.sb-salebanner__off { font-size: var(--sb-text-sm); font-weight: 600; letter-spacing: .04em; }
+.sb-salebanner__pct { font-family: var(--sb-font-heading); font-weight: 800; font-size: 2.4rem; line-height: 1; letter-spacing: -0.03em; }
+.sb-salebanner__off { font-size: var(--sb-text-sm); font-weight: 600; letter-spacing: .06em; }
 @media (min-width: 760px) {
   .sb-salebanner__card { grid-template-columns: 1fr auto; padding: var(--sb-space-7) var(--sb-space-7); }
   .sb-salebanner__badge { justify-self: center; width: 180px; height: 180px; }
   .sb-salebanner__pct { font-size: 4.2rem; }
 }
+
+/* Typography: the hero headline is the one big display moment. */
+.sb-hero h1 { font-size: clamp(2.6rem, 6.4vw, 5.6rem); font-weight: 800; line-height: 0.98; letter-spacing: -0.015em; text-wrap: balance; }
+.sb-hero__sub { font-size: var(--sb-text-lg); line-height: 1.55; }
+.sb2 :where(.sb-accent) { font-size: 1.15em; }
+.sb2 :where(.sb-tile__price strong, .sb-detail__price strong, .sb-summary__total dd, .sb-cartline__price) { font-variant-numeric: tabular-nums; }

@@ -244,7 +244,7 @@ const handleAdd = () => {
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <span style={{
-              background: "#fff", color: "#5B3E7F", fontFamily: "'Baloo 2', sans-serif",
+              background: "#fff", color: "#5B3E7F", fontFamily: "var(--sb-font-body)",
               fontSize: 12, fontWeight: 700, padding: "5px 12px", borderRadius: 100,
             }}>
               Sold out
@@ -255,18 +255,18 @@ const handleAdd = () => {
          {DISCOUNT_PERCENT > 0 &&  (
           <span style={{
             position: "absolute", top: 8, left: 8, zIndex: 2, background: "#e0556b", color: "#fff",
-            fontFamily: "'Baloo 2', sans-serif", fontSize: 11.5, fontWeight: 700,
+            fontFamily: "var(--sb-font-body)", fontSize: 11.5, fontWeight: 700,
             padding: "2px 8px", borderRadius: 100,
           }}>
             {DISCOUNT_PERCENT}% OFF
           </span>
         )}
         <div style={{ padding: "8px 10px 10px" }}>
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 13.5, color: theme.heading, margin: 0, lineHeight: 1.2 }}>
+        <p style={{ fontFamily: "var(--sb-font-body)", fontSize: 13.5, color: theme.heading, margin: 0, lineHeight: 1.2 }}>
           {item.name}
         </p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
-    <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 14.5, color: PEACH, fontWeight: 600 }}>
+    <span style={{ fontFamily: "var(--sb-font-body)", fontSize: 14.5, color: PEACH, fontWeight: 600 }}>
     {DISCOUNT_PERCENT > 0 ? (
       <>
         ₹{discounted(item.price)}{" "}
@@ -316,7 +316,7 @@ const handleAdd = () => {
         <button onClick={() => onUpdateQty(item.name, cartQty - 1)} className="stickbe-qty-btn" aria-label="Decrease quantity">
           <Minus size={12} />
         </button>
-        <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 14, textAlign: "center" }}>
+        <span style={{ fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 14, textAlign: "center" }}>
           {cartQty}
         </span>
         <button onClick={() => onUpdateQty(item.name, cartQty + 1)} className="stickbe-qty-btn" aria-label="Increase quantity">
@@ -357,7 +357,7 @@ function Toast({ message, onDone }) {
     <div
       style={{
         position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
-        background: "#5B3E7F", color: "#fff", fontFamily: "'Nunito', sans-serif",
+        background: "#5B3E7F", color: "#fff", fontFamily: "var(--sb-font-body)",
         fontWeight: 700, fontSize: 13.5, padding: "11px 20px", borderRadius: 100,
         boxShadow: "0 8px 22px rgba(0,0,0,0.25)", zIndex: 70,
         display: "flex", alignItems: "center", gap: 8,
@@ -383,7 +383,7 @@ function CustomStickerPopup({ open, onClose, theme }) {
       <div onClick={(e) => e.stopPropagation()} style={{ background: theme.surface, borderRadius: 18, maxWidth: 380, width: "100%", padding: "32px 26px", textAlign: "center", position: "relative" }}>
         <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
         <div style={{ fontSize: 36, marginBottom: 10 }}>🎨</div>
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 17, margin: "0 0 10px", lineHeight: 1.4 }}>
+        <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 17, margin: "0 0 10px", lineHeight: 1.4 }}>
           Yay! We'll reach out to you shortly to design your custom sticker together 🎨
         </p>
         <p style={{ color: theme.body, fontSize: 13.5, margin: "0 0 22px", lineHeight: 1.6 }}>
@@ -418,7 +418,7 @@ function VariantPopup({ item, onClose, onChoose, theme, cart, onUpdateQty }) {
     >
       <div onClick={(e) => e.stopPropagation()} style={{ background: theme.surface, borderRadius: 18, maxWidth: 380, width: "100%", padding: "28px 24px", textAlign: "center", position: "relative" }}>
         <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 17, margin: "6px 0 4px" }}>
+        <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 17, margin: "6px 0 4px" }}>
           {item.name}
         </p>
         <p style={{ color: theme.bodyMuted, fontSize: 13, margin: "0 0 20px" }}>
@@ -436,12 +436,12 @@ function VariantPopup({ item, onClose, onChoose, theme, cart, onUpdateQty }) {
         style={{
           display: "flex", justifyContent: "space-between", alignItems: "center",
           background: theme.surfaceAlt, borderRadius: 12,
-          padding: "12px 14px 12px 16px", fontFamily: "'Nunito', sans-serif",
+          padding: "12px 14px 12px 16px", fontFamily: "var(--sb-font-body)",
         }}
       >
         <div style={{ textAlign: "left" }}>
           <p style={{ color: theme.heading, fontWeight: 700, fontSize: 14, margin: 0 }}>{variant.label}</p>
-                    <p style={{ color: PEACH, fontWeight: 700, fontSize: 13, margin: "2px 0 0", fontFamily: "'Baloo 2', sans-serif" }}>
+                    <p style={{ color: PEACH, fontWeight: 700, fontSize: 13, margin: "2px 0 0", fontFamily: "var(--sb-font-body)" }}>
             ₹{discounted(variant.price)}{" "}
             {DISCOUNT_PERCENT > 0 && (
               <span style={{ fontSize: 11.5, color: theme.bodyMuted, textDecoration: "line-through", fontWeight: 500 }}>₹{variant.price}</span>
@@ -454,7 +454,7 @@ function VariantPopup({ item, onClose, onChoose, theme, cart, onUpdateQty }) {
             <button onClick={() => onUpdateQty(variantCartName, cartQty - 1)} className="stickbe-qty-btn" aria-label="Decrease quantity">
               <Minus size={12} />
             </button>
-            <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 14, textAlign: "center" }}>
+            <span style={{ fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 14, textAlign: "center" }}>
               {cartQty}
             </span>
             <button onClick={() => onUpdateQty(variantCartName, cartQty + 1)} className="stickbe-qty-btn" aria-label="Increase quantity">
@@ -539,7 +539,7 @@ function GallerySlider({ photos, theme }) {
       }}>
         <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
         <Camera size={28} strokeWidth={1.8} color="#a8916b" />
-        <span style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: "#a8916b", fontWeight: 700 }}>
+        <span style={{ fontFamily: "var(--sb-font-body)", fontSize: 12, color: "#a8916b", fontWeight: 700 }}>
           Photos coming soon
         </span>
       </div>
@@ -586,8 +586,8 @@ function GallerySlider({ photos, theme }) {
           <div style={{
             position: "absolute", bottom: 0, left: 0, right: 0,
             background: "linear-gradient(transparent, rgba(0,0,0,0.55))",
-            color: "#fff", fontFamily: "'Nunito', sans-serif", fontSize: 13, fontWeight: 700,
-            padding: "24px 16px 12px",
+            color: "#fff", fontFamily: "var(--sb-font-accent)", fontStyle: "italic", fontSize: 19, fontWeight: 400,
+            padding: "28px 16px 12px",
           }}>
             {photos[index].caption}
           </div>
@@ -664,7 +664,7 @@ function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, g
         overflowY: "auto", display: "flex", flexDirection: "column",
       }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <span style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 19, color: theme.heading, fontWeight: 700 }}>
+          <span style={{ fontFamily: "var(--sb-font-body)", fontSize: 19, color: theme.heading, fontWeight: 700 }}>
             StickBe
           </span>
           <button onClick={onClose} style={{ background: "none", border: "none", color: theme.bodyMuted, fontSize: 22, cursor: "pointer", padding: 4 }} aria-label="Close menu">
@@ -675,7 +675,7 @@ function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, g
         <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
   <p style={{
     display: "flex", alignItems: "center", gap: 10, margin: "8px 8px 4px",
-    fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading,
+    fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 14.5, color: theme.heading,
   }}>
     <ShoppingBag size={17} /> All products
   </p>
@@ -687,7 +687,7 @@ function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, g
         onClick={() => goToCategory(cat.id)}
         style={{
           background: "none", border: "none", cursor: "pointer", padding: "8px 6px",
-          textAlign: "left", fontFamily: "'Nunito', sans-serif", fontSize: 13.5, color: theme.body,
+          textAlign: "left", fontFamily: "var(--sb-font-body)", fontSize: 13.5, color: theme.body,
         }}
       >
         {cat.label}
@@ -696,7 +696,7 @@ function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, g
   </div>
           <button
             onClick={() => { setWishlistOpen(true); onClose(); }}
-            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
           >
             <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <Heart size={17} /> Wishlist
@@ -706,7 +706,7 @@ function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, g
 
           <button
             onClick={() => { setCartOpen(true); onClose(); }}
-            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
           >
             <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <ShoppingCart size={17} /> Cart
@@ -718,20 +718,20 @@ function SideMenu({ open, onClose, theme, darkMode, setDarkMode, goToCategory, g
         <div style={{ marginTop: "auto", display: "flex", flexDirection: "column" }}>
   <button
     onClick={() => window.open(INSTAGRAM, "_blank")}
-    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
   >
     <Instagram size={17} /> Instagram
   </button>
   <button
     onClick={() => { goToSection("feedback"); }}
-    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
   >
     <Mail size={17} /> Email us
   </button>
   {DARK_MODE_ENABLED && (
   <button
     onClick={() => setDarkMode((d) => !d)}
-    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
+    style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "12px 8px", fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 14.5, color: theme.heading }}
   >
     {darkMode ? <Sun size={17} /> : <Moon size={17} />}
     {darkMode ? "Light mode" : "Dark mode"}
@@ -781,11 +781,11 @@ function NotFoundPage() {
     <div style={{
       minHeight: "100vh", display: "flex", flexDirection: "column",
       alignItems: "center", justifyContent: "center", textAlign: "center",
-      padding: 24, background: CREAM, fontFamily: "'Nunito', sans-serif",
+      padding: 24, background: CREAM, fontFamily: "var(--sb-font-body)",
     }}>
       <img src={LOGO_URI} alt="StickBe" style={{ width: 64, height: 64, borderRadius: "50%", objectFit: "cover", marginBottom: 16 }} />
       <div style={{ fontSize: 42, marginBottom: 6 }}>🧸</div>
-      <p style={{ fontFamily: "'Baloo 2', sans-serif", fontSize: 26, color: PLUM, margin: "0 0 8px" }}>
+      <p style={{ fontFamily: "var(--sb-font-heading)", fontSize: 26, color: PLUM, margin: "0 0 8px" }}>
         Oops, page not found!
       </p>
       <p style={{ color: "#8a7a97", fontSize: 14, margin: "0 0 28px", maxWidth: 320, lineHeight: 1.6 }}>
@@ -813,7 +813,7 @@ function WishlistModal({ wishlistItems, onClose, onToggleWishlist, onAdd, theme 
     >
       <div onClick={(e) => e.stopPropagation()} style={{ background: theme.surface, borderRadius: 18, maxWidth: 420, width: "100%", maxHeight: "80vh", overflowY: "auto", padding: 22, position: "relative" }}>
         <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 19, margin: "6px 0 16px", display: "flex", alignItems: "center", gap: 8 }}>
+        <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 19, margin: "6px 0 16px", display: "flex", alignItems: "center", gap: 8 }}>
           <Heart size={18} fill="#e07a7a" stroke="#e07a7a" /> Your wishlist
         </p>
 
@@ -826,7 +826,7 @@ function WishlistModal({ wishlistItems, onClose, onToggleWishlist, onAdd, theme 
             {wishlistItems.map((item) => (
               <div key={item.name} style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: `1px solid ${theme.border}`, paddingBottom: 10 }}>
                 <div style={{ flex: 1 }}>
-                  <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 14, margin: 0 }}>{item.name}</p>
+                  <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 14, margin: 0 }}>{item.name}</p>
                   <p style={{ fontSize: 12, color: theme.bodyMuted, margin: "2px 0 0" }}>₹{discounted(item.price)}{DISCOUNT_PERCENT > 0 && <span style={{ textDecoration: "line-through", marginLeft: 4 }}>₹{item.price}</span>} · {item.categoryLabel}</p>
                 </div>
                 <button onClick={() => onAdd({ ...item })} className="stickbe-order-btn" style={{ padding: "5px 10px", fontSize: 11.5 }}>
@@ -991,7 +991,7 @@ if (status === "sent" && orderSnapshot) {
       <div style={{ background: theme.surface, borderRadius: 18, maxWidth: 420, width: "100%", maxHeight: "85vh", overflowY: "auto", padding: "30px 26px", textAlign: "center", position: "relative" }}>
         <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
         <div style={{ fontSize: 40, marginBottom: 10 }}>🎀</div>
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 19, margin: "0 0 8px" }}>
+        <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 19, margin: "0 0 8px" }}>
           Thank you for ordering!
         </p>
         <p style={{ color: theme.body, fontSize: 14, margin: "0 0 20px", lineHeight: 1.5 }}>
@@ -999,29 +999,29 @@ if (status === "sent" && orderSnapshot) {
         </p>
 
         <div style={{ textAlign: "left", background: theme.surfaceAlt, borderRadius: 12, padding: "14px 16px", marginBottom: 18 }}>
-          <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 14.5, margin: "0 0 10px" }}>
+          <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 14.5, margin: "0 0 10px" }}>
             Order summary
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 10 }}>
             {s.items.map((i) => (
-              <div key={i.name} style={{ display: "flex", justifyContent: "space-between", fontFamily: "'Nunito', sans-serif", fontSize: 13, color: theme.body }}>
+              <div key={i.name} style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--sb-font-body)", fontSize: 13, color: theme.body }}>
                 <span>{i.name} × {i.qty}</span>
                 <span>₹{i.price * i.qty}</span>
               </div>
             ))}
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, color: theme.bodyMuted, marginBottom: 2, fontFamily: "'Nunito', sans-serif" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, color: theme.bodyMuted, marginBottom: 2, fontFamily: "var(--sb-font-body)" }}>
             <span>Subtotal</span><span>₹{s.subtotal}</span>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, color: theme.bodyMuted, marginBottom: 8, fontFamily: "'Nunito', sans-serif" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, color: theme.bodyMuted, marginBottom: 8, fontFamily: "var(--sb-font-body)" }}>
             <span>Delivery</span><span>₹{s.deliveryFee}</span>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 8, borderTop: `1px solid ${theme.border}`, fontFamily: "'Nunito', sans-serif" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 8, borderTop: `1px solid ${theme.border}`, fontFamily: "var(--sb-font-body)" }}>
             <span style={{ fontWeight: 700, color: theme.heading, fontSize: 14 }}>Total</span>
-            <span style={{ fontFamily: "'Baloo 2', sans-serif", color: PEACH, fontSize: 16, fontWeight: 600 }}>₹{s.total}</span>
+            <span style={{ fontFamily: "var(--sb-font-body)", color: PEACH, fontSize: 16, fontWeight: 600 }}>₹{s.total}</span>
           </div>
 
-          <div style={{ borderTop: `1px solid ${theme.border}`, marginTop: 12, paddingTop: 10, fontFamily: "'Nunito', sans-serif", fontSize: 12.5, color: theme.body, lineHeight: 1.6 }}>
+          <div style={{ borderTop: `1px solid ${theme.border}`, marginTop: 12, paddingTop: 10, fontFamily: "var(--sb-font-body)", fontSize: 12.5, color: theme.body, lineHeight: 1.6 }}>
             <p style={{ margin: 0, fontWeight: 700, color: theme.heading }}>{s.customer.name}</p>
             <p style={{ margin: 0 }}>{s.customer.email}</p>
             <p style={{ margin: 0 }}>{s.customer.phone}{s.customer.altPhone ? ` / ${s.customer.altPhone}` : ""}</p>
@@ -1048,7 +1048,7 @@ if (status === "sent" && orderSnapshot) {
     >
       <div onClick={(e) => e.stopPropagation()} style={{ background: theme.surface, borderRadius: 18, maxWidth: 440, width: "100%", maxHeight: "88vh", overflowY: "auto", padding: 22, position: "relative" }}>
         <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 19, margin: "6px 0 16px", display: "flex", alignItems: "center", gap: 8 }}>
+        <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 19, margin: "6px 0 16px", display: "flex", alignItems: "center", gap: 8 }}>
           <ShoppingCart size={18} /> Your cart
         </p>
 
@@ -1062,14 +1062,14 @@ if (status === "sent" && orderSnapshot) {
               {cart.map((i) => (
                 <div key={i.name} style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: `1px solid ${theme.border}`, paddingBottom: 10 }}>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 14, margin: 0 }}>{i.name}</p>
+                    <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 14, margin: 0 }}>{i.name}</p>
                     <p style={{ fontSize: 12, color: theme.bodyMuted, margin: "2px 0 0" }}>₹{i.price} each · {i.categoryLabel}</p>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <button onClick={() => onUpdateQty(i.name, i.qty - 1)} className="stickbe-qty-btn" aria-label="Decrease quantity">
                       <Minus size={12} />
                     </button>
-                    <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 16, textAlign: "center" }}>
+                    <span style={{ fontFamily: "var(--sb-font-body)", fontWeight: 700, fontSize: 13, color: theme.heading, minWidth: 16, textAlign: "center" }}>
                       {i.qty}
                     </span>
                     <button onClick={() => onUpdateQty(i.name, i.qty + 1)} className="stickbe-qty-btn" aria-label="Increase quantity">
@@ -1089,31 +1089,31 @@ if (status === "sent" && orderSnapshot) {
       background: `${PEACH}22`, border: `1px solid ${PEACH}66`, borderRadius: 10,
       padding: "8px 12px", marginBottom: 4,
     }}>
-      <p style={{ fontFamily: "'Nunito', sans-serif", fontSize: 12, color: "#9a6a3f", fontWeight: 700, margin: 0 }}>
+      <p style={{ fontFamily: "var(--sb-font-body)", fontSize: 12, color: "#9a6a3f", fontWeight: 700, margin: 0 }}>
         Add ₹{MIN_ORDER_VALUE - subtotal} more to reach the ₹{MIN_ORDER_VALUE} minimum order
       </p>
     </div>
   )}
   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-    <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.bodyMuted, fontSize: 13 }}>Subtotal</span>
-    <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.body, fontSize: 13 }}>₹{subtotal}</span>
+    <span style={{ fontFamily: "var(--sb-font-body)", color: theme.bodyMuted, fontSize: 13 }}>Subtotal</span>
+    <span style={{ fontFamily: "var(--sb-font-body)", color: theme.body, fontSize: 13 }}>₹{subtotal}</span>
   </div>
 
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-  <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.bodyMuted, fontSize: 13 }}>Delivery</span>
-  <span style={{ fontFamily: "'Nunito', sans-serif", color: theme.body, fontSize: 13 }}>
+  <span style={{ fontFamily: "var(--sb-font-body)", color: theme.bodyMuted, fontSize: 13 }}>Delivery</span>
+  <span style={{ fontFamily: "var(--sb-font-body)", color: theme.body, fontSize: 13 }}>
     {cityEntered ? `₹${deliveryFee}` : "Enter city to see delivery fee"}
   </span>
 </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 6, borderTop: `1px solid ${theme.border}` }}>
-  <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700, color: theme.heading, fontSize: 15 }}>Total</span>
-  <span style={{ fontFamily: "'Baloo 2', sans-serif", color: PEACH, fontSize: 19, fontWeight: 600 }}>
+  <span style={{ fontFamily: "var(--sb-font-body)", fontWeight: 700, color: theme.heading, fontSize: 15 }}>Total</span>
+  <span style={{ fontFamily: "var(--sb-font-body)", color: PEACH, fontSize: 19, fontWeight: 600 }}>
     {cityEntered ? `₹${total}` : `₹${subtotal} + delivery`}
   </span>
 </div>
             </div>
 
-            <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 14.5, margin: "0 0 10px" }}>
+            <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 14.5, margin: "0 0 10px" }}>
               Delivery details
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 8 }}>
@@ -1165,7 +1165,7 @@ if (status === "sent" && orderSnapshot) {
               </summary>
               <pre style={{
                 background: theme.surfaceAlt, borderRadius: 10, padding: "10px 12px", fontSize: 12,
-                color: theme.inputText, whiteSpace: "pre-wrap", fontFamily: "'Nunito', sans-serif", margin: "8px 0",
+                color: theme.inputText, whiteSpace: "pre-wrap", fontFamily: "var(--sb-font-body)", margin: "8px 0",
               }}>
                 {orderText}
               </pre>
@@ -1224,7 +1224,7 @@ function FeedbackForm({ theme }) {
       <div style={{ maxWidth: 460, margin: "0 auto", background: theme.surface, borderRadius: 16, padding: 30, textAlign: "center", position: "relative", boxShadow: "0 4px 14px rgba(91,62,127,0.08)" }}>
         <div className="stickbe-tape" style={{ left: 24, top: -6 }} />
         <div style={{ fontSize: 34, marginBottom: 8 }}>💌</div>
-        <p style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 17, margin: "0 0 6px" }}>
+        <p style={{ fontFamily: "var(--sb-font-body)", color: theme.heading, fontSize: 17, margin: "0 0 6px" }}>
           Thanks for reaching out!
         </p>
         <p style={{ color: theme.body, fontSize: 13.5, margin: 0 }}>
@@ -1246,7 +1246,7 @@ function FeedbackForm({ theme }) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           rows={4}
-          style={{ resize: "vertical", fontFamily: "'Nunito', sans-serif" }}
+          style={{ resize: "vertical", fontFamily: "var(--sb-font-body)" }}
         />
       </div>
 
@@ -1446,9 +1446,8 @@ const goToSection = (id) => {
 
 
   return (
-   <div className="stickbe-root" style={{ background: theme.pageBg, minHeight: "100%", fontFamily: "'Nunito', sans-serif" }}>
+   <div className="stickbe-root" style={{ background: theme.pageBg, minHeight: "100%", fontFamily: "var(--sb-font-body)" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
         
         @keyframes stickbe-highlight-pulse {
   0% { box-shadow: 0 0 0 0 rgba(91,62,127,0.5); }
@@ -1503,7 +1502,7 @@ const goToSection = (id) => {
           gap: 5px;
           background: ${PLUM};
           color: #fff;
-          font-family: 'Nunito', sans-serif;
+          font-family: var(--sb-font-body);
           font-weight: 700;
           font-size: 12.5px;
           padding: 7px 13px;
@@ -1531,7 +1530,7 @@ const goToSection = (id) => {
         .stickbe-qty-btn:hover { background: ${theme.surfaceAlt}; }
 
         .stickbe-input {
-          font-family: 'Nunito', sans-serif;
+          font-family: var(--sb-font-body);
           font-size: 13.5px;
           padding: 9px 12px;
           border-radius: 10px;
@@ -1558,7 +1557,7 @@ const goToSection = (id) => {
     }
 
         .stickbe-tab {
-          font-family: 'Nunito', sans-serif;
+          font-family: var(--sb-font-body);
           font-weight: 700;
           font-size: 13.5px;
           padding: 9px 16px;
@@ -1604,7 +1603,7 @@ const goToSection = (id) => {
           align-items: center;
           gap: 8px;
           padding: 0 28px;
-          font-family: 'Nunito', sans-serif;
+          font-family: var(--sb-font-body);
           font-weight: 800;
           font-size: 12.5px;
           letter-spacing: 0.5px;
@@ -1644,7 +1643,7 @@ const goToSection = (id) => {
 
       {/* SHOP */}
       <section id="shop" style={{ padding: "44px var(--sb-gutter) 20px", maxWidth: "var(--sb-page-max)", margin: "0 auto", scrollMarginTop: 90 }}>
-        <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
+        <h2 style={{ fontFamily: "var(--sb-font-heading)", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
           Shop the collection
         </h2>
         <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
@@ -1669,10 +1668,10 @@ const goToSection = (id) => {
 
       {/* GALLERY */}
       <section id="gallery" style={{ padding: "20px var(--sb-gutter) 50px", maxWidth: "var(--sb-page-max)", margin: "0 auto", scrollMarginTop: 90 }}>
-  <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
+  <h2 style={{ fontFamily: "var(--sb-font-accent)", fontWeight: 400, letterSpacing: "-0.01em", color: theme.heading, fontSize: "clamp(2.2rem, 5vw, 3.2rem)", textAlign: "center", margin: "0 0 6px", lineHeight: 1.05 }}>
     StickBe Journal
   </h2>
-  <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>
+  <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 15, margin: "0 0 26px" }}>
     Pop-ups, packing days, and everything in between.
   </p>
   <GallerySlider photos={GALLERY_PHOTOS} theme={theme} />
@@ -1682,7 +1681,7 @@ const goToSection = (id) => {
 
       {/* FEEDBACK */}
       <section id="feedback" style={{ padding: "10px var(--sb-gutter) 56px", maxWidth: "var(--sb-page-max)", margin: "0 auto", scrollMarginTop: 90 }}>
-        <h2 style={{ fontFamily: "'Baloo 2', sans-serif", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
+        <h2 style={{ fontFamily: "var(--sb-font-heading)", color: theme.heading, fontSize: 26, textAlign: "center", margin: "0 0 6px" }}>
           Got feedback or a question?
         </h2>
         <p style={{ textAlign: "center", color: theme.bodyMuted, fontSize: 13.5, margin: "0 0 26px" }}>

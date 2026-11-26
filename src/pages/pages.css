@@ -56,7 +56,7 @@
 .sb-order summary::-webkit-details-marker { display: none; }
 .sb-order summary:focus-visible { outline: 3px solid var(--sb-violet); outline-offset: 4px; border-radius: 6px; }
 .sb-order__top, .sb-order__bottom { display: flex; justify-content: space-between; align-items: center; gap: var(--sb-space-3); }
-.sb-order__num { font: 700 var(--sb-text-lg) var(--sb-font-heading); margin: 0; }
+.sb-order__num { font: 700 var(--sb-text-lg) var(--sb-font-body); margin: 0; }
 .sb-order__date, .sb-order__items { color: var(--sb-muted); font-size: var(--sb-text-sm); margin: 0; }
 .sb-order__detail { margin-top: var(--sb-space-3); padding-top: var(--sb-space-3); border-top: 1px dashed var(--sb-lavender); display: grid; gap: 6px; }
 .sb-order__line { display: flex; justify-content: space-between; font-size: var(--sb-text-sm); color: var(--sb-muted); }

@@ -11,8 +11,8 @@ const SURFACE = "#ffffff";
 const BODY_MUTED = "#8a7a97";
 const BORDER = "#eee3f0";
 
-const FONT_HEAD = "'Baloo 2', sans-serif";
-const FONT_BODY = "'Nunito', sans-serif";
+const FONT_HEAD = "var(--sb-font-body)";
+const FONT_BODY = "var(--sb-font-body)";
 
 const inputStyle = {
   width: "100%",
@@ -144,7 +144,7 @@ function ProductForm({ initial, onSave, onCancel }) {
       ...emptyForm,
       ...initial,
       image: mainImage || "",
-            stock: typeof initial.stock === "number" ? initial.stock : "",
+      stock: typeof initial.stock === "number" ? initial.stock : "",
       extraImages: extra,
       hasVariants: Boolean(initial.hasVariants) || variants.length > 0,
       variants,

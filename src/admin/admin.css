@@ -12,7 +12,7 @@
 .sb-stat { display: grid; gap: 4px; padding: var(--sb-space-4); background: var(--sb-white); border: var(--sb-border); border-radius: var(--sb-radius-lg); color: var(--sb-ink); text-decoration: none; min-height: 112px; align-content: end; }
 .sb-stat:hover { border-color: var(--sb-violet); }
 .sb-stat:focus-visible { outline: 3px solid var(--sb-violet); outline-offset: 2px; }
-.sb-stat__num { font: 800 var(--sb-text-3xl, 2.25rem) var(--sb-font-heading); line-height: 1; }
+.sb-stat__num { font: 700 var(--sb-text-3xl, 2.25rem) var(--sb-font-body); font-variant-numeric: tabular-nums; line-height: 1; }
 .sb-stat__label { font-size: var(--sb-text-sm); color: var(--sb-muted); }
 .sb-stat--violet { background: var(--sb-lavender); border-color: var(--sb-lavender); }
 .sb-stat--violet .sb-stat__label { color: var(--sb-violet-dark); }
