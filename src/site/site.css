@@ -217,20 +217,7 @@
 }
 .sb-hero__tile--empty { box-shadow: none; background: var(--sb-lavender); }
 .sb-hero__tile--empty:hover { transform: rotate(var(--r, 0deg)); }
-.sb-hero__badge {
-  position: absolute;
-  z-index: 3;
-  width: clamp(84px, 22%, 118px);
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  animation: sb-spin 28s linear infinite;
-}
-.sb-hero__badge-bg { fill: var(--sb-plum); }
-.sb-hero__badge-text { font: 700 11.5px var(--sb-font-body); letter-spacing: 0.14em; fill: var(--sb-butter); }
-.sb-hero__badge-star { fill: var(--sb-coral); }
-@keyframes sb-spin { to { rotate: 360deg; } }
-@media (prefers-reduced-motion: reduce) { .sb-hero__badge { animation: none; } .sb-hero__tile { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .sb-hero__tile { transition: none; } }
 
 @media (min-width: 900px) {
   .sb-hero { padding: var(--sb-space-8) var(--sb-gutter) var(--sb-space-8); }
@@ -296,10 +283,10 @@
 }
 .sb-cat:first-child { grid-column: 1 / -1; min-height: 230px; }
 .sb-cat[data-i="0"] { background: var(--sb-plum); color: var(--sb-ivory); }
-.sb-cat[data-i="1"] { background: var(--sb-butter); }
-.sb-cat[data-i="2"] { background: var(--sb-coral); }
-.sb-cat[data-i="3"] { background: var(--sb-lavender); }
-.sb-cat[data-i="4"] { background: #d9dfb8; }
+.sb-cat[data-i="1"] { background: var(--sb-lavender); }
+.sb-cat[data-i="2"] { background: var(--sb-butter-bg); }
+.sb-cat[data-i="3"] { background: var(--sb-terracotta-bg); }
+.sb-cat[data-i="4"] { background: var(--sb-sage-bg); }
 .sb-cat:focus-visible { outline: 3px solid var(--sb-violet); outline-offset: 3px; }
 .sb-cat__text { position: relative; z-index: 1; display: grid; gap: 4px; max-width: 58%; }
 .sb-cat__label { font-family: var(--sb-font-heading); font-weight: 700; font-size: clamp(1.25rem, 2.4vw, 1.9rem); line-height: 1.05; letter-spacing: -0.02em; }
@@ -311,7 +298,7 @@
   background: var(--sb-ink); color: var(--sb-ivory);
   transition: transform var(--sb-dur) var(--sb-ease);
 }
-.sb-cat[data-i="0"] .sb-cat__go { background: var(--sb-butter); color: var(--sb-plum); }
+.sb-cat[data-i="0"] .sb-cat__go { background: var(--sb-lavender); color: var(--sb-plum); }
 .sb-cat__img {
   position: absolute;
   right: var(--sb-space-3);
@@ -450,17 +437,17 @@
   position: relative; overflow: hidden;
   display: grid; gap: var(--sb-space-5); align-items: center;
   padding: var(--sb-space-6) var(--sb-space-5);
-  background: var(--sb-plum); color: var(--sb-ivory);
+  background: linear-gradient(135deg, var(--sb-plum) 0%, var(--sb-plum-2) 100%); color: var(--sb-ivory);
   border-radius: 36px;
 }
 .sb-salebanner__shape { position: absolute; pointer-events: none; }
 .sb-salebanner__shape--a { width: 220px; aspect-ratio: 1; right: -60px; top: -80px; border-radius: 50%; background: var(--sb-violet); }
-.sb-salebanner__shape--b { width: 90px; aspect-ratio: 1; right: 14%; bottom: -26px; background: var(--sb-coral); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.sb-salebanner__shape--b { width: 90px; aspect-ratio: 1; right: 14%; bottom: -26px; background: var(--sb-lavender); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
 .sb-salebanner__big { position: relative; z-index: 1; margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--sb-space-3); color: var(--sb-ivory); }
-.sb-salebanner__kicker { flex-basis: 100%; font-size: var(--sb-text-2xl); color: var(--sb-butter); }
-.sb-salebanner__pct { font-family: var(--sb-font-heading); font-weight: 800; font-size: clamp(5rem, 17vw, 10.5rem); line-height: 0.85; letter-spacing: -0.03em; color: var(--sb-butter); }
+.sb-salebanner__kicker { flex-basis: 100%; font-size: var(--sb-text-2xl); color: var(--sb-lavender); }
+.sb-salebanner__pct { font-family: var(--sb-font-heading); font-weight: 800; font-size: clamp(5rem, 17vw, 10.5rem); line-height: 0.85; letter-spacing: -0.03em; color: var(--sb-ivory); }
 .sb-salebanner__pct small { font-size: 0.5em; margin-left: 2px; }
-.sb-salebanner__off { font-size: clamp(2.2rem, 6vw, 4rem); color: var(--sb-coral); }
+.sb-salebanner__off { font-size: clamp(2.2rem, 6vw, 4rem); color: var(--sb-lavender); }
 .sb-salebanner__side { position: relative; z-index: 1; display: grid; gap: var(--sb-space-3); justify-items: start; }
 .sb-salebanner__line { font-family: var(--sb-font-heading); font-weight: 700; font-size: var(--sb-text-xl); letter-spacing: -0.015em; }
 .sb-salebanner__sub { color: #d9c9e4; font-size: var(--sb-text-md); }
@@ -480,3 +467,5 @@
 .sb-hero__sub { font-size: var(--sb-text-lg); line-height: 1.55; }
 .sb2 :where(.sb-accent) { font-size: 1.15em; }
 .sb2 :where(.sb-tile__price strong, .sb-detail__price strong, .sb-summary__total dd, .sb-cartline__price) { font-variant-numeric: tabular-nums; }
+.sb-salebanner .sb-btn--accent { background: var(--sb-lavender); color: var(--sb-plum); }
+.sb-salebanner .sb-btn--accent:hover:not(:disabled) { background: var(--sb-ivory); }
